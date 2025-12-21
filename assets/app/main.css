@@ -202,12 +202,13 @@ img{
 .page_top_right{
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 15px;
 }
 
 .main_page_icon{
-    width: 28px;
-    height: 28px;
+    width: 55px;
+    height: 55px;
+    margin-right: 5px;
 }
 
 .main_page_bell{
