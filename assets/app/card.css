@@ -235,9 +235,10 @@ body .bottom_bar{
 
 .bottom_image{
     pointer-events: none;
-    width: 55px;
+    width: 65px;
     margin-top: auto;
     margin-bottom: auto;
+    margin-left: -5px;
 }
 
 .inset{
