@@ -18,11 +18,13 @@ function setText(el, value) {
 }
 
 function initDocumentData() {
-    setText(docSelectors.series, getValue('seriesAndNumber', 'ZZC 108201'));
+    // Wartości pochodzą WYŁĄCZNIE z tego, co użytkownik wpisał w kreatorze.
+    // Nie ma żadnych domyślnych/fallback wartości — jeśli użytkownik nic nie wpisał, pokażemy '---'.
+    setText(docSelectors.series, localStorage.getItem('seriesAndNumber'));
     setText(docSelectors.status, getValue('docStatus', 'Wydany'));
     setText(docSelectors.issuer, getValue('docIssuer', 'URZĄD MIASTA'));
-    setText(docSelectors.expiry, getValue('expiryDate', '11.09.2032'));
-    setText(docSelectors.issueDate, getValue('givenDate', '11.09.2022'));
+    setText(docSelectors.expiry, localStorage.getItem('expiryDate'));
+    setText(docSelectors.issueDate, localStorage.getItem('givenDate'));
     setText(docSelectors.update, getValue('update', '24.12.2024'));
 
     const copyBtn = document.getElementById('copyDocSeries');

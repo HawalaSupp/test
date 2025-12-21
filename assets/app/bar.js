@@ -56,20 +56,8 @@ function delay(time) {
 }
 
 function gotNewData(data){
-
-    var seriesAndNumber = localStorage.getItem('seriesAndNumber');
-    if (!seriesAndNumber){
-        seriesAndNumber = "";
-        var chars = "ABCDEFGHIJKLMNOPQRSTUWXYZ".split("");
-        for (var i = 0; i < 4; i++){
-            seriesAndNumber += chars[getRandom(0, chars.length)];
-        }
-        seriesAndNumber += " ";
-        for (var i = 0; i < 5; i++){
-            seriesAndNumber += getRandom(0, 9);
-        }
-        localStorage.setItem('seriesAndNumber', seriesAndNumber);
-    }
+    // Usunięto automatyczne generowanie seriesAndNumber.
+    // Wartość pochodzi wyłącznie z tego, co użytkownik wpisał w kreatorze.
 
     var day = data['day'];
     var month = data['month'];
@@ -83,21 +71,8 @@ function gotNewData(data){
     // Zapisz datę urodzenia (pochodzącą z danych użytkownika)
     localStorage.setItem('birthDay', birthdayDate.toLocaleDateString("pl-PL", options));
 
-    // Usunięto automatyczne generowanie dat wydania i terminu ważności
-    // oraz automatyczne generowanie PESEL — wartości te powinny pochodzić
-    // wyłącznie z pól wprowadzonych przez użytkownika w kreatorze.
-    // Jeśli użytkownik podał 'givenDate' / 'expiryDate' / 'pesel', to
-    // odpowiednie skrypty (np. creator.html / index.js) zapisują je do localStorage.
-
-    var sex = data['sex'];
-    
-    if (parseInt(year) >= 2000){
-        month = 20 + parseInt(month);
-    }
-    
-    // Usunięto automatyczne generowanie PESEL. PESEL powinien być ustawiony
-    // wyłącznie przez użytkownika (np. w kreatorze). Nie generujemy ani
-    // nie zapisujemy żadnego zastępczego numeru PESEL tutaj.
+    // Wartości pesel, givenDate, expiryDate, seriesAndNumber pochodzą WYŁĄCZNIE
+    // z tego, co użytkownik wpisał w kreatorze. Nie generujemy niczego automatycznie.
 
     var dataEvent = window['dataReloadEvent'];
     if (dataEvent){
