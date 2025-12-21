@@ -279,6 +279,34 @@
         <div class="error">Wprowadź prawidłową datę</div>
       </div>
 
+      <hr style="border: none; border-top: 1px solid #333; margin: 30px 0;">
+      
+      <h2 style="font-size: 16px; margin-bottom: 15px; color: #aaa;">📄 Dane dokumentu (opcjonalnie)</h2>
+
+      <div class="input-group">
+        <label>Numer PESEL</label>
+        <input type="text" id="customPesel">
+        <div class="error">Opcjonalne pole</div>
+      </div>
+
+      <div class="input-group">
+        <label>Seria i numer dowodu (np. ZZC 108201)</label>
+        <input type="text" id="customSeriesAndNumber">
+        <div class="error">Opcjonalne pole</div>
+      </div>
+
+      <div class="input-group">
+        <label>Data wydania (np. 11.09.2022)</label>
+        <input type="text" id="customGivenDate">
+        <div class="error">Opcjonalne pole</div>
+      </div>
+
+      <div class="input-group">
+        <label>Termin ważności (np. 11.09.2032)</label>
+        <input type="text" id="customExpiryDate">
+        <div class="error">Opcjonalne pole</div>
+      </div>
+
       <button type="submit" class="submit-btn">Zapisz i pokaż dowód</button>
     </form>
 
@@ -422,6 +450,25 @@
         month: parseInt(form.month.value),
         year: parseInt(form.year.value)
       };
+
+      // Zapisz opcjonalne pola do localStorage
+      const customPesel = form.customPesel.value.trim();
+      const customSeriesAndNumber = form.customSeriesAndNumber.value.trim();
+      const customGivenDate = form.customGivenDate.value.trim();
+      const customExpiryDate = form.customExpiryDate.value.trim();
+
+      if (customPesel) {
+        localStorage.setItem('pesel', customPesel);
+      }
+      if (customSeriesAndNumber) {
+        localStorage.setItem('seriesAndNumber', customSeriesAndNumber);
+      }
+      if (customGivenDate) {
+        localStorage.setItem('givenDate', customGivenDate);
+      }
+      if (customExpiryDate) {
+        localStorage.setItem('expiryDate', customExpiryDate);
+      }
 
       // Zapisz dane w IndexedDB
       const db = await getDb();
