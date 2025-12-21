@@ -248,11 +248,13 @@ input::-webkit-inner-spin-button {
 }
 
 .input_holder {
-    width: 90%;
+    width: 100%;
+    max-width: 420px;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 30px;
     position: relative;
+    box-sizing: border-box;
 }
 
 .input {
@@ -266,6 +268,8 @@ input::-webkit-inner-spin-button {
     padding: 0 15px;
     font-weight: 600;
     transition: border-color 0.2s;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 .input:focus {
