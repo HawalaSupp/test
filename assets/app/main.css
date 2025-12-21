@@ -34,11 +34,11 @@
 body{
     background-color: var(--background);
     margin: 0;
-    animation: fadeIn 0.4s ease-out forwards;
+    animation: fadeIn 0.2s ease-out forwards;
 }
 
 body.fade-out {
-    animation: fadeOut 0.3s ease-in forwards !important;
+    animation: fadeOut 0.15s ease-in forwards !important;
 }
 
 *{
