@@ -200,6 +200,10 @@ body .bottom_bar{
     z-index: -1;
     pointer-events: none;
     border-radius: 15px 15px 0px 0px;
+    background-image: url('images/plate.png');
+    background-size: 102% 102%;
+    background-position: 3px 3px;
+    background-repeat: no-repeat;
 }
 
 .other_grid{
