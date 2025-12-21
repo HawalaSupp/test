@@ -87,7 +87,6 @@ function loadReadyData(result){
     setData("fathersFamilyName", result['fathersFamilyName'].toUpperCase());
     setData("mothersFamilyName", result['mothersFamilyName'].toUpperCase());
     setData("birthPlace", result['birthPlace'].toUpperCase());
-    setData("countryOfBirth", result['countryOfBirth'].toUpperCase());
     
     setData('givenDate', localStorage.getItem('givenDate'));
     setData('expiryDate', localStorage.getItem('expiryDate'));

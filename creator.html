@@ -244,12 +244,6 @@
       </div>
 
       <div class="input-group">
-        <label>Kraj urodzenia *</label>
-        <input type="text" id="countryOfBirth" value="POLSKA" required>
-        <div class="error">To pole jest wymagane</div>
-      </div>
-
-      <div class="input-group">
         <label>Płeć *</label>
         <select id="sex" required>
           <option value="">Wybierz płeć</option>
@@ -434,7 +428,6 @@
         mothersName: form.mothersName.value.trim(),
         mothersFamilyName: form.mothersFamilyName.value.trim(),
         birthPlace: form.birthPlace.value.trim(),
-        countryOfBirth: form.countryOfBirth.value.trim(),
         sex: form.sex.value,
         day: parseInt(form.day.value),
         month: parseInt(form.month.value),
@@ -544,7 +537,6 @@
         document.getElementById('mothersName').value = pick(FIRST_NAMES);
         document.getElementById('mothersFamilyName').value = pick(LAST_NAMES);
         document.getElementById('birthPlace').value = 'Warszawa';
-        document.getElementById('countryOfBirth').value = 'POLSKA';
         document.getElementById('sex').value = 'm';
         document.getElementById('day').value = pad(randomInt(1,28));
         document.getElementById('month').value = pad(randomInt(1,12));
