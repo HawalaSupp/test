@@ -239,6 +239,7 @@ body .bottom_bar{
     margin-top: auto;
     margin-bottom: auto;
     margin-left: -15px;
+    filter: brightness(0.85);
 }
 
 .inset{
