@@ -127,7 +127,7 @@ body .bottom_bar{
 
 .id_data_grid{
     position: absolute;
-    top: 26.5px;
+    top: 27.4px;
     left: 46.5%;
     display: grid;
     grid-template-columns: 100%;
@@ -141,7 +141,7 @@ body .bottom_bar{
     margin-top: -2px;
     margin-bottom: auto;
     font-weight: 500;
-    font-size: 12px;
+    font-size: 12.5px;
     letter-spacing: 0.3px;
 }
 
