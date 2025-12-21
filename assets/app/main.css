@@ -193,17 +193,27 @@ img{
 }
 
 .page_top{
-    display: grid;
-    grid-template-columns: repeat(2, 50%);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-top: 20px;
+}
+
+.page_top_right{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.main_page_icon{
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 .main_page_bell{
     width: 28px;
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-left: auto;
-    margin-right: 0;
 }
 
 .main_page_logo{
