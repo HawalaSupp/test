@@ -283,7 +283,17 @@ body .bottom_bar{
     order: 100;
     margin-top: auto;
     margin-bottom: auto;
-    transition: 200ms;
+    transition: transform 0.3s ease;
+}
+
+.info_holder .action_arrow{
+    transform: rotate(90deg);
+    top: 30px;
+    bottom: auto;
+}
+
+.info_holder.unfolded .action_arrow{
+    transform: rotate(270deg);
 }
 
 .id_bottom{
@@ -357,20 +367,9 @@ body .bottom_bar{
     margin-top: -2s0px;
 }
 
-.info_holder .action_arrow{
-    transform: rotate(90deg);
-    top: 30px;
-    bottom: auto;
-    transition: transform 0.3s ease;
-}
-
 .unfolded{
     height: unset;
     max-height: 1200px;
-}
-
-.unfolded .action_arrow{
-    transform: rotate(270deg);
 }
 
 .additional_title{
