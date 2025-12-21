@@ -80,7 +80,7 @@ img{
 
 .box_top{
     color: white;
-    font-size: 15px;
+    font-size: 12px;
     margin-top: 20px;
     margin-bottom: auto;
     height: max-content;
@@ -102,7 +102,7 @@ img{
 .box_description{
     margin-top: -12px;
     margin-bottom: 10px;
-    font-size: 16px;
+    font-size: 12px;
     width: 70%;
     color: white;
 }
@@ -110,7 +110,7 @@ img{
 .box_value{
     margin-bottom: 10px;
     color: white;
-    font-size: 23px;
+    font-size: 17px;
     font-weight: 500;
     margin-top: auto;
     height: max-content;
@@ -150,7 +150,7 @@ img{
     margin-top: auto;
     margin-bottom: auto;
     color: white;
-    font-size: 18px;
+    font-size: 13px;
     font-weight: 400;
 }
 
@@ -160,11 +160,11 @@ img{
     margin-bottom: auto;
     color: white;
     font-weight: 500;
-    font-size: 23px;
+    font-size: 16px;
 }
 
 .box_highlight{
-    font-size: 31px;
+    font-size: 20px;
     font-weight: 600;
     margin-top: 0px;
 }

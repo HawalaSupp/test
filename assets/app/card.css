@@ -39,9 +39,9 @@ body .bottom_bar{
     background-color: var(--secondary);
     width: max-content;
     height: max-content;
-    padding: 15px;
-    height: 30px;
-    width: 30px;
+    padding: 12px;
+    height: 24px;
+    width: 24px;
     border-radius: 50%;
     margin-left: auto;
     margin-right: auto;
@@ -56,7 +56,7 @@ body .bottom_bar{
 }
 
 .under_image{
-    width: 30px;
+    width: 24px;
     margin-left: auto;
     margin-right: auto;
     margin-top: auto;
@@ -76,7 +76,7 @@ body .bottom_bar{
     color: white;
     opacity: 0.8;
     font-weight: 400;
-    font-size: 16px;
+    font-size: 12px;
 }
 
 .under_icon{
@@ -208,11 +208,11 @@ body .bottom_bar{
 
 .bottom_text{
     color: white;
-    font-size: 23px;
+    font-size: 14px;
     font-weight: 500;
     margin-top: auto;
     margin-bottom: auto;
-    margin-left: 17px;
+    margin-left: 12px;
 }
 
 .bottom_grid{
@@ -229,7 +229,7 @@ body .bottom_bar{
 
 .bottom_image{
     pointer-events: none;
-    width: 32px;
+    width: 22px;
     margin-top: auto;
     margin-bottom: auto;
 }
@@ -281,7 +281,7 @@ body .bottom_bar{
 .id_bottom{
     border-radius: 0px 0px 15px 15px;
     background-color: var(--secondary);
-    height: 70px;
+    height: 50px;
     z-index: 1;
     width: 100%;
     margin-left: auto;
@@ -364,7 +364,7 @@ body .bottom_bar{
 
 .additional_title{
     color: white;
-    font-size: 17px;
+    font-size: 13px;
     margin-top: 10px;
     margin-bottom: auto;
     height: max-content;
@@ -372,7 +372,7 @@ body .bottom_bar{
 
 .additional_subtitle{
     color: white;
-    font-size: 22px;
+    font-size: 16px;
     font-weight: 500;
     margin-top: 0px;
     margin-bottom: 20px;
