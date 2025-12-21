@@ -239,7 +239,7 @@ body .bottom_bar{
     margin-top: auto;
     margin-bottom: auto;
     margin-left: -15px;
-    filter: brightness(1.2) hue-rotate(30deg);
+    filter: brightness(1.2) hue-rotate(15deg);
 }
 
 .inset{
