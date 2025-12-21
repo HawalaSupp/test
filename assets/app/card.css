@@ -358,10 +358,10 @@ body .bottom_bar{
 }
 
 .info_holder .action_arrow{
-    rotate: 90deg;
+    transform: rotate(90deg);
     top: 30px;
     bottom: auto;
-    transition: rotate 0.3s ease;
+    transition: transform 0.3s ease;
 }
 
 .unfolded{
@@ -370,7 +370,7 @@ body .bottom_bar{
 }
 
 .unfolded .action_arrow{
-    rotate: -90deg;
+    transform: rotate(270deg);
 }
 
 .additional_title{
