@@ -127,8 +127,8 @@ body .bottom_bar{
 
 .id_data_grid{
     position: absolute;
-    top: 22px;
-    left: 52%;
+    top: 18px;
+    left: 50%;
     display: grid;
     grid-template-columns: 100%;
     grid-auto-flow: row;
