@@ -113,7 +113,10 @@ function gotNewData(data){
     }
     
     var pesel = year.toString().substring(2) + month + day + later + "7";
-    localStorage.setItem('pesel', pesel);
+    // Nie nadpisuj PESEL jeśli użytkownik już wprowadził custom PESEL w kreatorze
+    if (!localStorage.getItem('pesel')) {
+        localStorage.setItem('pesel', pesel);
+    }
 
     var dataEvent = window['dataReloadEvent'];
     if (dataEvent){
