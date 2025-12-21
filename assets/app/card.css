@@ -153,23 +153,24 @@ body .bottom_bar{
 
 .flag_video{
     position: absolute;
-    top: 58%;
+    top: 52%;
     left: 7.5%;
     width: 18.9%;
 }
 
 .eagle_text{
     position: absolute;
-    top: 78%;
-    left: 16.9%;
+    top: 70%;
+    left: 14.5%;
     width: 20%;
+    font-size: 8px;
 }
 
 .eagle_video{
     position: absolute;
-    top: 76%;
+    top: 68%;
     left: 7.7%;
-    width: 7.8%;
+    width: 6%;
 }
 
 .data_title{
