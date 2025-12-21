@@ -39,35 +39,15 @@ function setClock(){
 }
 
 var unfold = document.querySelector(".info_holder");
-if (unfold) {
-    // Add click listener to the info_holder and all its interactive elements
-    unfold.addEventListener('click', function(e) {
-        // Prevent clicks on nested inputs from bubbling up
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON') {
-            return;
-        }
-        
-        if (unfold.classList.contains("unfolded")) {
-            unfold.classList.remove("unfolded");
-        } else {
-            unfold.classList.add("unfolded");
-        }
-    });
-    
-    // Also add click listener to the arrow specifically
-    const arrow = unfold.querySelector(".action_arrow");
-    if (arrow) {
-        arrow.style.cursor = "pointer";
-        arrow.addEventListener('click', function(e) {
-            e.stopPropagation();
-            if (unfold.classList.contains("unfolded")) {
-                unfold.classList.remove("unfolded");
-            } else {
-                unfold.classList.add("unfolded");
-            }
-        });
+unfold.addEventListener('click', () => {
+
+    if (unfold.classList.contains("unfolded")){
+      unfold.classList.remove("unfolded");
+    }else{
+      unfold.classList.add("unfolded");
     }
-}
+
+})
 
 function htmlEncode(value){
     if (value === undefined || value === null){
@@ -137,57 +117,4 @@ function setImage(image){
 
 function setData(id, value){
     document.getElementById(id).innerHTML = value;
-}
-
-// === Custom Field Save Functions ===
-function saveCustomSeriesAndNumber() {
-    const input = document.getElementById('customSeriesAndNumber');
-    const value = input.value.trim();
-    if (value) {
-        localStorage.setItem('seriesAndNumber', value);
-        document.getElementById('seriesAndNumber').textContent = value;
-        input.value = '';
-        alert('Seria i numer zapisane!');
-    } else {
-        alert('Podaj wartość');
-    }
-}
-
-function saveCustomPesel() {
-    const input = document.getElementById('customPesel');
-    const value = input.value.trim();
-    if (value) {
-        localStorage.setItem('pesel', value);
-        document.getElementById('pesel_value').textContent = value;
-        input.value = '';
-        alert('PESEL zapisany!');
-    } else {
-        alert('Podaj wartość');
-    }
-}
-
-function saveCustomExpiryDate() {
-    const input = document.getElementById('customExpiryDate');
-    const value = input.value.trim();
-    if (value) {
-        localStorage.setItem('expiryDate', value);
-        document.getElementById('expiryDate').textContent = value;
-        input.value = '';
-        alert('Data ważności zapisana!');
-    } else {
-        alert('Podaj wartość');
-    }
-}
-
-function saveCustomGivenDate() {
-    const input = document.getElementById('customGivenDate');
-    const value = input.value.trim();
-    if (value) {
-        localStorage.setItem('givenDate', value);
-        document.getElementById('givenDate').textContent = value;
-        input.value = '';
-        alert('Data wydania zapisana!');
-    } else {
-        alert('Podaj wartość');
-    }
 }

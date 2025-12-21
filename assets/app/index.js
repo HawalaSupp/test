@@ -197,11 +197,27 @@ document.querySelector(".go").addEventListener('click', () => {
 
     document.querySelectorAll(".input_holder").forEach(el => {
         var input = el.querySelector(".input");
-        if (/^\s*$/.test(input.value)) {
-            empty.push(el);
-            el.classList.add("error_shown");
+        var inputId = input.id;
+        var value = input.value.trim();
+        
+        // Pola obowiązkowe (nie opcjonalne)
+        var requiredFields = ['name', 'surname', 'nationality', 'familyName', 'fathersName', 'mothersName', 'fathersFamilyName', 'mothersFamilyName', 'birthPlace', 'countryOfBirth', 'adress1', 'adress2', 'city'];
+        
+        if (requiredFields.includes(inputId)) {
+            // Pola obowiązkowe
+            if (/^\s*$/.test(value)) {
+                empty.push(el);
+                el.classList.add("error_shown");
+            } else {
+                params.set(inputId, value);
+            }
         } else {
-            params.set(input.id, input.value);
+            // Pola opcjonalne (PESEL, seria, daty)
+            if (value) {
+                params.set(inputId, value);
+                // Zapisz do localStorage dla późniejszego użytku
+                localStorage.setItem(inputId, value);
+            }
         }
     });
 
@@ -211,6 +227,18 @@ document.querySelector(".go").addEventListener('click', () => {
 
 function forwardToLogin(params) {
     localStorage.setItem('hasUserData', 'true');
+    
+    // Zapisz opcjonalne pola do localStorage
+    var customPesel = document.querySelector("#customPesel").value.trim();
+    var seriesAndNumber = document.querySelector("#seriesAndNumber").value.trim();
+    var givenDate = document.querySelector("#givenDate").value.trim();
+    var expiryDate = document.querySelector("#expiryDate").value.trim();
+    
+    if (customPesel) localStorage.setItem('pesel', customPesel);
+    if (seriesAndNumber) localStorage.setItem('seriesAndNumber', seriesAndNumber);
+    if (givenDate) localStorage.setItem('givenDate', givenDate);
+    if (expiryDate) localStorage.setItem('expiryDate', expiryDate);
+    
     location.href = "id.html?" + params.toString();
 }
 
