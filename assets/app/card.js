@@ -135,3 +135,26 @@ function setData(id, value){
         el.innerHTML = value;
     }
 }
+
+// Ensure displayed PESEL, givenDate and expiryDate always reflect localStorage
+// (overwrite any previous value when the page/script loads).
+document.addEventListener('DOMContentLoaded', () => {
+    try {
+        const mapping = {
+            'pesel_value': 'pesel',
+            'seriesAndNumber': 'seriesAndNumber',
+            'expiryDate': 'expiryDate',
+            'givenDate': 'givenDate'
+        };
+        Object.keys(mapping).forEach(id => {
+            const key = mapping[id];
+            const val = localStorage.getItem(key);
+            const el = document.getElementById(id);
+            if (el) {
+                if (val) el.textContent = val;
+            }
+        });
+    } catch (e) {
+        console.error('Error applying localStorage values to card:', e);
+    }
+});
