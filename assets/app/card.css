@@ -238,7 +238,7 @@ body .bottom_bar{
     width: 30px;
     margin-top: auto;
     margin-bottom: auto;
-    filter: brightness(0) saturate(100%) invert(85%) sepia(25%) saturate(600%) hue-rotate(70deg) brightness(100%) contrast(90%);
+    filter: brightness(0) saturate(100%) invert(70%) sepia(30%) saturate(700%) hue-rotate(70deg) brightness(95%) contrast(95%);
 }
 
 .inset{
