@@ -80,15 +80,14 @@ function gotNewData(data){
     birthdayDate.setMonth(month-1);
     birthdayDate.setFullYear(year);
 
+    // Zapisz datę urodzenia (pochodzącą z danych użytkownika)
     localStorage.setItem('birthDay', birthdayDate.toLocaleDateString("pl-PL", options));
 
-    var givenDate = birthdayDate;
-    givenDate.setFullYear(givenDate.getFullYear() + 18);
-    localStorage.setItem('givenDate', givenDate.toLocaleDateString("pl-PL", options));
-
-    var expiryDate = givenDate;
-    expiryDate.setFullYear(expiryDate.getFullYear() + 5);
-    localStorage.setItem('expiryDate', expiryDate.toLocaleDateString("pl-PL", options));
+    // Usunięto automatyczne generowanie dat wydania i terminu ważności
+    // oraz automatyczne generowanie PESEL — wartości te powinny pochodzić
+    // wyłącznie z pól wprowadzonych przez użytkownika w kreatorze.
+    // Jeśli użytkownik podał 'givenDate' / 'expiryDate' / 'pesel', to
+    // odpowiednie skrypty (np. creator.html / index.js) zapisują je do localStorage.
 
     var sex = data['sex'];
     
@@ -96,27 +95,9 @@ function gotNewData(data){
         month = 20 + parseInt(month);
     }
     
-    var later;
-    
-    if (sex === "m"){
-        later = "0295"
-    }else{
-        later = "0382"
-    }
-    
-    if (day < 10){
-        day = "0" + day
-    }
-    
-    if (month < 10){
-        month = "0" + month
-    }
-    
-    var pesel = year.toString().substring(2) + month + day + later + "7";
-    // Nie nadpisuj PESEL jeśli użytkownik już wprowadził custom PESEL w kreatorze
-    if (!localStorage.getItem('pesel')) {
-        localStorage.setItem('pesel', pesel);
-    }
+    // Usunięto automatyczne generowanie PESEL. PESEL powinien być ustawiony
+    // wyłącznie przez użytkownika (np. w kreatorze). Nie generujemy ani
+    // nie zapisujemy żadnego zastępczego numeru PESEL tutaj.
 
     var dataEvent = window['dataReloadEvent'];
     if (dataEvent){
