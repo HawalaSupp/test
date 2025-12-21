@@ -39,9 +39,9 @@ body .bottom_bar{
     background-color: var(--secondary);
     width: max-content;
     height: max-content;
-    padding: 12px;
-    height: 24px;
-    width: 24px;
+    padding: 16px;
+    height: 30px;
+    width: 30px;
     border-radius: 50%;
     margin-left: auto;
     margin-right: auto;
@@ -56,7 +56,7 @@ body .bottom_bar{
 }
 
 .under_image{
-    width: 24px;
+    width: 30px;
     margin-left: auto;
     margin-right: auto;
     margin-top: auto;
@@ -76,7 +76,7 @@ body .bottom_bar{
     color: white;
     opacity: 0.8;
     font-weight: 400;
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .under_icon{
@@ -140,7 +140,7 @@ body .bottom_bar{
     margin-top: -2px;
     margin-bottom: auto;
     font-weight: 500;
-    font-size: 10px;
+    font-size: 12px;
 }
 
 .data_holder{
@@ -160,7 +160,7 @@ body .bottom_bar{
 
 .eagle_text{
     position: absolute;
-    top: 74%;
+    top: 78%;
     left: 15.5%;
     width: 20%;
     font-size: 9px;
@@ -168,14 +168,14 @@ body .bottom_bar{
 
 .eagle_video{
     position: absolute;
-    top: 72%;
+    top: 66%;
     left: 7.7%;
-    width: 7%;
+    width: 9%;
 }
 
 .data_title{
-    font-weight: 450;
-    font-size: 17px;
+    font-weight: 500;
+    font-size: 19px;
     height: max-content;
     margin-top: auto;
     margin-bottom: 0px;
