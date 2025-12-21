@@ -88,7 +88,6 @@ function loadReadyData(result){
     setData("mothersFamilyName", result['mothersFamilyName'].toUpperCase());
     setData("birthPlace", result['birthPlace'].toUpperCase());
     setData("countryOfBirth", result['countryOfBirth'].toUpperCase());
-    setData("adress", ("ul. " + result['address1'] + "<br>" + result['address2'] + " " + result['city']).toUpperCase());
     
     setData('givenDate', localStorage.getItem('givenDate'));
     setData('expiryDate', localStorage.getItem('expiryDate'));
@@ -98,21 +97,6 @@ function loadReadyData(result){
     console.log('givenDate z localStorage:', localStorage.getItem('givenDate'));
     console.log('expiryDate z localStorage:', localStorage.getItem('expiryDate'));
     console.log('seriesAndNumber z localStorage:', localStorage.getItem('seriesAndNumber'));
-
-    if (!localStorage.getItem("homeDate")){
-      var homeDay = getRandom(1, 25);
-      var homeMonth = getRandom(0, 12);
-      var homeYear = getRandom(2012, 2019);
-    
-      var homeDate = new Date();
-      homeDate.setDate(homeDay);
-      homeDate.setMonth(homeMonth);
-      homeDate.setFullYear(homeYear)
-    
-      localStorage.setItem("homeDate", homeDate.toLocaleDateString("pl-PL", options))
-    }
-    
-    document.querySelector(".home_date").innerHTML = localStorage.getItem("homeDate");
 
     // Pobierz i wyświetl PESEL - waż niż cokolwiek innego
     const peselValue = localStorage.getItem('pesel');

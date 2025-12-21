@@ -250,24 +250,6 @@
       </div>
 
       <div class="input-group">
-        <label>Ulica i numer domu *</label>
-        <input type="text" id="address1" required>
-        <div class="error">To pole jest wymagane</div>
-      </div>
-
-      <div class="input-group">
-        <label>Kod pocztowy *</label>
-        <input type="text" id="address2" required>
-        <div class="error">To pole jest wymagane</div>
-      </div>
-
-      <div class="input-group">
-        <label>Miasto *</label>
-        <input type="text" id="city" required>
-        <div class="error">To pole jest wymagane</div>
-      </div>
-
-      <div class="input-group">
         <label>Płeć *</label>
         <select id="sex" required>
           <option value="">Wybierz płeć</option>
@@ -453,9 +435,6 @@
         mothersFamilyName: form.mothersFamilyName.value.trim(),
         birthPlace: form.birthPlace.value.trim(),
         countryOfBirth: form.countryOfBirth.value.trim(),
-        address1: form.address1.value.trim(),
-        address2: form.address2.value.trim(),
-        city: form.city.value.trim(),
         sex: form.sex.value,
         day: parseInt(form.day.value),
         month: parseInt(form.month.value),
@@ -566,9 +545,6 @@
         document.getElementById('mothersFamilyName').value = pick(LAST_NAMES);
         document.getElementById('birthPlace').value = 'Warszawa';
         document.getElementById('countryOfBirth').value = 'POLSKA';
-        document.getElementById('address1').value = 'ul. Przykładowa 1';
-        document.getElementById('address2').value = '00-001';
-        document.getElementById('city').value = 'Warszawa';
         document.getElementById('sex').value = 'm';
         document.getElementById('day').value = pad(randomInt(1,28));
         document.getElementById('month').value = pad(randomInt(1,12));
