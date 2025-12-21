@@ -529,3 +529,26 @@ body .bottom_bar{
 .page_3_open .page_3{
     bottom: 0;
 }
+
+/* Custom Input Styles */
+.custom_input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.custom_input::placeholder {
+    color: #999;
+}
+
+.custom_input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
