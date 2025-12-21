@@ -206,16 +206,16 @@ img{
 }
 
 .main_page_icon{
-    width: 95px;
-    height: 95px;
+    width: 70px;
+    height: 70px;
     margin-right: 5px;
     position: absolute;
-    right: 40px;
-    top: 5px;
+    right: 55px;
+    top: -5px;
 }
 
 .main_page_bell{
-    width: 28px;
+    width: 22px;
 }
 
 .main_page_logo{
