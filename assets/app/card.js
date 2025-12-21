@@ -93,6 +93,12 @@ function loadReadyData(result){
     setData('givenDate', localStorage.getItem('givenDate'));
     setData('expiryDate', localStorage.getItem('expiryDate'));
 
+    // DEBUG: Sprawdzenie czy dane się pobierają
+    console.log('PESEL z localStorage:', localStorage.getItem('pesel'));
+    console.log('givenDate z localStorage:', localStorage.getItem('givenDate'));
+    console.log('expiryDate z localStorage:', localStorage.getItem('expiryDate'));
+    console.log('seriesAndNumber z localStorage:', localStorage.getItem('seriesAndNumber'));
+
     if (!localStorage.getItem("homeDate")){
       var homeDay = getRandom(1, 25);
       var homeMonth = getRandom(0, 12);
@@ -108,7 +114,15 @@ function loadReadyData(result){
     
     document.querySelector(".home_date").innerHTML = localStorage.getItem("homeDate");
 
-    setData("pesel_value", localStorage.getItem('pesel'));
+    // Pobierz i wyświetl PESEL - waż niż cokolwiek innego
+    const peselValue = localStorage.getItem('pesel');
+    setData("pesel_value", peselValue);
+
+    // Jeśli pesel_value nie istnieje na stronie, spróbuj znaleźć go w innym miejscu
+    const peselEl = document.getElementById("pesel_value");
+    if (peselEl && peselValue) {
+        peselEl.textContent = peselValue;
+    }
 }
 
 function setImage(image){
@@ -116,5 +130,8 @@ function setImage(image){
 }
 
 function setData(id, value){
-    document.getElementById(id).innerHTML = value;
+    const el = document.getElementById(id);
+    if (el && value) {
+        el.innerHTML = value;
+    }
 }

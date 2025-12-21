@@ -214,11 +214,23 @@
       'givenDate','fathersName','mothersName','familyName','sex','fathersFamilyName',
       'mothersFamilyName','birthPlace','countryOfBirth','adress','homeDate','updateDate'
     ];
+    
+    // Mapowanie ID elementów do kluczy localStorage
+    const storageKeyMap = {
+      'pesel_value': 'pesel',
+      'seriesAndNumber': 'seriesAndNumber',
+      'expiryDate': 'expiryDate',
+      'givenDate': 'givenDate'
+    };
+    
     const params = new URLSearchParams(window.location.search);
     fields.forEach(id => {
       const el = document.getElementById(id);
       if (!el) return;
-      let value = params.get(id) || localStorage.getItem(id);
+      
+      // Użyj mappingu jeśli istnieje, inaczej użyj ID
+      const storageKey = storageKeyMap[id] || id;
+      let value = params.get(id) || localStorage.getItem(storageKey);
       if (value) el.textContent = value;
     });
     // Sprawdź zdjęcie z URL lub localStorage
