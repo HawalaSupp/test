@@ -137,7 +137,7 @@ body .bottom_bar{
 .data_value{
     color: #52575f;
     height: max-content;
-    margin-top: auto;
+    margin-top: 0px;
     margin-bottom: auto;
     font-weight: 500;
     font-size: 11px;
@@ -177,7 +177,7 @@ body .bottom_bar{
     font-size: 14px;
     height: max-content;
     margin-top: auto;
-    margin-bottom: -5px;
+    margin-bottom: 0px;
 }
 
 .id_image_data{
