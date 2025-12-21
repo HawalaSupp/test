@@ -36,7 +36,7 @@ function sendTo(url, top, bottom){
     document.body.classList.add('fade-out');
     setTimeout(() => {
         location.href = `${url}?` + params;
-    }, 150);
+    }, 100);
 }
 
 var options = { year: 'numeric', month: '2-digit', day: '2-digit' };
