@@ -148,7 +148,15 @@ async function loadData() {
     }
 }
 
-loadImage();
+// Wait for imageReloadEvent to be available before loading image
+(function waitForImageEvent() {
+    if (window['imageReloadEvent']) {
+        loadImage();
+    } else {
+        setTimeout(waitForImageEvent, 50);
+    }
+})();
+
 async function loadImage() {
     var db = await getDb();
     var image = await getData(db, 'image');
@@ -167,8 +175,20 @@ async function loadImage() {
             image: imageUrl
         };
         saveData(db, imageData);
-    } else if (image && imageEvent) {
-        imageEvent(image.image);
+    } else if (image && image.image) {
+        console.log('Loading image from IndexedDB via bar.js, image length:', image.image ? image.image.length : 0);
+        if (imageEvent) {
+            imageEvent(image.image);
+        } else {
+            // Fallback: set image directly if event not available
+            setTimeout(() => {
+                const photoEl = document.querySelector('.id_own_image');
+                if (photoEl && image.image) {
+                    photoEl.style.backgroundImage = `url(${image.image})`;
+                    console.log('Image set directly via fallback');
+                }
+            }, 100);
+        }
     } else {
         // Fallback - próba pobrania z serwera
         try {
