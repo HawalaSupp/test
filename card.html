@@ -23,7 +23,7 @@
       <p onclick="sendTo('documents.html')" class="back_text_fixed">Dokumenty</p>
     </div>
     <p class="title_text_fixed">mDowód</p>
-    <img src="assets/app/images/help.png" class="help_img_fixed" id="helpIconBtn" alt="" style="cursor: pointer; pointer-events: auto !important; z-index: 1000; position: relative;" onclick="alert('Help clicked!')">
+    <img src="assets/app/images/help.png" class="help_img_fixed" id="helpIconBtn" alt="" style="cursor: pointer; pointer-events: auto !important; z-index: 1000; position: relative;">
   </div>
 
   <div class="bottom_bar">
@@ -412,8 +412,8 @@
         // Apply saved transform
         bgImage.style.transform = `translate(${xOffset}px, ${yOffset}px) scaleX(${currentWidth / 100}) scaleY(${currentHeight / 100})`;
 
-        // Toggle function
-        function toggleDrag() {
+        // Toggle function - make it globally accessible
+        window.toggleEagleDrag = function() {
           isDraggable = !isDraggable;
           console.log('Toggle drag:', isDraggable);
           
@@ -431,17 +431,27 @@
             localStorage.setItem('bgImageWidth', currentWidth);
             localStorage.setItem('bgImageHeight', currentHeight);
           }
-        }
+        };
 
-        // Attach click handler directly
+        // Attach click handler multiple ways
         helpIcon.onclick = function(e) {
           e.preventDefault();
           e.stopPropagation();
-          toggleDrag();
+          window.toggleEagleDrag();
         };
-        helpIcon.addEventListener('click', toggleDrag, true);
+        helpIcon.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          window.toggleEagleDrag();
+        }, true);
+        helpIcon.addEventListener('mousedown', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          window.toggleEagleDrag();
+        }, true);
         helpIcon.style.cursor = 'pointer';
         helpIcon.style.pointerEvents = 'auto';
+        helpIcon.style.zIndex = '10000';
 
         // Drag handlers
         bgImage.addEventListener('mousedown', function(e) {
