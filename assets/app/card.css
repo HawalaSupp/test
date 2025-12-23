@@ -169,6 +169,7 @@ body .bottom_bar{
     top: 52.2%;
     left: 4%;
     width: 16.9%;
+    filter: saturate(1.3);
 }
 
 .eagle_text{
@@ -183,7 +184,7 @@ body .bottom_bar{
 .eagle_wrapper{
     position: absolute;
     top: 69.6%;
-    left: 5.5%;
+    left: 4%;
     width: 7.8%;
     overflow: hidden;
 }
