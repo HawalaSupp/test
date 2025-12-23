@@ -251,6 +251,7 @@ img{
     width: 15px;
     margin-top: auto;
     margin-bottom: auto;
+    filter: brightness(0) saturate(100%) invert(58%) sepia(98%) saturate(1234%) hue-rotate(180deg) brightness(105%) contrast(100%);
 }
 
 .back_text_fixed{
@@ -258,7 +259,7 @@ img{
     font-weight: 400;
     font-size: 22px;
     height: max-content;
-    margin-top: 5px;
+    margin-top: auto;
     margin-bottom: auto;
     margin-left: 10px;
 }
