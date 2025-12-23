@@ -3,10 +3,6 @@ var confirmElement = document.querySelector(".confirm");
 
 var time = document.getElementById("time");
 
-if (localStorage.getItem("update") == null){
-    localStorage.setItem("update", "24.12.2024")
-}
-
 var date = new Date();
 
 var dataReloadEvent = (data) => {
@@ -18,7 +14,12 @@ var imageReloadEvent = (image) => {
 }
 
 var updateText = document.querySelector(".bottom_update_value");
-updateText.innerHTML = localStorage.getItem("update");
+// Always show current date
+var options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+var optionsTime = { second: '2-digit', minute: '2-digit', hour: '2-digit' };
+var currentDate = date.toLocaleDateString("pl-PL", options);
+updateText.innerHTML = currentDate;
+localStorage.setItem("update", currentDate);
 
 var update = document.querySelector(".update");
 update.addEventListener('click', () => {
