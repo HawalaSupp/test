@@ -386,9 +386,24 @@
       let widthValue = null;
       let heightValue = null;
 
+      // Eagle draggable state
+      let eagleDraggable = false;
+      let eagleDragging = false;
+      let eagleXOffset = 0;
+      let eagleYOffset = 0;
+      let eagleInitialX = 0;
+      let eagleInitialY = 0;
+      let eagleWrapper = null;
+
       function updateTransform() {
         if (bgImage) {
           bgImage.style.transform = `translate(${xOffset}px, ${yOffset}px) scaleX(${currentWidth / 100}) scaleY(${currentHeight / 100})`;
+        }
+      }
+
+      function updateEagleTransform() {
+        if (eagleWrapper) {
+          eagleWrapper.style.transform = `translate(${eagleXOffset}px, ${eagleYOffset}px)`;
         }
       }
 
@@ -400,8 +415,9 @@
         heightSlider = document.getElementById('heightSlider');
         widthValue = document.getElementById('widthValue');
         heightValue = document.getElementById('heightValue');
+        eagleWrapper = document.querySelector('.eagle_wrapper');
 
-        if (!bgImage || !helpIcon || !controlsDiv) {
+        if (!bgImage || !helpIcon || !controlsDiv || !eagleWrapper) {
           console.log('Waiting for elements...');
           setTimeout(setupDraggable, 200);
           return;
@@ -409,7 +425,7 @@
 
         console.log('Setting up draggable functionality');
 
-        // Load saved values
+        // Load saved values for background
         const savedX = localStorage.getItem('bgImageX');
         const savedY = localStorage.getItem('bgImageY');
         const savedWidth = localStorage.getItem('bgImageWidth');
@@ -428,35 +444,40 @@
           if (heightValue) heightValue.textContent = Math.round(currentHeight);
         }
 
-        // Apply saved transform
+        // Load saved values for eagle
+        const savedEagleX = localStorage.getItem('eagleX');
+        const savedEagleY = localStorage.getItem('eagleY');
+        if (savedEagleX !== null) eagleXOffset = parseFloat(savedEagleX);
+        if (savedEagleY !== null) eagleYOffset = parseFloat(savedEagleY);
+
+        // Apply saved transforms
         updateTransform();
+        updateEagleTransform();
 
         // Toggle function - make it globally accessible
         window.toggleEagleDrag = function() {
-          if (!bgImage || !controlsDiv) {
+          if (!eagleWrapper || !controlsDiv) {
             console.log('Elements not ready, calling setup...');
             setupDraggable();
             setTimeout(() => window.toggleEagleDrag(), 100);
             return;
           }
           
-          isDraggable = !isDraggable;
-          console.log('Toggle drag:', isDraggable);
+          eagleDraggable = !eagleDraggable;
+          console.log('Toggle eagle drag:', eagleDraggable);
           
-          if (isDraggable) {
-            bgImage.style.pointerEvents = 'auto';
-            bgImage.style.cursor = 'move';
+          if (eagleDraggable) {
+            eagleWrapper.style.pointerEvents = 'auto';
+            eagleWrapper.style.cursor = 'move';
             controlsDiv.style.display = 'block';
-            updateTransform();
+            updateEagleTransform();
           } else {
-            bgImage.style.pointerEvents = 'none';
-            bgImage.style.cursor = 'default';
+            eagleWrapper.style.pointerEvents = 'none';
+            eagleWrapper.style.cursor = 'default';
             controlsDiv.style.display = 'none';
-            isDragging = false;
-            localStorage.setItem('bgImageX', xOffset);
-            localStorage.setItem('bgImageY', yOffset);
-            localStorage.setItem('bgImageWidth', currentWidth);
-            localStorage.setItem('bgImageHeight', currentHeight);
+            eagleDragging = false;
+            localStorage.setItem('eagleX', eagleXOffset);
+            localStorage.setItem('eagleY', eagleYOffset);
           }
         };
 
@@ -475,68 +496,53 @@
         helpIcon.style.pointerEvents = 'auto';
         helpIcon.style.zIndex = '10000';
 
-        // Drag handlers
-        bgImage.addEventListener('mousedown', function(e) {
-          if (!isDraggable) return;
+        // Eagle drag handlers
+        eagleWrapper.addEventListener('mousedown', function(e) {
+          if (!eagleDraggable) return;
           e.preventDefault();
-          initialX = e.clientX - xOffset;
-          initialY = e.clientY - yOffset;
-          isDragging = true;
+          e.stopPropagation();
+          eagleInitialX = e.clientX - eagleXOffset;
+          eagleInitialY = e.clientY - eagleYOffset;
+          eagleDragging = true;
         });
 
         document.addEventListener('mousemove', function(e) {
-          if (isDragging && isDraggable) {
+          if (eagleDragging && eagleDraggable) {
             e.preventDefault();
-            xOffset = e.clientX - initialX;
-            yOffset = e.clientY - initialY;
-            updateTransform();
+            eagleXOffset = e.clientX - eagleInitialX;
+            eagleYOffset = e.clientY - eagleInitialY;
+            updateEagleTransform();
           }
         });
 
         document.addEventListener('mouseup', function() {
-          isDragging = false;
+          eagleDragging = false;
         });
 
-        // Touch handlers
-        bgImage.addEventListener('touchstart', function(e) {
-          if (!isDraggable) return;
+        // Eagle touch handlers
+        eagleWrapper.addEventListener('touchstart', function(e) {
+          if (!eagleDraggable) return;
           e.preventDefault();
+          e.stopPropagation();
           const touch = e.touches[0];
-          initialX = touch.clientX - xOffset;
-          initialY = touch.clientY - yOffset;
-          isDragging = true;
+          eagleInitialX = touch.clientX - eagleXOffset;
+          eagleInitialY = touch.clientY - eagleYOffset;
+          eagleDragging = true;
         });
 
         document.addEventListener('touchmove', function(e) {
-          if (isDragging && isDraggable) {
+          if (eagleDragging && eagleDraggable) {
             e.preventDefault();
             const touch = e.touches[0];
-            xOffset = touch.clientX - initialX;
-            yOffset = touch.clientY - initialY;
-            updateTransform();
+            eagleXOffset = touch.clientX - eagleInitialX;
+            eagleYOffset = touch.clientY - eagleInitialY;
+            updateEagleTransform();
           }
         });
 
         document.addEventListener('touchend', function() {
-          isDragging = false;
+          eagleDragging = false;
         });
-
-        // Slider handlers
-        if (widthSlider) {
-          widthSlider.addEventListener('input', function(e) {
-            currentWidth = parseFloat(e.target.value);
-            if (widthValue) widthValue.textContent = Math.round(currentWidth);
-            updateTransform();
-          });
-        }
-
-        if (heightSlider) {
-          heightSlider.addEventListener('input', function(e) {
-            currentHeight = parseFloat(e.target.value);
-            if (heightValue) heightValue.textContent = Math.round(currentHeight);
-            updateTransform();
-          });
-        }
       }
 
       // Start setup
