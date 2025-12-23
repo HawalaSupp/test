@@ -199,7 +199,6 @@
     </div>
   </div>
 
-  <script src="assets/app/encode.js"></script>
   <script src="assets/app/bar.js"></script>
   <script src="assets/app/card.js"></script>
   <script src="assets/app/manifest.js"></script>
@@ -252,7 +251,8 @@
       'givenDate': 'givenDate'
     };
     
-    const params = new URLSearchParams(window.location.search);
+    // Declare params in global scope
+    var params = new URLSearchParams(window.location.search);
     fields.forEach(id => {
       const el = document.getElementById(id);
       if (!el) return;
@@ -294,7 +294,8 @@
         }
 
         // Load image from IndexedDB
-        const photoUrl = params.get('image');
+        const urlParams = new URLSearchParams(window.location.search);
+        const photoUrl = urlParams.get('image');
         if (photoUrl) {
           // Use setImage function from card.js if available, otherwise set directly
           if (typeof setImage === 'function') {
