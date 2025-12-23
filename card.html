@@ -200,6 +200,31 @@
   <script src="assets/app/cache.js"></script>
 
   <script>
+    // === IndexedDB Functions ===
+    function getDb(){
+      return new Promise((resolve, reject) => {
+        const r = indexedDB.open('fobywatel', 1);
+        r.onupgradeneeded = e => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains('data')){
+            db.createObjectStore('data', { keyPath: 'data' });
+          }
+        };
+        r.onsuccess = e => resolve(e.target.result);
+        r.onerror = e => reject(e.target.error);
+      });
+    }
+
+    function getData(db, key){
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction('data','readonly');
+        const store = tx.objectStore('data');
+        const req = store.get(key);
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = e => reject(e.target.error);
+      });
+    }
+
     // === Wczytywanie danych z localStorage lub URL ===
     const fields = [
       'name','surname','nationality','birthday','pesel_value','seriesAndNumber','expiryDate',
@@ -225,10 +250,36 @@
       let value = params.get(id) || localStorage.getItem(storageKey);
       if (value) el.textContent = value;
     });
-    // Sprawdź zdjęcie z URL lub localStorage
-    const photoUrl = params.get('image');
-    const photo = photoUrl || localStorage.getItem('userPhoto');
-    if (photo) document.getElementById('userPhoto').style.backgroundImage = `url(${photo})`;
+
+    // === Load image from IndexedDB, URL, or localStorage ===
+    async function loadUserImage() {
+      const photoUrl = params.get('image');
+      if (photoUrl) {
+        document.getElementById('userPhoto').style.backgroundImage = `url(${photoUrl})`;
+        return;
+      }
+
+      // Try localStorage first (for backward compatibility)
+      const photoFromLocalStorage = localStorage.getItem('userPhoto');
+      if (photoFromLocalStorage) {
+        document.getElementById('userPhoto').style.backgroundImage = `url(${photoFromLocalStorage})`;
+        return;
+      }
+
+      // Load from IndexedDB
+      try {
+        const db = await getDb();
+        const imageData = await getData(db, 'image');
+        if (imageData && imageData.image) {
+          document.getElementById('userPhoto').style.backgroundImage = `url(${imageData.image})`;
+        }
+      } catch (error) {
+        console.error('Error loading image from IndexedDB:', error);
+      }
+    }
+
+    // Load image when page loads
+    loadUserImage();
   </script>
 
   <!-- Hard Refresh Button -->
