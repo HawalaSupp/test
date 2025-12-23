@@ -191,7 +191,7 @@ body .bottom_bar{
     position: absolute;
     top: 69.6%;
     left: 4%;
-    width: 7%;
+    width: 7.8%;
     overflow: hidden;
 }
 
@@ -200,9 +200,11 @@ body .bottom_bar{
     height: auto;
     display: block;
     animation: hologramWave 12s ease-in-out infinite;
-    filter: brightness(1.4) opacity(0.8) grayscale(75%) contrast(1.1);
+    filter: brightness(1.4) opacity(0.85) grayscale(70%) contrast(1.3);
     transform: scaleX(1.0);
     object-fit: contain;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
 }
 
 .hologram_shine{
@@ -220,25 +222,25 @@ body .bottom_bar{
 
 @keyframes hologramWave {
     0%, 30% {
-        filter: brightness(1.4) opacity(0.8) grayscale(75%) contrast(1.1) hue-rotate(0deg) saturate(1.2);
+        filter: brightness(1.4) opacity(0.85) grayscale(70%) contrast(1.3) hue-rotate(0deg) saturate(1.2);
     }
     35% {
-        filter: brightness(1.5) opacity(0.85) grayscale(75%) contrast(1.15) hue-rotate(60deg) saturate(1.4);
+        filter: brightness(1.5) opacity(0.88) grayscale(70%) contrast(1.35) hue-rotate(60deg) saturate(1.4);
     }
     40% {
-        filter: brightness(1.6) opacity(0.9) grayscale(75%) contrast(1.2) hue-rotate(120deg) saturate(1.6);
+        filter: brightness(1.6) opacity(0.9) grayscale(70%) contrast(1.4) hue-rotate(120deg) saturate(1.6);
     }
     45% {
-        filter: brightness(1.65) opacity(0.92) grayscale(75%) contrast(1.25) hue-rotate(180deg) saturate(1.8);
+        filter: brightness(1.65) opacity(0.92) grayscale(70%) contrast(1.45) hue-rotate(180deg) saturate(1.8);
     }
     50% {
-        filter: brightness(1.6) opacity(0.9) grayscale(75%) contrast(1.2) hue-rotate(240deg) saturate(1.6);
+        filter: brightness(1.6) opacity(0.9) grayscale(70%) contrast(1.4) hue-rotate(240deg) saturate(1.6);
     }
     55% {
-        filter: brightness(1.5) opacity(0.85) grayscale(75%) contrast(1.15) hue-rotate(300deg) saturate(1.4);
+        filter: brightness(1.5) opacity(0.88) grayscale(70%) contrast(1.35) hue-rotate(300deg) saturate(1.4);
     }
     60%, 100% {
-        filter: brightness(1.4) opacity(0.8) grayscale(75%) contrast(1.1) hue-rotate(0deg) saturate(1.2);
+        filter: brightness(1.4) opacity(0.85) grayscale(70%) contrast(1.3) hue-rotate(0deg) saturate(1.2);
     }
 }
 
