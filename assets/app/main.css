@@ -248,7 +248,7 @@ img{
 }
 
 .back_img_fixed{
-    width: 15px;
+    width: 18px;
     margin-top: auto;
     margin-bottom: auto;
     filter: brightness(0) saturate(100%) invert(58%) sepia(98%) saturate(1234%) hue-rotate(180deg) brightness(105%) contrast(100%);
