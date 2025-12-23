@@ -594,6 +594,16 @@ img{
     border-radius: 0;
 }
 
+.action_box_connected .action_box:first-child{
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.action_box_connected .action_box:last-child{
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
 .action_box_connected .action_box_text{
     margin-left: 0;
 }
@@ -604,10 +614,14 @@ img{
 
 .delete_action{
     width: 100%;
+    margin-top: 30px;
 }
 
 .delete_action .action_box{
-    width: 100%;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 20px;
 }
 
 .delete_action .action_box_text{
@@ -615,7 +629,7 @@ img{
 }
 
 .delete_action .action_image{
-    filter: brightness(0) saturate(100%) invert(58%) sepia(95%) saturate(2000%) hue-rotate(340deg) brightness(115%) contrast(100%);
+    filter: none;
 }
 
 .action_box_connected .action_box:nth-child(2) .action_image{
