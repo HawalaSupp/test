@@ -185,7 +185,7 @@ body .bottom_bar{
     position: absolute;
     top: 69.6%;
     left: 4%;
-    width: 7.8%;
+    width: 9%;
     overflow: hidden;
 }
 
@@ -194,7 +194,7 @@ body .bottom_bar{
     height: auto;
     display: block;
     animation: hologramShine 18s ease-in-out infinite;
-    filter: brightness(1.1);
+    filter: brightness(1.3);
 }
 
 .hologram_shine{
