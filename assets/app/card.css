@@ -151,7 +151,7 @@ body .bottom_bar{
     margin-top: -2px;
     margin-bottom: auto;
     font-weight: 500;
-    font-size: 12px;
+    font-size: 14px;
     letter-spacing: -0.3px;
 }
 
@@ -188,8 +188,8 @@ body .bottom_bar{
 }
 
 .data_title{
-    font-weight: 530;
-    font-size: 19.5px;
+    font-weight: 500;
+    font-size: 20.5px;
     height: max-content;
     margin-top: auto;
     margin-bottom: 0px;
