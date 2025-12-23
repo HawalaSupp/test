@@ -193,7 +193,7 @@ body .bottom_bar{
     width: 100%;
     height: auto;
     display: block;
-    animation: hologramShine 18s ease-in-out infinite;
+    animation: hologramWave 20s ease-in-out infinite;
     filter: brightness(1.3) opacity(0.75);
 }
 
@@ -210,24 +210,27 @@ body .bottom_bar{
     }
 }
 
-@keyframes hologramShine {
-    0%, 100% {
+@keyframes hologramWave {
+    0%, 30% {
         filter: brightness(1.3) opacity(0.75) hue-rotate(0deg) saturate(1);
     }
-    16.66% {
+    35% {
         filter: brightness(1.35) opacity(0.78) hue-rotate(60deg) saturate(1.1);
     }
-    33.33% {
+    40% {
         filter: brightness(1.4) opacity(0.8) hue-rotate(120deg) saturate(1.2);
     }
-    50% {
+    45% {
         filter: brightness(1.45) opacity(0.82) hue-rotate(180deg) saturate(1.3);
     }
-    66.66% {
+    50% {
         filter: brightness(1.4) opacity(0.8) hue-rotate(240deg) saturate(1.2);
     }
-    83.33% {
+    55% {
         filter: brightness(1.35) opacity(0.78) hue-rotate(300deg) saturate(1.1);
+    }
+    60%, 100% {
+        filter: brightness(1.3) opacity(0.75) hue-rotate(0deg) saturate(1);
     }
 }
 
