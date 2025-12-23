@@ -281,6 +281,7 @@ img{
     margin-top: 5px;
     margin-bottom: auto;
     cursor: pointer;
+    pointer-events: auto !important;
 }
 
 .main_button{
