@@ -602,12 +602,24 @@ img{
     margin-right: 0;
 }
 
+.delete_action{
+    width: 100%;
+}
+
+.delete_action .action_box{
+    width: 100%;
+}
+
 .delete_action .action_box_text{
     color: #ff6b6b;
 }
 
 .delete_action .action_image{
-    filter: brightness(0) saturate(100%) invert(65%) sepia(85%) saturate(1500%) hue-rotate(340deg) brightness(120%) contrast(100%);
+    filter: brightness(0) saturate(100%) invert(58%) sepia(95%) saturate(2000%) hue-rotate(340deg) brightness(115%) contrast(100%);
+}
+
+.action_box_connected .action_box:nth-child(2) .action_image{
+    filter: brightness(0) invert(1);
 }
 
 .frame_qr{
