@@ -106,7 +106,7 @@ img{
     margin-left: auto;
     margin-right: auto;
     height: max-content;
-    background-color: var(--secondary);
+    background-color: #1F2329;
     border-radius: 15px;
     display: grid;
     grid-template-columns: 100%;
@@ -398,7 +398,7 @@ img{
 
 .bottom_bar{
     position: fixed;
-    background-color: var(--secondary);
+    background-color: #2B2C30;
     border-top: var(--gray);
     bottom: 0;
     left: 0;
