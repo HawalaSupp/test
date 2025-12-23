@@ -517,6 +517,35 @@
         }
       }
 
+      // Make toggle function available immediately (before setup)
+      window.toggleEagleDrag = function() {
+        const bgImage = document.getElementById('bgImage');
+        const controlsDiv = document.getElementById('bg_image_controls');
+        if (!bgImage || !controlsDiv) {
+          console.log('Elements not ready, calling setup...');
+          setupDraggable();
+          setTimeout(() => window.toggleEagleDrag(), 100);
+          return;
+        }
+        isDraggable = !isDraggable;
+        console.log('Toggle drag:', isDraggable);
+        
+        if (isDraggable) {
+          bgImage.style.pointerEvents = 'auto';
+          bgImage.style.cursor = 'move';
+          controlsDiv.style.display = 'block';
+        } else {
+          bgImage.style.pointerEvents = 'none';
+          bgImage.style.cursor = 'default';
+          controlsDiv.style.display = 'none';
+          isDragging = false;
+          localStorage.setItem('bgImageX', xOffset);
+          localStorage.setItem('bgImageY', yOffset);
+          localStorage.setItem('bgImageWidth', currentWidth);
+          localStorage.setItem('bgImageHeight', currentHeight);
+        }
+      };
+
       // Start setup
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', setupDraggable);
