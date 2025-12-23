@@ -413,14 +413,18 @@
       // Apply saved transform
       bgImage.style.transform = `translate(${xOffset}px, ${yOffset}px) scaleX(${currentWidth / 100}) scaleY(${currentHeight / 100})`;
 
-      // Help icon click handler
+      // Help icon click handler - use capture phase and multiple event types
       console.log('Help icon found:', helpIcon);
       helpIcon.style.cursor = 'pointer';
       helpIcon.style.pointerEvents = 'auto';
+      helpIcon.style.zIndex = '1000';
+      helpIcon.style.position = 'relative';
       
-      helpIcon.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
+      function toggleDraggable(e) {
+        if (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
         console.log('Help icon clicked! isDraggable:', isDraggable);
         isDraggable = !isDraggable;
         
@@ -444,7 +448,15 @@
           localStorage.setItem('bgImageHeight', currentHeight);
           console.log('Dragging disabled, sliders hidden');
         }
-      });
+      }
+      
+      // Add multiple event listeners
+      helpIcon.addEventListener('click', toggleDraggable, true);
+      helpIcon.addEventListener('mousedown', toggleDraggable, true);
+      helpIcon.addEventListener('touchstart', toggleDraggable, true);
+      
+      // Also set onclick as fallback
+      helpIcon.onclick = toggleDraggable;
 
       // Mouse events for dragging
       bgImage.addEventListener('mousedown', (e) => {
