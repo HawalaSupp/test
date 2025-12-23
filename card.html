@@ -251,35 +251,69 @@
       if (value) el.textContent = value;
     });
 
-    // === Load image from IndexedDB, URL, or localStorage ===
-    async function loadUserImage() {
-      const photoUrl = params.get('image');
-      if (photoUrl) {
-        document.getElementById('userPhoto').style.backgroundImage = `url(${photoUrl})`;
-        return;
-      }
-
-      // Try localStorage first (for backward compatibility)
-      const photoFromLocalStorage = localStorage.getItem('userPhoto');
-      if (photoFromLocalStorage) {
-        document.getElementById('userPhoto').style.backgroundImage = `url(${photoFromLocalStorage})`;
-        return;
-      }
-
-      // Load from IndexedDB
+    // === Load data and image from IndexedDB ===
+    async function loadUserData() {
       try {
         const db = await getDb();
+        
+        // Load user data from IndexedDB
+        const userData = await getData(db, 'data');
+        if (userData) {
+          // Set form fields from IndexedDB data
+          if (userData.name) setData('name', userData.name.toUpperCase());
+          if (userData.surname) setData('surname', userData.surname.toUpperCase());
+          if (userData.nationality) setData('nationality', userData.nationality.toUpperCase());
+          if (userData.familyName) setData('familyName', userData.familyName.toUpperCase());
+          if (userData.fathersName) setData('fathersName', userData.fathersName.toUpperCase());
+          if (userData.fathersFamilyName) setData('fathersFamilyName', userData.fathersFamilyName.toUpperCase());
+          if (userData.mothersName) setData('mothersName', userData.mothersName.toUpperCase());
+          if (userData.mothersFamilyName) setData('mothersFamilyName', userData.mothersFamilyName.toUpperCase());
+          if (userData.birthPlace) setData('birthPlace', userData.birthPlace.toUpperCase());
+          
+          if (userData.sex === 'm') setData('sex', 'MĘŻCZYZNA');
+          else if (userData.sex === 'k') setData('sex', 'KOBIETA');
+          
+          // Format birthday
+          if (userData.day && userData.month && userData.year) {
+            const day = String(userData.day).padStart(2, '0');
+            const month = String(userData.month).padStart(2, '0');
+            setData('birthday', `${day}.${month}.${userData.year}`);
+          }
+        }
+
+        // Load image from IndexedDB
+        const photoUrl = params.get('image');
+        if (photoUrl) {
+          document.getElementById('userPhoto').style.backgroundImage = `url(${photoUrl})`;
+          return;
+        }
+
+        // Try localStorage first (for backward compatibility)
+        const photoFromLocalStorage = localStorage.getItem('userPhoto');
+        if (photoFromLocalStorage) {
+          document.getElementById('userPhoto').style.backgroundImage = `url(${photoFromLocalStorage})`;
+          return;
+        }
+
+        // Load from IndexedDB
         const imageData = await getData(db, 'image');
         if (imageData && imageData.image) {
           document.getElementById('userPhoto').style.backgroundImage = `url(${imageData.image})`;
         }
       } catch (error) {
-        console.error('Error loading image from IndexedDB:', error);
+        console.error('Error loading data from IndexedDB:', error);
       }
     }
 
-    // Load image when page loads
-    loadUserImage();
+    function setData(id, value) {
+      const el = document.getElementById(id);
+      if (el && value) {
+        el.textContent = value;
+      }
+    }
+
+    // Load data and image when page loads
+    loadUserData();
   </script>
 
   <!-- Hard Refresh Button -->
