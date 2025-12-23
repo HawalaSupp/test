@@ -31,7 +31,7 @@ body .bottom_bar{
     display: grid;
     grid-template-rows: 100%;
     grid-template-columns: repeat(4, 1fr);
-    margin-top: 15px;
+    margin-top: 25px;
     margin-bottom: 15px;
 }
 
@@ -194,7 +194,7 @@ body .bottom_bar{
     height: max-content;
     margin-top: auto;
     margin-bottom: 0px;
-    letter-spacing: 0.4px;
+    letter-spacing: 0.2px;
 }
 
 .id_image_data{
@@ -249,7 +249,7 @@ body .bottom_bar{
     grid-template-columns: max-content max-content max-content;
     height: 100%;
     width: max-content;
-    margin-top: 10px;
+    margin-top: 5px;
     margin-bottom: auto;
     margin-left: 20px;
     margin-right: auto;
@@ -373,7 +373,7 @@ body .bottom_bar{
     margin-left: auto;
     margin-right: auto;
     text-align: center;
-    font-size: 12px;
+    font-size: 12.5px;
 }
 
 .info_holder .bottom_grid{
