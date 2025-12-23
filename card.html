@@ -23,7 +23,7 @@
       <p onclick="sendTo('documents.html')" class="back_text_fixed">Dokumenty</p>
     </div>
     <p class="title_text_fixed">mDowód</p>
-    <img src="assets/app/images/help.png" class="help_img_fixed" id="helpIconBtn" alt="" onclick="window.toggleEagleDraggable && window.toggleEagleDraggable(event)">
+    <img src="assets/app/images/help.png" class="help_img_fixed" id="helpIconBtn" alt="" style="cursor: pointer; pointer-events: auto !important; z-index: 1000; position: relative;">
   </div>
 
   <div class="bottom_bar">
@@ -362,208 +362,160 @@
       initUserData();
     }
 
-    // === Eagle Background Draggable Functionality ===
-    let isDraggable = false;
-    let isDragging = false;
-    let currentX = 0;
-    let currentY = 0;
-    let initialX = 0;
-    let initialY = 0;
-    let xOffset = 0;
-    let yOffset = 0;
-    let currentWidth = 100;
-    let currentHeight = 100;
+    // === Simple Background Draggable Functionality ===
+    (function() {
+      let isDraggable = false;
+      let isDragging = false;
+      let xOffset = 0;
+      let yOffset = 0;
+      let currentWidth = 100;
+      let currentHeight = 100;
+      let initialX = 0;
+      let initialY = 0;
 
-    // Wait for DOM to be ready
-    function initDraggable() {
-      const bgImage = document.getElementById('bgImage');
-      const helpIcon = document.querySelector('.help_img_fixed');
-      const controlsDiv = document.getElementById('bg_image_controls');
-      const widthSlider = document.getElementById('widthSlider');
-      const heightSlider = document.getElementById('heightSlider');
-      const widthValue = document.getElementById('widthValue');
-      const heightValue = document.getElementById('heightValue');
+      function setupDraggable() {
+        const bgImage = document.getElementById('bgImage');
+        const helpIcon = document.getElementById('helpIconBtn') || document.querySelector('.help_img_fixed');
+        const controlsDiv = document.getElementById('bg_image_controls');
+        const widthSlider = document.getElementById('widthSlider');
+        const heightSlider = document.getElementById('heightSlider');
+        const widthValue = document.getElementById('widthValue');
+        const heightValue = document.getElementById('heightValue');
 
-      if (!bgImage || !helpIcon || !controlsDiv) {
-        setTimeout(initDraggable, 100);
-        return;
-      }
+        if (!bgImage || !helpIcon || !controlsDiv) {
+          console.log('Waiting for elements...');
+          setTimeout(setupDraggable, 200);
+          return;
+        }
 
-      // Load saved position and dimensions
-      const savedX = localStorage.getItem('bgImageX');
-      const savedY = localStorage.getItem('bgImageY');
-      const savedWidth = localStorage.getItem('bgImageWidth');
-      const savedHeight = localStorage.getItem('bgImageHeight');
-      
-      if (savedX !== null && savedY !== null) {
-        xOffset = parseFloat(savedX);
-        yOffset = parseFloat(savedY);
-      }
-      if (savedWidth !== null) {
-        currentWidth = parseFloat(savedWidth);
-        widthSlider.value = currentWidth;
-        widthValue.textContent = Math.round(currentWidth);
-      }
-      if (savedHeight !== null) {
-        currentHeight = parseFloat(savedHeight);
-        heightSlider.value = currentHeight;
-        heightValue.textContent = Math.round(currentHeight);
-      }
+        console.log('Setting up draggable functionality');
 
-      // Apply saved transform
-      bgImage.style.transform = `translate(${xOffset}px, ${yOffset}px) scaleX(${currentWidth / 100}) scaleY(${currentHeight / 100})`;
+        // Load saved values
+        const savedX = localStorage.getItem('bgImageX');
+        const savedY = localStorage.getItem('bgImageY');
+        const savedWidth = localStorage.getItem('bgImageWidth');
+        const savedHeight = localStorage.getItem('bgImageHeight');
+        
+        if (savedX !== null) xOffset = parseFloat(savedX);
+        if (savedY !== null) yOffset = parseFloat(savedY);
+        if (savedWidth !== null) {
+          currentWidth = parseFloat(savedWidth);
+          if (widthSlider) widthSlider.value = currentWidth;
+          if (widthValue) widthValue.textContent = Math.round(currentWidth);
+        }
+        if (savedHeight !== null) {
+          currentHeight = parseFloat(savedHeight);
+          if (heightSlider) heightSlider.value = currentHeight;
+          if (heightValue) heightValue.textContent = Math.round(currentHeight);
+        }
 
-      // Help icon click handler - use capture phase and multiple event types
-      console.log('Help icon found:', helpIcon);
-      helpIcon.style.cursor = 'pointer';
-      helpIcon.style.pointerEvents = 'auto';
-      helpIcon.style.zIndex = '1000';
-      helpIcon.style.position = 'relative';
-      
-      function toggleDraggable(e) {
-        if (e) {
+        // Apply saved transform
+        bgImage.style.transform = `translate(${xOffset}px, ${yOffset}px) scaleX(${currentWidth / 100}) scaleY(${currentHeight / 100})`;
+
+        // Toggle function
+        function toggleDrag() {
+          isDraggable = !isDraggable;
+          console.log('Toggle drag:', isDraggable);
+          
+          if (isDraggable) {
+            bgImage.style.pointerEvents = 'auto';
+            bgImage.style.cursor = 'move';
+            controlsDiv.style.display = 'block';
+          } else {
+            bgImage.style.pointerEvents = 'none';
+            bgImage.style.cursor = 'default';
+            controlsDiv.style.display = 'none';
+            isDragging = false;
+            localStorage.setItem('bgImageX', xOffset);
+            localStorage.setItem('bgImageY', yOffset);
+            localStorage.setItem('bgImageWidth', currentWidth);
+            localStorage.setItem('bgImageHeight', currentHeight);
+          }
+        }
+
+        // Attach click handler directly
+        helpIcon.onclick = function(e) {
           e.preventDefault();
           e.stopPropagation();
-        }
-        console.log('Help icon clicked! isDraggable:', isDraggable);
-        isDraggable = !isDraggable;
-        
-        if (isDraggable) {
-          // Enable dragging
-          bgImage.style.pointerEvents = 'auto';
-          bgImage.style.cursor = 'move';
-          controlsDiv.style.display = 'block';
-          console.log('Dragging enabled, sliders shown');
-        } else {
-          // Lock in place
-          bgImage.style.pointerEvents = 'none';
-          bgImage.style.cursor = 'default';
-          controlsDiv.style.display = 'none';
-          isDragging = false;
-          
-          // Save position and dimensions
-          localStorage.setItem('bgImageX', xOffset);
-          localStorage.setItem('bgImageY', yOffset);
-          localStorage.setItem('bgImageWidth', currentWidth);
-          localStorage.setItem('bgImageHeight', currentHeight);
-          console.log('Dragging disabled, sliders hidden');
-        }
-      }
-      
-      // Make function globally available for inline onclick
-      window.toggleEagleDraggable = function(e) {
-        toggleDraggable(e);
-      };
-      
-      // Add multiple event listeners
-      helpIcon.addEventListener('click', toggleDraggable, true);
-      helpIcon.addEventListener('mousedown', toggleDraggable, true);
-      helpIcon.addEventListener('touchstart', toggleDraggable, true);
-      
-      // Also set onclick as fallback
-      helpIcon.onclick = toggleDraggable;
+          toggleDrag();
+        };
+        helpIcon.addEventListener('click', toggleDrag, true);
+        helpIcon.style.cursor = 'pointer';
+        helpIcon.style.pointerEvents = 'auto';
 
-      // Mouse events for dragging
-      bgImage.addEventListener('mousedown', (e) => {
-        if (!isDraggable) return;
-        initialX = e.clientX - xOffset;
-        initialY = e.clientY - yOffset;
-        
-        if (e.target === bgImage) {
-          isDragging = true;
-        }
-      });
-
-      document.addEventListener('mousemove', (e) => {
-        if (isDragging && isDraggable) {
+        // Drag handlers
+        bgImage.addEventListener('mousedown', function(e) {
+          if (!isDraggable) return;
           e.preventDefault();
-          currentX = e.clientX - initialX;
-          currentY = e.clientY - initialY;
-          
-          xOffset = currentX;
-          yOffset = currentY;
-          
-          bgImage.style.transform = `translate(${xOffset}px, ${yOffset}px) scaleX(${currentWidth / 100}) scaleY(${currentHeight / 100})`;
-        }
-      });
-
-      document.addEventListener('mouseup', () => {
-        if (isDragging) {
-          isDragging = false;
-        }
-      });
-
-      // Touch events for mobile
-      bgImage.addEventListener('touchstart', (e) => {
-        if (!isDraggable) return;
-        const touch = e.touches[0];
-        initialX = touch.clientX - xOffset;
-        initialY = touch.clientY - yOffset;
-        
-        if (e.target === bgImage) {
+          initialX = e.clientX - xOffset;
+          initialY = e.clientY - yOffset;
           isDragging = true;
-        }
-      });
+        });
 
-      document.addEventListener('touchmove', (e) => {
-        if (isDragging && isDraggable) {
+        document.addEventListener('mousemove', function(e) {
+          if (isDragging && isDraggable) {
+            e.preventDefault();
+            xOffset = e.clientX - initialX;
+            yOffset = e.clientY - initialY;
+            bgImage.style.transform = `translate(${xOffset}px, ${yOffset}px) scaleX(${currentWidth / 100}) scaleY(${currentHeight / 100})`;
+          }
+        });
+
+        document.addEventListener('mouseup', function() {
+          isDragging = false;
+        });
+
+        // Touch handlers
+        bgImage.addEventListener('touchstart', function(e) {
+          if (!isDraggable) return;
           e.preventDefault();
           const touch = e.touches[0];
-          currentX = touch.clientX - initialX;
-          currentY = touch.clientY - initialY;
-          
-          xOffset = currentX;
-          yOffset = currentY;
-          
-          bgImage.style.transform = `translate(${xOffset}px, ${yOffset}px) scaleX(${currentWidth / 100}) scaleY(${currentHeight / 100})`;
-        }
-      });
+          initialX = touch.clientX - xOffset;
+          initialY = touch.clientY - yOffset;
+          isDragging = true;
+        });
 
-      document.addEventListener('touchend', () => {
-        if (isDragging) {
+        document.addEventListener('touchmove', function(e) {
+          if (isDragging && isDraggable) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            xOffset = touch.clientX - initialX;
+            yOffset = touch.clientY - initialY;
+            bgImage.style.transform = `translate(${xOffset}px, ${yOffset}px) scaleX(${currentWidth / 100}) scaleY(${currentHeight / 100})`;
+          }
+        });
+
+        document.addEventListener('touchend', function() {
           isDragging = false;
+        });
+
+        // Slider handlers
+        if (widthSlider) {
+          widthSlider.addEventListener('input', function(e) {
+            currentWidth = parseFloat(e.target.value);
+            if (widthValue) widthValue.textContent = Math.round(currentWidth);
+            bgImage.style.transform = `translate(${xOffset}px, ${yOffset}px) scaleX(${currentWidth / 100}) scaleY(${currentHeight / 100})`;
+          });
         }
-      });
 
-      // Slider handlers
-      widthSlider.addEventListener('input', (e) => {
-        currentWidth = parseFloat(e.target.value);
-        widthValue.textContent = Math.round(currentWidth);
-        bgImage.style.transform = `translate(${xOffset}px, ${yOffset}px) scaleX(${currentWidth / 100}) scaleY(${currentHeight / 100})`;
-      });
-
-      heightSlider.addEventListener('input', (e) => {
-        currentHeight = parseFloat(e.target.value);
-        heightValue.textContent = Math.round(currentHeight);
-        bgImage.style.transform = `translate(${xOffset}px, ${yOffset}px) scaleX(${currentWidth / 100}) scaleY(${currentHeight / 100})`;
-      });
-    }
-
-    // Initialize draggable functionality - try multiple times to ensure it works
-    function tryInitDraggable() {
-      const helpIcon = document.querySelector('.help_img_fixed');
-      const bgImage = document.getElementById('bgImage');
-      const controlsDiv = document.getElementById('bg_image_controls');
-      
-      if (!helpIcon || !bgImage || !controlsDiv) {
-        console.log('Elements not found, retrying...');
-        setTimeout(tryInitDraggable, 100);
-        return;
+        if (heightSlider) {
+          heightSlider.addEventListener('input', function(e) {
+            currentHeight = parseFloat(e.target.value);
+            if (heightValue) heightValue.textContent = Math.round(currentHeight);
+            bgImage.style.transform = `translate(${xOffset}px, ${yOffset}px) scaleX(${currentWidth / 100}) scaleY(${currentHeight / 100})`;
+          });
+        }
       }
-      
-      console.log('All elements found, initializing draggable...');
-      initDraggable();
-    }
 
-    // Try immediately and also on DOMContentLoaded
-    tryInitDraggable();
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', tryInitDraggable);
-    }
-    
-    // Also try after a delay to catch late-loading elements
-    setTimeout(tryInitDraggable, 500);
-    setTimeout(tryInitDraggable, 1000);
+      // Start setup
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupDraggable);
+      } else {
+        setupDraggable();
+      }
+      setTimeout(setupDraggable, 500);
+      setTimeout(setupDraggable, 1000);
+    })();
   </script>
 
   <!-- Hard Refresh Button -->
