@@ -630,6 +630,8 @@ img{
 
 .delete_action .action_image{
     filter: none;
+    width: 40px;
+    height: 40px;
 }
 
 .action_box_connected .action_box:nth-child(2) .action_image{
