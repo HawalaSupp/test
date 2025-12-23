@@ -2,31 +2,26 @@
     margin-top: 60px;
 }
 
-.pesel_icon {
-    width: 80px;
-    height: 80px;
-    margin: 30px auto;
-    display: block;
-}
-
 .pesel_title {
     color: white;
     font-size: 24px;
     font-weight: 600;
-    text-align: center;
+    text-align: left;
     margin-top: 20px;
     margin-bottom: 15px;
+    margin-left: 5%;
 }
 
 .pesel_description {
     color: white !important;
     font-size: 16px;
-    text-align: center;
+    text-align: left;
     margin-bottom: 30px;
-    padding: 0 20px;
+    margin-left: 5%;
+    padding: 0;
 }
 
-.action_box {
+.pesel_action_box {
     width: 90%;
     margin-left: auto;
     margin-right: auto;
