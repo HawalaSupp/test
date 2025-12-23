@@ -4,14 +4,14 @@
 
 .pesel_title {
     color: white;
-    font-size: 28px;
+    font-size: 32px;
     font-weight: 600;
     text-align: left;
     margin-top: 20px;
     margin-bottom: 15px;
-    margin-left: calc(-10% + 3px);
+    margin-left: calc(-10% + 5px);
     padding-left: 5%;
-    line-height: 1.2;
+    line-height: 1.5;
 }
 
 .pesel_description {
