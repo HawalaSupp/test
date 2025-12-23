@@ -626,12 +626,15 @@ img{
 
 .delete_action .action_box_text{
     color: #ff6b6b;
+    margin-left: -10px;
 }
 
 .delete_action .action_image{
     filter: none;
-    width: 60px;
-    height: 60px;
+    width: 80px;
+    height: 80px;
+    position: relative;
+    top: -5px;
 }
 
 .action_box_connected .action_box:nth-child(2) .action_image{
