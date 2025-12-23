@@ -258,10 +258,11 @@ body .bottom_bar{
 
 .bottom_image{
     pointer-events: none;
-    width: 65px;
+    width: 68px;
     margin-top: auto;
     margin-bottom: auto;
     margin-left: -15px;
+    opacity: 0.95;
 }
 
 .inset{
