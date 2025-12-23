@@ -373,6 +373,7 @@ body .bottom_bar{
     margin-left: auto;
     margin-right: auto;
     text-align: center;
+    font-size: 13px;
 }
 
 .info_holder .bottom_grid{
