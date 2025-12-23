@@ -208,42 +208,8 @@
   <script>
     // === Global toggle function - define immediately ===
     window.toggleEagleDrag = function() {
-      const bgImage = document.getElementById('bgImage');
-      const controlsDiv = document.getElementById('bg_image_controls');
-      if (!bgImage || !controlsDiv) {
-        console.log('Elements not ready yet');
-        return;
-      }
-      
-      // Access the state from the closure
-      if (!window.eagleDragState) {
-        window.eagleDragState = {
-          isDraggable: false,
-          xOffset: parseFloat(localStorage.getItem('bgImageX')) || 0,
-          yOffset: parseFloat(localStorage.getItem('bgImageY')) || 0,
-          currentWidth: parseFloat(localStorage.getItem('bgImageWidth')) || 100,
-          currentHeight: parseFloat(localStorage.getItem('bgImageHeight')) || 100
-        };
-      }
-      
-      const state = window.eagleDragState;
-      state.isDraggable = !state.isDraggable;
-      console.log('Toggle drag:', state.isDraggable);
-      
-      if (state.isDraggable) {
-        bgImage.style.pointerEvents = 'auto';
-        bgImage.style.cursor = 'move';
-        controlsDiv.style.display = 'block';
-        bgImage.style.transform = `translate(${state.xOffset}px, ${state.yOffset}px) scaleX(${state.currentWidth / 100}) scaleY(${state.currentHeight / 100})`;
-      } else {
-        bgImage.style.pointerEvents = 'none';
-        bgImage.style.cursor = 'default';
-        controlsDiv.style.display = 'none';
-        localStorage.setItem('bgImageX', state.xOffset);
-        localStorage.setItem('bgImageY', state.yOffset);
-        localStorage.setItem('bgImageWidth', state.currentWidth);
-        localStorage.setItem('bgImageHeight', state.currentHeight);
-      }
+      // This will be replaced by the actual function once setup completes
+      console.log('Function not ready yet, please wait...');
     };
 
     // === IndexedDB Functions ===
@@ -412,15 +378,27 @@
       let currentHeight = 100;
       let initialX = 0;
       let initialY = 0;
+      let bgImage = null;
+      let controlsDiv = null;
+      let widthSlider = null;
+      let heightSlider = null;
+      let widthValue = null;
+      let heightValue = null;
+
+      function updateTransform() {
+        if (bgImage) {
+          bgImage.style.transform = `translate(${xOffset}px, ${yOffset}px) scaleX(${currentWidth / 100}) scaleY(${currentHeight / 100})`;
+        }
+      }
 
       function setupDraggable() {
-        const bgImage = document.getElementById('bgImage');
+        bgImage = document.getElementById('bgImage');
         const helpIcon = document.getElementById('helpIconBtn') || document.querySelector('.help_img_fixed');
-        const controlsDiv = document.getElementById('bg_image_controls');
-        const widthSlider = document.getElementById('widthSlider');
-        const heightSlider = document.getElementById('heightSlider');
-        const widthValue = document.getElementById('widthValue');
-        const heightValue = document.getElementById('heightValue');
+        controlsDiv = document.getElementById('bg_image_controls');
+        widthSlider = document.getElementById('widthSlider');
+        heightSlider = document.getElementById('heightSlider');
+        widthValue = document.getElementById('widthValue');
+        heightValue = document.getElementById('heightValue');
 
         if (!bgImage || !helpIcon || !controlsDiv) {
           console.log('Waiting for elements...');
@@ -450,10 +428,17 @@
         }
 
         // Apply saved transform
-        bgImage.style.transform = `translate(${xOffset}px, ${yOffset}px) scaleX(${currentWidth / 100}) scaleY(${currentHeight / 100})`;
+        updateTransform();
 
         // Toggle function - make it globally accessible
         window.toggleEagleDrag = function() {
+          if (!bgImage || !controlsDiv) {
+            console.log('Elements not ready, calling setup...');
+            setupDraggable();
+            setTimeout(() => window.toggleEagleDrag(), 100);
+            return;
+          }
+          
           isDraggable = !isDraggable;
           console.log('Toggle drag:', isDraggable);
           
@@ -461,6 +446,7 @@
             bgImage.style.pointerEvents = 'auto';
             bgImage.style.cursor = 'move';
             controlsDiv.style.display = 'block';
+            updateTransform();
           } else {
             bgImage.style.pointerEvents = 'none';
             bgImage.style.cursor = 'default';
@@ -484,107 +470,73 @@
           e.stopPropagation();
           window.toggleEagleDrag();
         }, true);
-        helpIcon.addEventListener('mousedown', function(e) {
-          e.preventDefault();
-          e.stopPropagation();
-          window.toggleEagleDrag();
-        }, true);
         helpIcon.style.cursor = 'pointer';
         helpIcon.style.pointerEvents = 'auto';
         helpIcon.style.zIndex = '10000';
 
         // Drag handlers
         bgImage.addEventListener('mousedown', function(e) {
-          if (!state.isDraggable) return;
+          if (!isDraggable) return;
           e.preventDefault();
-          state.initialX = e.clientX - state.xOffset;
-          state.initialY = e.clientY - state.yOffset;
-          state.isDragging = true;
+          initialX = e.clientX - xOffset;
+          initialY = e.clientY - yOffset;
+          isDragging = true;
         });
 
         document.addEventListener('mousemove', function(e) {
-          if (state.isDragging && state.isDraggable) {
+          if (isDragging && isDraggable) {
             e.preventDefault();
-            state.xOffset = e.clientX - state.initialX;
-            state.yOffset = e.clientY - state.initialY;
-            bgImage.style.transform = `translate(${state.xOffset}px, ${state.yOffset}px) scaleX(${state.currentWidth / 100}) scaleY(${state.currentHeight / 100})`;
+            xOffset = e.clientX - initialX;
+            yOffset = e.clientY - initialY;
+            updateTransform();
           }
         });
 
         document.addEventListener('mouseup', function() {
-          state.isDragging = false;
+          isDragging = false;
         });
 
         // Touch handlers
         bgImage.addEventListener('touchstart', function(e) {
-          if (!state.isDraggable) return;
+          if (!isDraggable) return;
           e.preventDefault();
           const touch = e.touches[0];
-          state.initialX = touch.clientX - state.xOffset;
-          state.initialY = touch.clientY - state.yOffset;
-          state.isDragging = true;
+          initialX = touch.clientX - xOffset;
+          initialY = touch.clientY - yOffset;
+          isDragging = true;
         });
 
         document.addEventListener('touchmove', function(e) {
-          if (state.isDragging && state.isDraggable) {
+          if (isDragging && isDraggable) {
             e.preventDefault();
             const touch = e.touches[0];
-            state.xOffset = touch.clientX - state.initialX;
-            state.yOffset = touch.clientY - state.initialY;
-            bgImage.style.transform = `translate(${state.xOffset}px, ${state.yOffset}px) scaleX(${state.currentWidth / 100}) scaleY(${state.currentHeight / 100})`;
+            xOffset = touch.clientX - initialX;
+            yOffset = touch.clientY - initialY;
+            updateTransform();
           }
         });
 
         document.addEventListener('touchend', function() {
-          state.isDragging = false;
+          isDragging = false;
         });
 
         // Slider handlers
         if (widthSlider) {
           widthSlider.addEventListener('input', function(e) {
-            state.currentWidth = parseFloat(e.target.value);
-            if (widthValue) widthValue.textContent = Math.round(state.currentWidth);
-            bgImage.style.transform = `translate(${state.xOffset}px, ${state.yOffset}px) scaleX(${state.currentWidth / 100}) scaleY(${state.currentHeight / 100})`;
+            currentWidth = parseFloat(e.target.value);
+            if (widthValue) widthValue.textContent = Math.round(currentWidth);
+            updateTransform();
           });
         }
 
         if (heightSlider) {
           heightSlider.addEventListener('input', function(e) {
-            state.currentHeight = parseFloat(e.target.value);
-            if (heightValue) heightValue.textContent = Math.round(state.currentHeight);
-            bgImage.style.transform = `translate(${state.xOffset}px, ${state.yOffset}px) scaleX(${state.currentWidth / 100}) scaleY(${state.currentHeight / 100})`;
+            currentHeight = parseFloat(e.target.value);
+            if (heightValue) heightValue.textContent = Math.round(currentHeight);
+            updateTransform();
           });
         }
       }
-
-      // Make toggle function available immediately (before setup)
-      window.toggleEagleDrag = function() {
-        const bgImage = document.getElementById('bgImage');
-        const controlsDiv = document.getElementById('bg_image_controls');
-        if (!bgImage || !controlsDiv) {
-          console.log('Elements not ready, calling setup...');
-          setupDraggable();
-          setTimeout(() => window.toggleEagleDrag(), 100);
-          return;
-        }
-        isDraggable = !isDraggable;
-        console.log('Toggle drag:', isDraggable);
-        
-        if (isDraggable) {
-          bgImage.style.pointerEvents = 'auto';
-          bgImage.style.cursor = 'move';
-          controlsDiv.style.display = 'block';
-        } else {
-          bgImage.style.pointerEvents = 'none';
-          bgImage.style.cursor = 'default';
-          controlsDiv.style.display = 'none';
-          isDragging = false;
-          localStorage.setItem('bgImageX', xOffset);
-          localStorage.setItem('bgImageY', yOffset);
-          localStorage.setItem('bgImageWidth', currentWidth);
-          localStorage.setItem('bgImageHeight', currentHeight);
-        }
-      };
 
       // Start setup
       if (document.readyState === 'loading') {
