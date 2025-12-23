@@ -414,7 +414,14 @@
       bgImage.style.transform = `translate(${xOffset}px, ${yOffset}px) scaleX(${currentWidth / 100}) scaleY(${currentHeight / 100})`;
 
       // Help icon click handler
-      helpIcon.addEventListener('click', () => {
+      console.log('Help icon found:', helpIcon);
+      helpIcon.style.cursor = 'pointer';
+      helpIcon.style.pointerEvents = 'auto';
+      
+      helpIcon.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Help icon clicked! isDraggable:', isDraggable);
         isDraggable = !isDraggable;
         
         if (isDraggable) {
@@ -422,6 +429,7 @@
           bgImage.style.pointerEvents = 'auto';
           bgImage.style.cursor = 'move';
           controlsDiv.style.display = 'block';
+          console.log('Dragging enabled, sliders shown');
         } else {
           // Lock in place
           bgImage.style.pointerEvents = 'none';
@@ -434,6 +442,7 @@
           localStorage.setItem('bgImageY', yOffset);
           localStorage.setItem('bgImageWidth', currentWidth);
           localStorage.setItem('bgImageHeight', currentHeight);
+          console.log('Dragging disabled, sliders hidden');
         }
       });
 
