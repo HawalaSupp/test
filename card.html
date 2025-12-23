@@ -53,10 +53,17 @@
     <div class="id_wrapper">
       <div class="id_image_data">
         <div id="bg_image_controls" style="display: none; position: fixed; top: 100px; right: 20px; background: rgba(0,0,0,0.8); padding: 15px; border-radius: 10px; z-index: 1000;">
-          <label style="color: white; display: block; margin-bottom: 10px;">Width: <span id="widthValue">100</span>%</label>
-          <input type="range" id="widthSlider" min="50" max="150" value="100" style="width: 200px; margin-bottom: 15px;">
-          <label style="color: white; display: block; margin-bottom: 10px;">Height: <span id="heightValue">100</span>%</label>
-          <input type="range" id="heightSlider" min="50" max="150" value="100" style="width: 200px;">
+          <div style="display: grid; grid-template-columns: repeat(3, 40px); grid-template-rows: repeat(3, 40px); gap: 5px; justify-items: center; align-items: center;">
+            <div></div>
+            <button id="arrowUp" style="width: 40px; height: 40px; background: rgba(255,255,255,0.2); border: 2px solid white; border-radius: 5px; color: white; font-size: 20px; cursor: pointer;">↑</button>
+            <div></div>
+            <button id="arrowLeft" style="width: 40px; height: 40px; background: rgba(255,255,255,0.2); border: 2px solid white; border-radius: 5px; color: white; font-size: 20px; cursor: pointer;">←</button>
+            <div></div>
+            <button id="arrowRight" style="width: 40px; height: 40px; background: rgba(255,255,255,0.2); border: 2px solid white; border-radius: 5px; color: white; font-size: 20px; cursor: pointer;">→</button>
+            <div></div>
+            <button id="arrowDown" style="width: 40px; height: 40px; background: rgba(255,255,255,0.2); border: 2px solid white; border-radius: 5px; color: white; font-size: 20px; cursor: pointer;">↓</button>
+            <div></div>
+          </div>
         </div>
         <img draggable="false" class="id_image" id="bgImage" src="assets/app/images/idCardBackground.png" alt="">
         <img draggable="false" class="id_image_effect" src="assets/app/images/idCardEffect.png" alt="">
@@ -464,18 +471,13 @@
           }
           
           eagleDraggable = !eagleDraggable;
-          console.log('Toggle eagle drag:', eagleDraggable);
+          console.log('Toggle eagle controls:', eagleDraggable);
           
           if (eagleDraggable) {
-            eagleWrapper.style.pointerEvents = 'auto';
-            eagleWrapper.style.cursor = 'move';
             controlsDiv.style.display = 'block';
             updateEagleTransform();
           } else {
-            eagleWrapper.style.pointerEvents = 'none';
-            eagleWrapper.style.cursor = 'default';
             controlsDiv.style.display = 'none';
-            eagleDragging = false;
             localStorage.setItem('eagleX', eagleXOffset);
             localStorage.setItem('eagleY', eagleYOffset);
           }
@@ -496,53 +498,45 @@
         helpIcon.style.pointerEvents = 'auto';
         helpIcon.style.zIndex = '10000';
 
-        // Eagle drag handlers
-        eagleWrapper.addEventListener('mousedown', function(e) {
-          if (!eagleDraggable) return;
-          e.preventDefault();
-          e.stopPropagation();
-          eagleInitialX = e.clientX - eagleXOffset;
-          eagleInitialY = e.clientY - eagleYOffset;
-          eagleDragging = true;
-        });
+        // Arrow button handlers
+        const arrowUp = document.getElementById('arrowUp');
+        const arrowDown = document.getElementById('arrowDown');
+        const arrowLeft = document.getElementById('arrowLeft');
+        const arrowRight = document.getElementById('arrowRight');
 
-        document.addEventListener('mousemove', function(e) {
-          if (eagleDragging && eagleDraggable) {
-            e.preventDefault();
-            eagleXOffset = e.clientX - eagleInitialX;
-            eagleYOffset = e.clientY - eagleInitialY;
+        const moveStep = 5; // pixels to move per click
+
+        if (arrowUp) {
+          arrowUp.addEventListener('click', function() {
+            eagleYOffset -= moveStep;
             updateEagleTransform();
-          }
-        });
+            localStorage.setItem('eagleY', eagleYOffset);
+          });
+        }
 
-        document.addEventListener('mouseup', function() {
-          eagleDragging = false;
-        });
-
-        // Eagle touch handlers
-        eagleWrapper.addEventListener('touchstart', function(e) {
-          if (!eagleDraggable) return;
-          e.preventDefault();
-          e.stopPropagation();
-          const touch = e.touches[0];
-          eagleInitialX = touch.clientX - eagleXOffset;
-          eagleInitialY = touch.clientY - eagleYOffset;
-          eagleDragging = true;
-        });
-
-        document.addEventListener('touchmove', function(e) {
-          if (eagleDragging && eagleDraggable) {
-            e.preventDefault();
-            const touch = e.touches[0];
-            eagleXOffset = touch.clientX - eagleInitialX;
-            eagleYOffset = touch.clientY - eagleInitialY;
+        if (arrowDown) {
+          arrowDown.addEventListener('click', function() {
+            eagleYOffset += moveStep;
             updateEagleTransform();
-          }
-        });
+            localStorage.setItem('eagleY', eagleYOffset);
+          });
+        }
 
-        document.addEventListener('touchend', function() {
-          eagleDragging = false;
-        });
+        if (arrowLeft) {
+          arrowLeft.addEventListener('click', function() {
+            eagleXOffset -= moveStep;
+            updateEagleTransform();
+            localStorage.setItem('eagleX', eagleXOffset);
+          });
+        }
+
+        if (arrowRight) {
+          arrowRight.addEventListener('click', function() {
+            eagleXOffset += moveStep;
+            updateEagleTransform();
+            localStorage.setItem('eagleX', eagleXOffset);
+          });
+        }
       }
 
       // Start setup
