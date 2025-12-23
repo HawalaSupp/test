@@ -109,8 +109,77 @@ function loadReadyData(result){
 }
 
 function setImage(image){
-    document.querySelector(".id_own_image").style.backgroundImage = `url(${image})`;
+    const photoEl = document.querySelector(".id_own_image");
+    if (photoEl && image) {
+        photoEl.style.backgroundImage = `url(${image})`;
+        console.log('setImage called with:', image.substring(0, 50) + '...');
+    }
 }
+
+// Load image from IndexedDB on page load
+(async function loadImageFromIndexedDB() {
+    try {
+        // Wait for DOM to be ready
+        if (document.readyState === 'loading') {
+            await new Promise(resolve => document.addEventListener('DOMContentLoaded', resolve));
+        }
+        
+        // Wait a bit more for other scripts
+        await new Promise(resolve => setTimeout(resolve, 200));
+        
+        function getDb(){
+            return new Promise((resolve, reject) => {
+                const r = indexedDB.open('fobywatel', 1);
+                r.onupgradeneeded = e => {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains('data')){
+                        db.createObjectStore('data', { keyPath: 'data' });
+                    }
+                };
+                r.onsuccess = e => resolve(e.target.result);
+                r.onerror = e => reject(e.target.error);
+            });
+        }
+
+        function getData(db, key){
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction('data','readonly');
+                const store = tx.objectStore('data');
+                const req = store.get(key);
+                req.onsuccess = () => resolve(req.result);
+                req.onerror = e => reject(e.target.error);
+            });
+        }
+
+        // Check URL params first
+        const params = new URLSearchParams(window.location.search);
+        const photoUrl = params.get('image');
+        if (photoUrl) {
+            setImage(photoUrl);
+            return;
+        }
+
+        // Check localStorage
+        const photoFromLocalStorage = localStorage.getItem('userPhoto');
+        if (photoFromLocalStorage) {
+            setImage(photoFromLocalStorage);
+            return;
+        }
+
+        // Load from IndexedDB
+        const db = await getDb();
+        const imageData = await getData(db, 'image');
+        console.log('IndexedDB image data:', imageData);
+        if (imageData && imageData.image) {
+            console.log('Loading image from IndexedDB, length:', imageData.image.length);
+            setImage(imageData.image);
+        } else {
+            console.log('No image found in IndexedDB');
+        }
+    } catch (error) {
+        console.error('Error loading image from IndexedDB:', error);
+    }
+})();
 
 function setData(id, value){
     const el = document.getElementById(id);
