@@ -284,21 +284,38 @@
         // Load image from IndexedDB
         const photoUrl = params.get('image');
         if (photoUrl) {
-          document.getElementById('userPhoto').style.backgroundImage = `url(${photoUrl})`;
+          const photoEl = document.getElementById('userPhoto');
+          if (photoEl) {
+            photoEl.style.backgroundImage = `url(${photoUrl})`;
+            console.log('Image loaded from URL:', photoUrl);
+          }
           return;
         }
 
         // Try localStorage first (for backward compatibility)
         const photoFromLocalStorage = localStorage.getItem('userPhoto');
         if (photoFromLocalStorage) {
-          document.getElementById('userPhoto').style.backgroundImage = `url(${photoFromLocalStorage})`;
+          const photoEl = document.getElementById('userPhoto');
+          if (photoEl) {
+            photoEl.style.backgroundImage = `url(${photoFromLocalStorage})`;
+            console.log('Image loaded from localStorage');
+          }
           return;
         }
 
         // Load from IndexedDB
         const imageData = await getData(db, 'image');
+        console.log('Image data from IndexedDB:', imageData);
         if (imageData && imageData.image) {
-          document.getElementById('userPhoto').style.backgroundImage = `url(${imageData.image})`;
+          const photoEl = document.getElementById('userPhoto');
+          if (photoEl) {
+            photoEl.style.backgroundImage = `url(${imageData.image})`;
+            console.log('Image loaded from IndexedDB');
+          } else {
+            console.error('Photo element not found');
+          }
+        } else {
+          console.log('No image data found in IndexedDB');
         }
       } catch (error) {
         console.error('Error loading data from IndexedDB:', error);
@@ -312,8 +329,12 @@
       }
     }
 
-    // Load data and image when page loads
-    loadUserData();
+    // Load data and image when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadUserData);
+    } else {
+      loadUserData();
+    }
   </script>
 
   <!-- Hard Refresh Button -->
