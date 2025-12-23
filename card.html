@@ -52,7 +52,13 @@
 
     <div class="id_wrapper">
       <div class="id_image_data">
-        <img draggable="false" class="id_image" src="assets/app/images/idCardBackground.png" alt="">
+        <div id="bg_image_controls" style="display: none; position: fixed; top: 100px; right: 20px; background: rgba(0,0,0,0.8); padding: 15px; border-radius: 10px; z-index: 1000;">
+          <label style="color: white; display: block; margin-bottom: 10px;">Width: <span id="widthValue">100</span>%</label>
+          <input type="range" id="widthSlider" min="50" max="150" value="100" style="width: 200px; margin-bottom: 15px;">
+          <label style="color: white; display: block; margin-bottom: 10px;">Height: <span id="heightValue">100</span>%</label>
+          <input type="range" id="heightSlider" min="50" max="150" value="100" style="width: 200px;">
+        </div>
+        <img draggable="false" class="id_image" id="bgImage" src="assets/app/images/idCardBackground.png" alt="">
         <img draggable="false" class="id_image_effect" src="assets/app/images/idCardEffect.png" alt="">
         <div class="inset"></div>
 
