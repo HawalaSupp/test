@@ -212,25 +212,25 @@ body .bottom_bar{
 
 @keyframes hologramWave {
     0%, 30% {
-        filter: brightness(1.3) opacity(0.75) hue-rotate(0deg) saturate(1);
+        filter: brightness(1.3) opacity(0.75) grayscale(60%) contrast(0.9) hue-rotate(0deg) saturate(1);
     }
     35% {
-        filter: brightness(1.35) opacity(0.78) hue-rotate(60deg) saturate(1.1);
+        filter: brightness(1.35) opacity(0.78) grayscale(55%) contrast(0.92) hue-rotate(60deg) saturate(1.1);
     }
     40% {
-        filter: brightness(1.4) opacity(0.8) hue-rotate(120deg) saturate(1.2);
+        filter: brightness(1.4) opacity(0.8) grayscale(50%) contrast(0.95) hue-rotate(120deg) saturate(1.2);
     }
     45% {
-        filter: brightness(1.45) opacity(0.82) hue-rotate(180deg) saturate(1.3);
+        filter: brightness(1.45) opacity(0.82) grayscale(45%) contrast(0.98) hue-rotate(180deg) saturate(1.3);
     }
     50% {
-        filter: brightness(1.4) opacity(0.8) hue-rotate(240deg) saturate(1.2);
+        filter: brightness(1.4) opacity(0.8) grayscale(50%) contrast(0.95) hue-rotate(240deg) saturate(1.2);
     }
     55% {
-        filter: brightness(1.35) opacity(0.78) hue-rotate(300deg) saturate(1.1);
+        filter: brightness(1.35) opacity(0.78) grayscale(55%) contrast(0.92) hue-rotate(300deg) saturate(1.1);
     }
     60%, 100% {
-        filter: brightness(1.3) opacity(0.75) hue-rotate(0deg) saturate(1);
+        filter: brightness(1.3) opacity(0.75) grayscale(60%) contrast(0.9) hue-rotate(0deg) saturate(1);
     }
 }
 
