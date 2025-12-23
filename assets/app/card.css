@@ -194,7 +194,7 @@ body .bottom_bar{
     height: max-content;
     margin-top: auto;
     margin-bottom: 0px;
-    letter-spacing: 0.05px;
+    letter-spacing: -0.5px;
 }
 
 .id_image_data{
@@ -262,7 +262,6 @@ body .bottom_bar{
     margin-top: auto;
     margin-bottom: auto;
     margin-left: -15px;
-    filter: brightness(0) saturate(100%) invert(73%) sepia(45%) saturate(520%) hue-rotate(80deg) brightness(95%) contrast(90%);
 }
 
 .inset{
