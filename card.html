@@ -206,6 +206,46 @@
   <script src="assets/app/cache.js"></script>
 
   <script>
+    // === Global toggle function - define immediately ===
+    window.toggleEagleDrag = function() {
+      const bgImage = document.getElementById('bgImage');
+      const controlsDiv = document.getElementById('bg_image_controls');
+      if (!bgImage || !controlsDiv) {
+        console.log('Elements not ready yet');
+        return;
+      }
+      
+      // Access the state from the closure
+      if (!window.eagleDragState) {
+        window.eagleDragState = {
+          isDraggable: false,
+          xOffset: parseFloat(localStorage.getItem('bgImageX')) || 0,
+          yOffset: parseFloat(localStorage.getItem('bgImageY')) || 0,
+          currentWidth: parseFloat(localStorage.getItem('bgImageWidth')) || 100,
+          currentHeight: parseFloat(localStorage.getItem('bgImageHeight')) || 100
+        };
+      }
+      
+      const state = window.eagleDragState;
+      state.isDraggable = !state.isDraggable;
+      console.log('Toggle drag:', state.isDraggable);
+      
+      if (state.isDraggable) {
+        bgImage.style.pointerEvents = 'auto';
+        bgImage.style.cursor = 'move';
+        controlsDiv.style.display = 'block';
+        bgImage.style.transform = `translate(${state.xOffset}px, ${state.yOffset}px) scaleX(${state.currentWidth / 100}) scaleY(${state.currentHeight / 100})`;
+      } else {
+        bgImage.style.pointerEvents = 'none';
+        bgImage.style.cursor = 'default';
+        controlsDiv.style.display = 'none';
+        localStorage.setItem('bgImageX', state.xOffset);
+        localStorage.setItem('bgImageY', state.yOffset);
+        localStorage.setItem('bgImageWidth', state.currentWidth);
+        localStorage.setItem('bgImageHeight', state.currentHeight);
+      }
+    };
+
     // === IndexedDB Functions ===
     function getDb(){
       return new Promise((resolve, reject) => {
@@ -455,64 +495,64 @@
 
         // Drag handlers
         bgImage.addEventListener('mousedown', function(e) {
-          if (!isDraggable) return;
+          if (!state.isDraggable) return;
           e.preventDefault();
-          initialX = e.clientX - xOffset;
-          initialY = e.clientY - yOffset;
-          isDragging = true;
+          state.initialX = e.clientX - state.xOffset;
+          state.initialY = e.clientY - state.yOffset;
+          state.isDragging = true;
         });
 
         document.addEventListener('mousemove', function(e) {
-          if (isDragging && isDraggable) {
+          if (state.isDragging && state.isDraggable) {
             e.preventDefault();
-            xOffset = e.clientX - initialX;
-            yOffset = e.clientY - initialY;
-            bgImage.style.transform = `translate(${xOffset}px, ${yOffset}px) scaleX(${currentWidth / 100}) scaleY(${currentHeight / 100})`;
+            state.xOffset = e.clientX - state.initialX;
+            state.yOffset = e.clientY - state.initialY;
+            bgImage.style.transform = `translate(${state.xOffset}px, ${state.yOffset}px) scaleX(${state.currentWidth / 100}) scaleY(${state.currentHeight / 100})`;
           }
         });
 
         document.addEventListener('mouseup', function() {
-          isDragging = false;
+          state.isDragging = false;
         });
 
         // Touch handlers
         bgImage.addEventListener('touchstart', function(e) {
-          if (!isDraggable) return;
+          if (!state.isDraggable) return;
           e.preventDefault();
           const touch = e.touches[0];
-          initialX = touch.clientX - xOffset;
-          initialY = touch.clientY - yOffset;
-          isDragging = true;
+          state.initialX = touch.clientX - state.xOffset;
+          state.initialY = touch.clientY - state.yOffset;
+          state.isDragging = true;
         });
 
         document.addEventListener('touchmove', function(e) {
-          if (isDragging && isDraggable) {
+          if (state.isDragging && state.isDraggable) {
             e.preventDefault();
             const touch = e.touches[0];
-            xOffset = touch.clientX - initialX;
-            yOffset = touch.clientY - initialY;
-            bgImage.style.transform = `translate(${xOffset}px, ${yOffset}px) scaleX(${currentWidth / 100}) scaleY(${currentHeight / 100})`;
+            state.xOffset = touch.clientX - state.initialX;
+            state.yOffset = touch.clientY - state.initialY;
+            bgImage.style.transform = `translate(${state.xOffset}px, ${state.yOffset}px) scaleX(${state.currentWidth / 100}) scaleY(${state.currentHeight / 100})`;
           }
         });
 
         document.addEventListener('touchend', function() {
-          isDragging = false;
+          state.isDragging = false;
         });
 
         // Slider handlers
         if (widthSlider) {
           widthSlider.addEventListener('input', function(e) {
-            currentWidth = parseFloat(e.target.value);
-            if (widthValue) widthValue.textContent = Math.round(currentWidth);
-            bgImage.style.transform = `translate(${xOffset}px, ${yOffset}px) scaleX(${currentWidth / 100}) scaleY(${currentHeight / 100})`;
+            state.currentWidth = parseFloat(e.target.value);
+            if (widthValue) widthValue.textContent = Math.round(state.currentWidth);
+            bgImage.style.transform = `translate(${state.xOffset}px, ${state.yOffset}px) scaleX(${state.currentWidth / 100}) scaleY(${state.currentHeight / 100})`;
           });
         }
 
         if (heightSlider) {
           heightSlider.addEventListener('input', function(e) {
-            currentHeight = parseFloat(e.target.value);
-            if (heightValue) heightValue.textContent = Math.round(currentHeight);
-            bgImage.style.transform = `translate(${xOffset}px, ${yOffset}px) scaleX(${currentWidth / 100}) scaleY(${currentHeight / 100})`;
+            state.currentHeight = parseFloat(e.target.value);
+            if (heightValue) heightValue.textContent = Math.round(state.currentHeight);
+            bgImage.style.transform = `translate(${state.xOffset}px, ${state.yOffset}px) scaleX(${state.currentWidth / 100}) scaleY(${state.currentHeight / 100})`;
           });
         }
       }
