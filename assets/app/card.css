@@ -143,7 +143,7 @@ body .bottom_bar{
     display: grid;
     grid-template-columns: 100%;
     grid-auto-flow: row;
-    grid-auto-rows: 70px;
+    grid-auto-rows: 75px;
 }
 
 .data_value{
@@ -152,7 +152,7 @@ body .bottom_bar{
     margin-top: -4px;
     margin-bottom: auto;
     font-weight: 450;
-    font-size: 12px;
+    font-size: 12.5px;
     letter-spacing: -0.5px;
 }
 
@@ -251,7 +251,7 @@ body .bottom_bar{
     width: max-content;
     margin-top: auto;
     margin-bottom: auto;
-    margin-left: 20px;
+    margin-left: auto;
     margin-right: auto;
 }
 
