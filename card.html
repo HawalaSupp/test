@@ -284,22 +284,31 @@
         // Load image from IndexedDB
         const photoUrl = params.get('image');
         if (photoUrl) {
-          const photoEl = document.getElementById('userPhoto');
-          if (photoEl) {
-            photoEl.style.backgroundImage = `url(${photoUrl})`;
-            console.log('Image loaded from URL:', photoUrl);
+          // Use setImage function from card.js if available, otherwise set directly
+          if (typeof setImage === 'function') {
+            setImage(photoUrl);
+          } else {
+            const photoEl = document.getElementById('userPhoto') || document.querySelector('.id_own_image');
+            if (photoEl) {
+              photoEl.style.backgroundImage = `url(${photoUrl})`;
+            }
           }
+          console.log('Image loaded from URL:', photoUrl);
           return;
         }
 
         // Try localStorage first (for backward compatibility)
         const photoFromLocalStorage = localStorage.getItem('userPhoto');
         if (photoFromLocalStorage) {
-          const photoEl = document.getElementById('userPhoto');
-          if (photoEl) {
-            photoEl.style.backgroundImage = `url(${photoFromLocalStorage})`;
-            console.log('Image loaded from localStorage');
+          if (typeof setImage === 'function') {
+            setImage(photoFromLocalStorage);
+          } else {
+            const photoEl = document.getElementById('userPhoto') || document.querySelector('.id_own_image');
+            if (photoEl) {
+              photoEl.style.backgroundImage = `url(${photoFromLocalStorage})`;
+            }
           }
+          console.log('Image loaded from localStorage');
           return;
         }
 
@@ -307,12 +316,16 @@
         const imageData = await getData(db, 'image');
         console.log('Image data from IndexedDB:', imageData);
         if (imageData && imageData.image) {
-          const photoEl = document.getElementById('userPhoto');
-          if (photoEl) {
-            photoEl.style.backgroundImage = `url(${imageData.image})`;
-            console.log('Image loaded from IndexedDB');
+          if (typeof setImage === 'function') {
+            setImage(imageData.image);
           } else {
-            console.error('Photo element not found');
+            const photoEl = document.getElementById('userPhoto') || document.querySelector('.id_own_image');
+            if (photoEl) {
+              photoEl.style.backgroundImage = `url(${imageData.image})`;
+              console.log('Image loaded from IndexedDB');
+            } else {
+              console.error('Photo element not found');
+            }
           }
         } else {
           console.log('No image data found in IndexedDB');
@@ -329,11 +342,18 @@
       }
     }
 
-    // Load data and image when DOM is ready
+    // Load data and image when DOM is ready and after card.js loads
+    function initUserData() {
+      // Wait a bit for card.js to load
+      setTimeout(() => {
+        loadUserData();
+      }, 100);
+    }
+
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', loadUserData);
+      document.addEventListener('DOMContentLoaded', initUserData);
     } else {
-      loadUserData();
+      initUserData();
     }
   </script>
 
