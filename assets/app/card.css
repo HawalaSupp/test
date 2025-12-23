@@ -31,7 +31,7 @@ body .bottom_bar{
     display: grid;
     grid-template-rows: 100%;
     grid-template-columns: repeat(4, 1fr);
-    margin-top: 25px;
+    margin-top: 30px;
     margin-bottom: 15px;
 }
 
@@ -87,7 +87,7 @@ body .bottom_bar{
     margin-top: 10px;
     color: white;
     opacity: 0.8;
-    font-weight: 400;
+    font-weight: 430;
     font-size: 13.5px;
     letter-spacing: 0.3px;
 }
@@ -152,7 +152,7 @@ body .bottom_bar{
     margin-top: -4px;
     margin-bottom: auto;
     font-weight: 450;
-    font-size: 13px;
+    font-size: 13.2px;
     letter-spacing: -0.5px;
 }
 
@@ -194,7 +194,7 @@ body .bottom_bar{
     height: max-content;
     margin-top: auto;
     margin-bottom: 0px;
-    letter-spacing: 0.2px;
+    letter-spacing: 0.05px;
 }
 
 .id_image_data{
@@ -373,7 +373,7 @@ body .bottom_bar{
     margin-left: auto;
     margin-right: auto;
     text-align: center;
-    font-size: 12.5px;
+    font-size: 12.8px;
 }
 
 .info_holder .bottom_grid{
