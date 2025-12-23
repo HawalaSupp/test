@@ -22,23 +22,23 @@
 }
 
 @keyframes fadeIn {
-    0% { opacity: 0; }
+    0% { opacity: 0.95; }
     100% { opacity: 1; }
 }
 
 @keyframes fadeOut {
     0% { opacity: 1; }
-    100% { opacity: 0; }
+    100% { opacity: 0.95; }
 }
 
 body{
     background-color: var(--background);
     margin: 0;
-    animation: fadeIn 0.09s cubic-bezier(0.4,0,0.2,1) forwards;
+    animation: fadeIn 0.15s ease-out forwards;
 }
 
 body.fade-out {
-    animation: fadeOut 0.07s cubic-bezier(0.4,0,0.2,1) forwards !important;
+    animation: fadeOut 0.1s ease-in forwards !important;
 }
 
 *{

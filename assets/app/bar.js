@@ -32,11 +32,11 @@ function sendTo(url, top, bottom){
     if (bottom){
         localStorage.setItem('bottom', bottom)
     }
-    // Add fade out transition
+    // Add subtle fade out transition
     document.body.classList.add('fade-out');
     setTimeout(() => {
         location.href = `${url}?` + params;
-    }, 100);
+    }, 50);
 }
 
 var options = { year: 'numeric', month: '2-digit', day: '2-digit' };
