@@ -6,9 +6,8 @@
     width: 60px;
     height: 60px;
     display: block;
-    margin-left: calc(-10% + 5px);
+    margin-left: calc(-10% + 30px);
     margin-bottom: 15px;
-    filter: brightness(0) invert(1);
 }
 
 .pesel_title {
