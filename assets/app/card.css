@@ -9,7 +9,7 @@ body{
 
 .container {
     padding-bottom: 40px;
-    margin-top: 25px;
+    margin-top: 40px;
 }
 
 .bottom_bar{
@@ -250,6 +250,7 @@ body .bottom_bar{
 .id_image_data{
     position: relative;
     overflow: hidden;
+    border-radius: 15px 15px 0px 0px;
 }
 
 .id_image{
@@ -375,7 +376,7 @@ body .bottom_bar{
 .id_bottom{
     border-radius: 0px 0px 15px 15px;
     background-color: #1F2329;
-    height: 90px;
+    height: 110px;
     z-index: 1;
     width: 100%;
     margin-left: auto;
