@@ -270,7 +270,7 @@ img{
     text-align: center;
     width: 100%;
     font-weight: 500;
-    margin-top: 5px;
+    margin-top: auto;
     margin-bottom: auto;
     height: max-content;
 }
@@ -285,6 +285,7 @@ img{
     pointer-events: auto !important;
     z-index: 10001 !important;
     position: relative;
+    filter: brightness(3);
 }
 
 .main_button{

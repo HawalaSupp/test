@@ -376,7 +376,7 @@ body .bottom_bar{
 .id_bottom{
     border-radius: 0px 0px 15px 15px;
     background-color: #1F2329;
-    height: 88px;
+    height: 85px;
     z-index: 1;
     width: 100%;
     margin-left: auto;
@@ -424,7 +424,7 @@ body .bottom_bar{
     margin-left: auto;
     margin-right: auto;
     text-align: center;
-    font-size: 12.8px;
+    font-size: 13.2px;
 }
 
 .info_holder .bottom_grid{
