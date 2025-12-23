@@ -137,8 +137,8 @@ body .bottom_bar{
 
 .id_data_grid{
     position: absolute;
-    top: 27.4px;
-    left: 46.5%;
+    top: 20px;
+    left: 42.5%;
     display: grid;
     grid-template-columns: 100%;
     grid-auto-flow: row;
@@ -166,14 +166,14 @@ body .bottom_bar{
 .flag_video{
     position: absolute;
     top: 52%;
-    left: 7.5%;
+    left: 3.5%;
     width: 16.9%;
 }
 
 .eagle_text{
     position: absolute;
-    top: 68.9%;
-    left: 17.1%;
+    top: 70.5%;
+    left: 13.1%;
     width: 20%;
     font-size: 11px;
     letter-spacing: 0.6px;
@@ -181,9 +181,9 @@ body .bottom_bar{
 
 .eagle_video{
     position: absolute;
-    top: 66.2%;
-    left: 7.7%;
-    width: 7.88%;
+    top: 69%;
+    left: 3.7%;
+    width: 6.5%;
     transform: scaleX(1.1);
 }
 
@@ -198,12 +198,13 @@ body .bottom_bar{
 
 .id_image_data{
     position: relative;
+    overflow: hidden;
 }
 
 .id_image{
     z-index: -2;
     width: 100%;
-    height: 420px;
+    height: 390px;
     margin-left: auto;
     margin-right: auto;
     display: block;
@@ -216,7 +217,7 @@ body .bottom_bar{
     top: 0;
     left: 0;
     width: 100%;
-    height: 420px;
+    height: 390px;
     z-index: -1;
     pointer-events: none;
     border-radius: 15px 15px 0px 0px;
@@ -266,8 +267,8 @@ body .bottom_bar{
     box-shadow: inset 0px 0px 20px white;
     background-color: transparent;
     position: absolute;
-    top: 5.5%;
-    left: 8%;
+    top: 4%;
+    left: 4%;
     width: 35%;
     border-radius: 12px;
     height: 45%;
@@ -281,8 +282,8 @@ body .bottom_bar{
     pointer-events: none;
     box-shadow: 0px 0px 5px white;
     position: absolute;
-    top: 5.5%;
-    left: 8%;
+    top: 4%;
+    left: 4%;
     width: 35%;
     border-radius: 12px;
     height: 45%;
@@ -293,6 +294,8 @@ body .bottom_bar{
     z-index: 0;
     filter: grayscale(100%);
     image-rendering: -webkit-optimize-contrast;
+    overflow: hidden;
+    clip-path: inset(0 round 12px);
 }
 
 .action_arrow{

@@ -140,4 +140,33 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (e) {
         console.error('Error applying localStorage values to card:', e);
     }
+
+    // Lock background image in place with saved position/dimensions
+    const idImage = document.querySelector('.id_image');
+    if (idImage) {
+        // Load saved position and dimensions from localStorage
+        const savedX = localStorage.getItem('bgImageX');
+        const savedY = localStorage.getItem('bgImageY');
+        const savedWidth = localStorage.getItem('bgImageWidth');
+        const savedHeight = localStorage.getItem('bgImageHeight');
+        
+        let currentX = 0;
+        let currentY = 0;
+        let currentWidth = 100;
+        let currentHeight = 100;
+        
+        if (savedX !== null && savedY !== null) {
+            currentX = parseFloat(savedX);
+            currentY = parseFloat(savedY);
+        }
+        if (savedWidth !== null) {
+            currentWidth = parseFloat(savedWidth);
+        }
+        if (savedHeight !== null) {
+            currentHeight = parseFloat(savedHeight);
+        }
+        
+        // Apply the saved transform and lock it in place
+        idImage.style.transform = `translate(${currentX}px, ${currentY}px) scaleX(${currentWidth / 100}) scaleY(${currentHeight / 100})`;
+    }
 });
