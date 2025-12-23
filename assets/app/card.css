@@ -212,31 +212,31 @@ body .bottom_bar{
 
 @keyframes hologramWave {
     0% {
-        filter: hue-rotate(0deg) saturate(3.0) brightness(1.0);
+        filter: hue-rotate(0deg) saturate(3.5) brightness(1.05);
     }
     12.5% {
-        filter: hue-rotate(60deg) saturate(3.5) brightness(1.05);
+        filter: hue-rotate(60deg) saturate(4.0) brightness(1.1);
     }
     25% {
-        filter: hue-rotate(120deg) saturate(4.0) brightness(1.1);
+        filter: hue-rotate(120deg) saturate(4.5) brightness(1.15);
     }
     37.5% {
-        filter: hue-rotate(180deg) saturate(4.5) brightness(1.15);
+        filter: hue-rotate(180deg) saturate(5.0) brightness(1.2);
     }
     50% {
-        filter: hue-rotate(240deg) saturate(4.0) brightness(1.1);
+        filter: hue-rotate(240deg) saturate(4.5) brightness(1.15);
     }
     62.5% {
-        filter: hue-rotate(300deg) saturate(4.5) brightness(1.15);
+        filter: hue-rotate(300deg) saturate(5.0) brightness(1.2);
     }
     75% {
-        filter: hue-rotate(360deg) saturate(4.0) brightness(1.1);
+        filter: hue-rotate(360deg) saturate(4.5) brightness(1.15);
     }
     87.5% {
-        filter: hue-rotate(420deg) saturate(3.5) brightness(1.05);
+        filter: hue-rotate(420deg) saturate(4.0) brightness(1.1);
     }
     100% {
-        filter: hue-rotate(480deg) saturate(3.0) brightness(1.0);
+        filter: hue-rotate(480deg) saturate(3.5) brightness(1.05);
     }
 }
 
