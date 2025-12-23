@@ -450,6 +450,11 @@
         }
       }
       
+      // Make function globally available for inline onclick
+      window.toggleEagleDraggable = function(e) {
+        toggleDraggable(e);
+      };
+      
       // Add multiple event listeners
       helpIcon.addEventListener('click', toggleDraggable, true);
       helpIcon.addEventListener('mousedown', toggleDraggable, true);
