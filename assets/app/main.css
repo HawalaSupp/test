@@ -317,11 +317,11 @@ img{
 
 .bottom_element_image{
     pointer-events: none;
-    width: 32px;
+    width: 28px;
     background-position: center;
     background-size: 90%;
     background-repeat: no-repeat;
-    height: 35px;
+    height: 30px;
     margin-left: auto;
     margin-right: auto;
     margin-top: auto;
