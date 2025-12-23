@@ -68,6 +68,18 @@ body .bottom_bar{
     right: 0;
 }
 
+.under_image_small{
+    width: 20px;
+}
+
+.under_image_larger{
+    width: 33px;
+}
+
+.under_image_blue{
+    filter: brightness(0) saturate(100%) invert(58%) sepia(98%) saturate(1234%) hue-rotate(180deg) brightness(105%) contrast(100%);
+}
+
 .under_text{
     width: 100px;
     text-align: center;
