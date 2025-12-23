@@ -522,12 +522,31 @@
       });
     }
 
-    // Initialize draggable functionality
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initDraggable);
-    } else {
-      setTimeout(initDraggable, 200);
+    // Initialize draggable functionality - try multiple times to ensure it works
+    function tryInitDraggable() {
+      const helpIcon = document.querySelector('.help_img_fixed');
+      const bgImage = document.getElementById('bgImage');
+      const controlsDiv = document.getElementById('bg_image_controls');
+      
+      if (!helpIcon || !bgImage || !controlsDiv) {
+        console.log('Elements not found, retrying...');
+        setTimeout(tryInitDraggable, 100);
+        return;
+      }
+      
+      console.log('All elements found, initializing draggable...');
+      initDraggable();
     }
+
+    // Try immediately and also on DOMContentLoaded
+    tryInitDraggable();
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', tryInitDraggable);
+    }
+    
+    // Also try after a delay to catch late-loading elements
+    setTimeout(tryInitDraggable, 500);
+    setTimeout(tryInitDraggable, 1000);
   </script>
 
   <!-- Hard Refresh Button -->
