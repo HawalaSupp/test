@@ -361,6 +361,164 @@
     } else {
       initUserData();
     }
+
+    // === Eagle Background Draggable Functionality ===
+    let isDraggable = false;
+    let isDragging = false;
+    let currentX = 0;
+    let currentY = 0;
+    let initialX = 0;
+    let initialY = 0;
+    let xOffset = 0;
+    let yOffset = 0;
+    let currentWidth = 100;
+    let currentHeight = 100;
+
+    // Wait for DOM to be ready
+    function initDraggable() {
+      const bgImage = document.getElementById('bgImage');
+      const helpIcon = document.querySelector('.help_img_fixed');
+      const controlsDiv = document.getElementById('bg_image_controls');
+      const widthSlider = document.getElementById('widthSlider');
+      const heightSlider = document.getElementById('heightSlider');
+      const widthValue = document.getElementById('widthValue');
+      const heightValue = document.getElementById('heightValue');
+
+      if (!bgImage || !helpIcon || !controlsDiv) {
+        setTimeout(initDraggable, 100);
+        return;
+      }
+
+      // Load saved position and dimensions
+      const savedX = localStorage.getItem('bgImageX');
+      const savedY = localStorage.getItem('bgImageY');
+      const savedWidth = localStorage.getItem('bgImageWidth');
+      const savedHeight = localStorage.getItem('bgImageHeight');
+      
+      if (savedX !== null && savedY !== null) {
+        xOffset = parseFloat(savedX);
+        yOffset = parseFloat(savedY);
+      }
+      if (savedWidth !== null) {
+        currentWidth = parseFloat(savedWidth);
+        widthSlider.value = currentWidth;
+        widthValue.textContent = Math.round(currentWidth);
+      }
+      if (savedHeight !== null) {
+        currentHeight = parseFloat(savedHeight);
+        heightSlider.value = currentHeight;
+        heightValue.textContent = Math.round(currentHeight);
+      }
+
+      // Apply saved transform
+      bgImage.style.transform = `translate(${xOffset}px, ${yOffset}px) scaleX(${currentWidth / 100}) scaleY(${currentHeight / 100})`;
+
+      // Help icon click handler
+      helpIcon.addEventListener('click', () => {
+        isDraggable = !isDraggable;
+        
+        if (isDraggable) {
+          // Enable dragging
+          bgImage.style.pointerEvents = 'auto';
+          bgImage.style.cursor = 'move';
+          controlsDiv.style.display = 'block';
+        } else {
+          // Lock in place
+          bgImage.style.pointerEvents = 'none';
+          bgImage.style.cursor = 'default';
+          controlsDiv.style.display = 'none';
+          isDragging = false;
+          
+          // Save position and dimensions
+          localStorage.setItem('bgImageX', xOffset);
+          localStorage.setItem('bgImageY', yOffset);
+          localStorage.setItem('bgImageWidth', currentWidth);
+          localStorage.setItem('bgImageHeight', currentHeight);
+        }
+      });
+
+      // Mouse events for dragging
+      bgImage.addEventListener('mousedown', (e) => {
+        if (!isDraggable) return;
+        initialX = e.clientX - xOffset;
+        initialY = e.clientY - yOffset;
+        
+        if (e.target === bgImage) {
+          isDragging = true;
+        }
+      });
+
+      document.addEventListener('mousemove', (e) => {
+        if (isDragging && isDraggable) {
+          e.preventDefault();
+          currentX = e.clientX - initialX;
+          currentY = e.clientY - initialY;
+          
+          xOffset = currentX;
+          yOffset = currentY;
+          
+          bgImage.style.transform = `translate(${xOffset}px, ${yOffset}px) scaleX(${currentWidth / 100}) scaleY(${currentHeight / 100})`;
+        }
+      });
+
+      document.addEventListener('mouseup', () => {
+        if (isDragging) {
+          isDragging = false;
+        }
+      });
+
+      // Touch events for mobile
+      bgImage.addEventListener('touchstart', (e) => {
+        if (!isDraggable) return;
+        const touch = e.touches[0];
+        initialX = touch.clientX - xOffset;
+        initialY = touch.clientY - yOffset;
+        
+        if (e.target === bgImage) {
+          isDragging = true;
+        }
+      });
+
+      document.addEventListener('touchmove', (e) => {
+        if (isDragging && isDraggable) {
+          e.preventDefault();
+          const touch = e.touches[0];
+          currentX = touch.clientX - initialX;
+          currentY = touch.clientY - initialY;
+          
+          xOffset = currentX;
+          yOffset = currentY;
+          
+          bgImage.style.transform = `translate(${xOffset}px, ${yOffset}px) scaleX(${currentWidth / 100}) scaleY(${currentHeight / 100})`;
+        }
+      });
+
+      document.addEventListener('touchend', () => {
+        if (isDragging) {
+          isDragging = false;
+        }
+      });
+
+      // Slider handlers
+      widthSlider.addEventListener('input', (e) => {
+        currentWidth = parseFloat(e.target.value);
+        widthValue.textContent = Math.round(currentWidth);
+        bgImage.style.transform = `translate(${xOffset}px, ${yOffset}px) scaleX(${currentWidth / 100}) scaleY(${currentHeight / 100})`;
+      });
+
+      heightSlider.addEventListener('input', (e) => {
+        currentHeight = parseFloat(e.target.value);
+        heightValue.textContent = Math.round(currentHeight);
+        bgImage.style.transform = `translate(${xOffset}px, ${yOffset}px) scaleX(${currentWidth / 100}) scaleY(${currentHeight / 100})`;
+      });
+    }
+
+    // Initialize draggable functionality
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initDraggable);
+    } else {
+      setTimeout(initDraggable, 200);
+    }
   </script>
 
   <!-- Hard Refresh Button -->
