@@ -131,6 +131,20 @@ img{
     height: max-content;
 }
 
+.box_image_grid{
+    display: grid;
+    grid-template-columns: max-content max-content;
+    gap: 10px;
+    align-items: center;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.box_image{
+    width: 24px;
+    height: 24px;
+}
+
 .bottom_update{
     display: grid;
     grid-template-columns: 50% 50%;
