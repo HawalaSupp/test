@@ -181,12 +181,13 @@ body .bottom_bar{
 }
 
 .eagle_video{
-    filter: grayscale(100%) brightness(2.0) contrast(0.7);
     position: absolute;
     top: 69.2%;
     left: 4.2%;
     width: 8.5%;
     transform: scaleX(1.1);
+    mix-blend-mode: screen;
+    opacity: 0.9;
 }
 
 .data_title{
