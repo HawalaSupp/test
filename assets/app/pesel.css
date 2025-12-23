@@ -9,8 +9,9 @@
     text-align: left;
     margin-top: 20px;
     margin-bottom: 15px;
-    margin-left: -10%;
+    margin-left: calc(-10% + 3px);
     padding-left: 5%;
+    line-height: 1.2;
 }
 
 .pesel_description {
