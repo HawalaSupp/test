@@ -1,5 +1,6 @@
-.pin_icon {
-    filter: brightness(0) invert(1);
+.action_box_connected .action_image.pin_icon,
+.action_box_connected .pin_icon {
+    filter: brightness(0) invert(1) !important;
 }
 
 .title{
