@@ -73,16 +73,26 @@
             const controls = document.getElementById('backgroundControls');
             const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
             
-            if (!bgElement || !controls || !forgotPasswordBtn) {
-                console.error('Background control elements not found');
+            if (!bgElement) {
+                console.error('Background element not found');
+                return;
+            }
+            if (!controls) {
+                console.error('Controls element not found');
+                return;
+            }
+            if (!forgotPasswordBtn) {
+                console.error('Forgot password button not found');
                 return;
             }
             
             function updateBackgroundPosition() {
-                bgElement.style.setProperty('background-position', `${bgX}% ${bgY}%`, 'important');
+                const posValue = `${bgX}% ${bgY}%`;
+                bgElement.style.backgroundPosition = posValue;
+                bgElement.style.setProperty('background-position', posValue, 'important');
                 localStorage.setItem('bgPosX', bgX);
                 localStorage.setItem('bgPosY', bgY);
-                console.log(`Background position updated: ${bgX}% ${bgY}%`);
+                console.log('Background position updated to:', posValue);
             }
             
             // Load saved position
@@ -100,33 +110,46 @@
             });
             
             // Arrow button handlers
-            document.getElementById('bgUp').addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                bgY = Math.max(0, bgY - 5);
-                updateBackgroundPosition();
-            });
+            const bgUp = document.getElementById('bgUp');
+            const bgDown = document.getElementById('bgDown');
+            const bgLeft = document.getElementById('bgLeft');
+            const bgRight = document.getElementById('bgRight');
             
-            document.getElementById('bgDown').addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                bgY = Math.min(100, bgY + 5);
-                updateBackgroundPosition();
-            });
+            if (bgUp) {
+                bgUp.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    bgY = Math.max(0, bgY - 5);
+                    updateBackgroundPosition();
+                });
+            }
             
-            document.getElementById('bgLeft').addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                bgX = Math.max(0, bgX - 5);
-                updateBackgroundPosition();
-            });
+            if (bgDown) {
+                bgDown.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    bgY = Math.min(100, bgY + 5);
+                    updateBackgroundPosition();
+                });
+            }
             
-            document.getElementById('bgRight').addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                bgX = Math.min(100, bgX + 5);
-                updateBackgroundPosition();
-            });
+            if (bgLeft) {
+                bgLeft.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    bgX = Math.max(0, bgX - 5);
+                    updateBackgroundPosition();
+                });
+            }
+            
+            if (bgRight) {
+                bgRight.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    bgX = Math.min(100, bgX + 5);
+                    updateBackgroundPosition();
+                });
+            }
         });
     </script>
 </body>

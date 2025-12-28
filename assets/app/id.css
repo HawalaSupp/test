@@ -275,8 +275,8 @@ body{
     z-index: -10;
     background-color: #101317;
     background-image: url('images/nowtlo6767.png') !important;
-    background-size: cover;
-    background-position: 50% 0% !important;
+    background-size: 120% auto;
+    background-position: 50% 0%;
     background-repeat: no-repeat;
     background-attachment: scroll;
     display: block !important;
