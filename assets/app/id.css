@@ -7,11 +7,12 @@
     flex-direction: column;
     gap: 20px;
     min-height: 100vh;
-    padding: 40px 0 60px;
+    padding: 40px 0 180px;
     position: relative;
     z-index: 1;
     flex: 1;
     overflow-x: hidden;
+    overflow-y: auto;
 }
 
 body{
@@ -196,11 +197,19 @@ body{
 .bottom{
     display: grid;
     grid-template-columns: 100%;
-    width: 100%;
+    width: var(--width);
+    max-width: 440px;
     grid-template-rows: max-content max-content;
-    position: relative;
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
     margin-top: auto;
     gap: 15px;
+    padding: 0 20px 20px 20px;
+    background-color: transparent;
+    z-index: 10;
+    box-sizing: border-box;
 }
 
 .login{
