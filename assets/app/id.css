@@ -345,6 +345,12 @@ body{
     background: rgba(255,255,255,0.4);
 }
 
+#bgZoomIn, #bgZoomOut{
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 1;
+}
+
 .login_text{
     color: white;
     margin-top: 8px;
