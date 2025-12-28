@@ -198,19 +198,9 @@
         throw new Error('Strona musi działać przez HTTPS, aby użyć kamery.');
       }
 
-      // Pobierz listę kamer i wybierz tylną, jeśli istnieje
-      const devices = await Html5Qrcode.getCameras();
-      if (!devices || !devices.length) throw new Error('Nie wykryto kamery w urządzeniu.');
-      
-      // Najpierw spróbuj znaleźć tylną kamerę po etykiecie
-      const back = devices.find(d => /back|rear|environment/i.test(d.label));
-      
-      // Jeśli nie znaleziono, spróbuj znaleźć kamerę, która NIE jest przednią
-      const notFront = back || devices.find(d => !/front|user|facing/i.test(d.label));
-      
-      // Użyj tylnej kamery lub pierwszej dostępnej, ale preferuj facingMode
       if (!html5QrCode) html5QrCode = new Html5Qrcode('reader');
 
+      // TYLKO tylna kamera - NIGDY przednia
       // Najpierw spróbuj z facingMode: 'environment' (tylna kamera)
       try {
         await html5QrCode.start(
@@ -219,35 +209,44 @@
           onScanSuccess,
           onScanFailure
         );
+        return; // Sukces - tylna kamera działa
       } catch (facingError) {
-        // Jeśli facingMode nie działa, użyj deviceId
-        if (notFront) {
-          selectedCameraId = notFront.id;
-          await html5QrCode.start(
-            { deviceId: { exact: selectedCameraId } },
-            { fps: 10, qrbox: { width: 250, height: 250 } },
-            onScanSuccess,
-            onScanFailure
-          );
-        } else {
-          throw facingError;
-        }
+        console.log('facingMode failed, trying deviceId approach:', facingError);
       }
+
+      // Jeśli facingMode nie działa, znajdź tylną kamerę po deviceId
+      const devices = await Html5Qrcode.getCameras();
+      if (!devices || !devices.length) {
+        throw new Error('Nie wykryto kamery w urządzeniu.');
+      }
+
+      // Znajdź TYLKO tylną kamerę - odrzuć wszystkie przednie
+      const backCamera = devices.find(d => {
+        const label = d.label.toLowerCase();
+        // Szukaj kamer oznaczonych jako tylne
+        if (/back|rear|environment/i.test(label)) return true;
+        // Odrzuć wszystkie przednie kamery
+        if (/front|user|facing.*user/i.test(label)) return false;
+        // Jeśli nie ma wyraźnej etykiety, sprawdź czy to nie jest przednia
+        return !label.includes('front');
+      });
+
+      if (!backCamera) {
+        throw new Error('Nie znaleziono tylnej kamery. Tylna kamera jest wymagana do skanowania QR.');
+      }
+
+      // Użyj tylko tylnej kamery
+      selectedCameraId = backCamera.id;
+      await html5QrCode.start(
+        { deviceId: { exact: selectedCameraId } },
+        { fps: 10, qrbox: { width: 250, height: 250 } },
+        onScanSuccess,
+        onScanFailure
+      );
     } catch (e) {
       console.error('startScanner error:', e);
-      // Fallback – spróbuj bez exact (np. Safari i dziwne etykiety)
-      try {
-        if (!html5QrCode) html5QrCode = new Html5Qrcode('reader');
-        await html5QrCode.start(
-          { facingMode: 'environment' }, // zawsze próbuj tylnej kamery
-          { fps: 10, qrbox: { width: 250, height: 250 } },
-          onScanSuccess,
-          onScanFailure
-        );
-      } catch (e2) {
-        console.error('fallback start failed:', e2);
-        showError('Brak dostępu do kamery', 'Sprawdź uprawnienia przeglądarki i połączenie HTTPS.');
-      }
+      // NIE MA FALLBACKU - jeśli tylna kamera nie działa, pokaż błąd
+      showError('Brak dostępu do tylnej kamery', 'Aplikacja wymaga tylnej kamery do skanowania kodów QR. Sprawdź uprawnienia przeglądarki i upewnij się, że tylna kamera jest dostępna.');
     }
   }
 
