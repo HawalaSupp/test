@@ -83,12 +83,12 @@
 }
 
 .card_box:nth-of-type(2) .card_eagle{
-    width: 45px;
+    width: 65px;
 }
 
 .card_box:nth-of-type(2) .card_eagle_background{
-    width: 55px;
-    height: 55px;
+    width: 75px;
+    height: 75px;
 }
 
 .card_background{
