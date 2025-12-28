@@ -100,7 +100,7 @@ body{
     width: 100%;
     max-width: 100%;
     margin-top: 10px;
-    padding: 12px 8px;
+    padding: 12px 15px;
     background-color: var(--secondary);
     margin-left: 0;
     margin-right: 0;
@@ -218,7 +218,7 @@ body{
     color: black;
     line-height: 55px;
     text-align: center;
-    font-weight: 600;
+    font-weight: 400;
     font-size: 20px;
     width: 100%;
     margin-left: 0;
@@ -325,7 +325,7 @@ body{
 }
 
 .logo_other{
-    height: 18px;
+    height: 20px;
     margin-left: 0px;
     margin-top: auto;
     margin-bottom: auto;
