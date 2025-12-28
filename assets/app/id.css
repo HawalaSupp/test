@@ -249,8 +249,8 @@ body{
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    filter: blur(5px);
-    opacity: 0.6;
+    filter: blur(0px);
+    opacity: 1;
 }
 
 .login_text{
