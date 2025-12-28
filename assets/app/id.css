@@ -96,13 +96,13 @@ body{
 }
 
 .password_box{
-    width: calc(100% - 5px);
+    width: 100%;
     max-width: 100%;
     margin-top: 10px;
     padding: 12px 25px;
     background-color: var(--secondary);
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 0;
+    margin-right: 0;
     position: relative;
     border-radius: 15px;
     box-shadow: 0 10px 35px rgba(0,0,0,0.35);
@@ -318,14 +318,13 @@ body{
 }
 
 .version{
-    margin-right: 0px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto;
     opacity: 0.5;
     color: white;
     font-size: 12px;
     text-align: center;
     width: 100%;
+    display: block;
     height: max-content;
     margin-top: auto;
     margin-bottom: auto;
