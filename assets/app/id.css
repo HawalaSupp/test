@@ -319,9 +319,13 @@ body{
 
 .version{
     margin-right: 0px;
+    margin-left: auto;
+    margin-right: auto;
     opacity: 0.5;
     color: white;
-    font-size: 14px;
+    font-size: 12px;
+    text-align: center;
+    width: 100%;
     height: max-content;
     margin-top: auto;
     margin-bottom: auto;
