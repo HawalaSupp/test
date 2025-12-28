@@ -94,16 +94,29 @@
                     bgElement.style.setProperty('background-position', pos, 'important');
                     localStorage.setItem('bgPosX', bgX);
                     localStorage.setItem('bgPosY', bgY);
+                    updateInfoDisplay();
                 }
                 
                 function updateBackgroundSize() {
                     bgElement.style.setProperty('background-size', bgSize + '% auto', 'important');
                     localStorage.setItem('bgSize', bgSize);
+                    updateInfoDisplay();
+                }
+                
+                function updateInfoDisplay() {
+                    const infoElement = document.getElementById('bgInfo');
+                    if (infoElement) {
+                        const xPercent = Math.round(bgX);
+                        const yPercent = Math.round(bgY);
+                        const zoomPercent = Math.round(bgSize);
+                        infoElement.innerHTML = `X: ${xPercent}%<br>Y: ${yPercent}%<br>Zoom: ${zoomPercent}%`;
+                    }
                 }
                 
                 function updateAll() {
                     updateBackgroundPosition();
                     updateBackgroundSize();
+                    updateInfoDisplay();
                 }
                 
                 updateAll();
