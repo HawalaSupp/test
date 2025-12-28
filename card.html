@@ -16,7 +16,7 @@
   <link rel="shortcut icon" href="assets/app/images/ikonka.png">
 </head>
 <body>
-  <button class="refresh_button" onclick="location.reload(true)" title="Force Refresh">↻</button>
+  <button class="refresh_button" onclick="window.location.href = window.location.href.split("?")[0] + "?t=" + Date.now()" title="Force Refresh">↻</button>
 
   <div class="top_grid_fixed">
     <div class="action_grid_fixed">
