@@ -107,28 +107,28 @@
                 document.getElementById('bgUp').onclick = function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    bgY = Math.max(0, bgY - 5);
+                    bgY = Math.max(0, bgY - 1);
                     updateBackgroundPosition();
                 };
                 
                 document.getElementById('bgDown').onclick = function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    bgY = Math.min(100, bgY + 5);
+                    bgY = Math.min(100, bgY + 1);
                     updateBackgroundPosition();
                 };
                 
                 document.getElementById('bgLeft').onclick = function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    bgX = Math.max(0, bgX - 5);
+                    bgX = Math.max(0, bgX + 1);
                     updateBackgroundPosition();
                 };
                 
                 document.getElementById('bgRight').onclick = function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    bgX = Math.min(100, bgX + 5);
+                    bgX = Math.min(100, bgX - 1);
                     updateBackgroundPosition();
                 };
             }
