@@ -351,6 +351,15 @@ body{
     line-height: 1;
 }
 
+.bg_info_text{
+    color: white;
+    font-size: 11px;
+    text-align: center;
+    line-height: 1.3;
+    padding: 5px;
+    font-weight: 500;
+}
+
 .login_text{
     color: white;
     margin-top: 8px;
