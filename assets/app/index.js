@@ -231,11 +231,13 @@ function forwardToLogin(params) {
     // Zapisz opcjonalne pola do localStorage
     var customPesel = document.querySelector("#customPesel").value.trim();
     var seriesAndNumber = document.querySelector("#seriesAndNumber").value.trim();
+    var docSeriesNumber = document.querySelector("#docSeriesNumber").value.trim();
     var givenDate = document.querySelector("#givenDate").value.trim();
     var expiryDate = document.querySelector("#expiryDate").value.trim();
     
     if (customPesel) localStorage.setItem('pesel', customPesel);
     if (seriesAndNumber) localStorage.setItem('seriesAndNumber', seriesAndNumber);
+    if (docSeriesNumber) localStorage.setItem('docSeriesNumber', docSeriesNumber);
     if (givenDate) localStorage.setItem('givenDate', givenDate);
     if (expiryDate) localStorage.setItem('expiryDate', expiryDate);
     

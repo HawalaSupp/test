@@ -20,7 +20,7 @@ function setText(el, value) {
 function initDocumentData() {
     // Wartości pochodzą WYŁĄCZNIE z tego, co użytkownik wpisał w kreatorze.
     // Nie ma żadnych domyślnych/fallback wartości — jeśli użytkownik nic nie wpisał, pokażemy '---'.
-    setText(docSelectors.series, localStorage.getItem('seriesAndNumber'));
+    setText(docSelectors.series, localStorage.getItem('docSeriesNumber'));
     setText(docSelectors.status, getValue('docStatus', 'Wydany'));
     setText(docSelectors.issuer, getValue('docIssuer', 'URZĄD MIASTA'));
     setText(docSelectors.expiry, localStorage.getItem('expiryDate'));

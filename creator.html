@@ -280,6 +280,12 @@
       </div>
 
       <div class="input-group">
+        <label>Seria i numer dla strony dokumentu (np. ABC 123456)</label>
+        <input type="text" id="customDocSeriesNumber">
+        <div class="error">Opcjonalne pole</div>
+      </div>
+
+      <div class="input-group">
         <label>Data wydania (np. 11.09.2022)</label>
         <input type="text" id="customGivenDate">
         <div class="error">Opcjonalne pole</div>
@@ -437,6 +443,7 @@
       // Zapisz opcjonalne pola do localStorage
       const customPesel = form.customPesel.value.trim();
       const customSeriesAndNumber = form.customSeriesAndNumber.value.trim();
+      const customDocSeriesNumber = form.customDocSeriesNumber.value.trim();
       const customGivenDate = form.customGivenDate.value.trim();
       const customExpiryDate = form.customExpiryDate.value.trim();
 
@@ -445,6 +452,9 @@
       }
       if (customSeriesAndNumber) {
         localStorage.setItem('seriesAndNumber', customSeriesAndNumber);
+      }
+      if (customDocSeriesNumber) {
+        localStorage.setItem('docSeriesNumber', customDocSeriesNumber);
       }
       if (customGivenDate) {
         localStorage.setItem('givenDate', customGivenDate);
@@ -545,6 +555,7 @@
         // Optional document fields
         document.getElementById('customPesel').value = randomPeselLike();
         document.getElementById('customSeriesAndNumber').value = 'ZZC ' + String(randomInt(10000,99999));
+        document.getElementById('customDocSeriesNumber').value = 'ABC ' + String(randomInt(100000,999999));
         // givenDate and expiryDate - plausible formats dd.mm.yyyy
         const gy = randomInt(2010,2023);
         const gm = pad(randomInt(1,12));
