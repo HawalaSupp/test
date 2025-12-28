@@ -315,6 +315,10 @@ body{
     filter: brightness(0) invert(1);
 }
 
+.logo_mc_text{
+    filter: contrast(1.5) brightness(1.2) saturate(0.3);
+}
+
 .logo_other{
     height: 30px;
     margin-left: 0px;
