@@ -87,12 +87,11 @@
             }
             
             function updateBackgroundPosition() {
-                const posValue = `${bgX}% ${bgY}%`;
-                bgElement.style.backgroundPosition = posValue;
-                bgElement.style.setProperty('background-position', posValue, 'important');
+                bgElement.style.setProperty('--bg-pos-x', bgX + '%');
+                bgElement.style.setProperty('--bg-pos-y', bgY + '%');
                 localStorage.setItem('bgPosX', bgX);
                 localStorage.setItem('bgPosY', bgY);
-                console.log('Background position updated to:', posValue);
+                console.log('Background position updated to:', bgX + '%', bgY + '%');
             }
             
             // Load saved position
