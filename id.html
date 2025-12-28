@@ -93,7 +93,9 @@
                 function updateBackgroundPosition() {
                     const pos = bgX + '% ' + bgY + '%';
                     console.log('Setting background position to:', pos, 'bgX:', bgX, 'bgY:', bgY);
+                    bgElement.style.backgroundPosition = pos;
                     bgElement.style.setProperty('background-position', pos, 'important');
+                    console.log('Applied style, computed:', window.getComputedStyle(bgElement).backgroundPosition);
                     localStorage.setItem('bgPosX', bgX);
                     localStorage.setItem('bgPosY', bgY);
                     updateInfoDisplay();
@@ -145,7 +147,14 @@
                     updateBackgroundPosition();
                 };
                 
-                document.getElementById('bgLeft').onclick = function(e) {
+                const bgLeftBtn = document.getElementById('bgLeft');
+                const bgRightBtn = document.getElementById('bgRight');
+                
+                if (!bgLeftBtn || !bgRightBtn) {
+                    console.error('Left or Right button not found!');
+                }
+                
+                bgLeftBtn.onclick = function(e) {
                     e.preventDefault();
                     e.stopPropagation();
                     bgX = bgX - 1;
@@ -153,7 +162,7 @@
                     updateBackgroundPosition();
                 };
                 
-                document.getElementById('bgRight').onclick = function(e) {
+                bgRightBtn.onclick = function(e) {
                     e.preventDefault();
                     e.stopPropagation();
                     bgX = bgX + 1;
