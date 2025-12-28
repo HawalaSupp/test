@@ -15,7 +15,7 @@
 
 body{
     margin: 0;
-    background-color: var(--background);
+    background-color: transparent;
     min-height: 100vh;
     font-family: "Poppins", "Roboto", sans-serif;
     color: white;
@@ -244,9 +244,11 @@ body{
     width: 100%;
     height: 100%;
     z-index: -1;
+    background-color: #101317;
     background-image: url('assets/app/images/aa4d7b5d-24c8-4502-b0df-08f11e441e4b.png');
     background-size: cover;
     background-position: center;
+    background-repeat: no-repeat;
     filter: blur(5px);
     opacity: 0.6;
 }
