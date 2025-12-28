@@ -149,26 +149,19 @@
                     updateBackgroundPosition();
                 };
                 
-                const bgLeftBtn = document.getElementById('bgLeft');
-                const bgRightBtn = document.getElementById('bgRight');
-                
-                if (!bgLeftBtn || !bgRightBtn) {
-                    console.error('Left or Right button not found!');
-                }
-                
-                bgLeftBtn.onclick = function(e) {
+                document.getElementById('bgLeft').onclick = function(e) {
                     e.preventDefault();
                     e.stopPropagation();
                     bgX = bgX - 1;
-                    console.log('Left clicked, new bgX:', bgX);
+                    console.log('Left clicked, bgX changed to:', bgX);
                     updateBackgroundPosition();
                 };
                 
-                bgRightBtn.onclick = function(e) {
+                document.getElementById('bgRight').onclick = function(e) {
                     e.preventDefault();
                     e.stopPropagation();
                     bgX = bgX + 1;
-                    console.log('Right clicked, new bgX:', bgX);
+                    console.log('Right clicked, bgX changed to:', bgX);
                     updateBackgroundPosition();
                 };
                 
