@@ -219,23 +219,27 @@ body{
     text-align: center;
     font-weight: 600;
     font-size: 20px;
-    width: 100%;
+    width: calc(100% - 16px);
+    margin-left: 8px;
+    margin-right: 8px;
     background-color: var(--text);
     height: 55px;
-    border-radius: 32px;
+    border-radius: 8px;
+    box-sizing: border-box;
 }
 
 .data{
     height: max-content;
-    width: 95%;
-    margin-left: auto;
-    margin-right: auto;
+    width: calc(100% - 16px);
+    margin-left: 8px;
+    margin-right: 8px;
     display: grid;
     grid-template-columns: 80px 100px auto auto;
     grid-template-rows: max-content;
     align-items: center;
     justify-items: center;
     gap: 10px;
+    box-sizing: border-box;
 }
 
 .logo_text{
