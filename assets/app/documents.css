@@ -93,6 +93,10 @@
     clip-path: none !important;
 }
 
+.prawo_jazdy_card .card_filler{
+    display: none !important;
+}
+
 .card_background{
     width: 100%;
     height: 100%;
