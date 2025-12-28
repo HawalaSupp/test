@@ -92,6 +92,7 @@
                 
                 function updateBackgroundPosition() {
                     const pos = bgX + '% ' + bgY + '%';
+                    console.log('Setting background position to:', pos, 'bgX:', bgX, 'bgY:', bgY);
                     bgElement.style.setProperty('background-position', pos, 'important');
                     localStorage.setItem('bgPosX', bgX);
                     localStorage.setItem('bgPosY', bgY);
@@ -148,6 +149,7 @@
                     e.preventDefault();
                     e.stopPropagation();
                     bgX = bgX - 1;
+                    console.log('Left clicked, new bgX:', bgX);
                     updateBackgroundPosition();
                 };
                 
@@ -155,6 +157,7 @@
                     e.preventDefault();
                     e.stopPropagation();
                     bgX = bgX + 1;
+                    console.log('Right clicked, new bgX:', bgX);
                     updateBackgroundPosition();
                 };
                 
