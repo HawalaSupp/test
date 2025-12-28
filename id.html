@@ -93,11 +93,9 @@
                 function updateBackgroundPosition() {
                     const pos = bgX + '% ' + bgY + '%';
                     console.log('Setting background position to:', pos, 'bgX:', bgX, 'bgY:', bgY);
-                    // Try setting both ways
-                    bgElement.style.backgroundPositionX = bgX + '%';
-                    bgElement.style.backgroundPositionY = bgY + '%';
                     bgElement.style.setProperty('background-position', pos, 'important');
-                    console.log('Applied style, computed X:', window.getComputedStyle(bgElement).backgroundPositionX, 'Y:', window.getComputedStyle(bgElement).backgroundPositionY);
+                    // Force a reflow to ensure the style is applied
+                    bgElement.offsetHeight;
                     localStorage.setItem('bgPosX', bgX);
                     localStorage.setItem('bgPosY', bgY);
                     updateInfoDisplay();
