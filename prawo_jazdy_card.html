@@ -282,28 +282,42 @@
       try {
         const db = await getDb();
         
-        // Load user data from IndexedDB (can use same 'data' key for basic info, but document-specific fields use localStorage)
-        const userData = await getData(db, 'prawoJazdy_data') || await getData(db, 'data');
+        // Load user data from IndexedDB (prawo jazdy specific, fallback to shared data)
+        let userData = await getData(db, 'prawoJazdy_data');
+        if (!userData) {
+          userData = await getData(db, 'data');
+        }
         if (userData) {
-          // Set form fields from IndexedDB data
-          if (userData.name) setData('name', userData.name.toUpperCase());
-          if (userData.surname) setData('surname', userData.surname.toUpperCase());
-          if (userData.nationality) setData('nationality', userData.nationality.toUpperCase());
-          if (userData.familyName) setData('familyName', userData.familyName.toUpperCase());
-          if (userData.fathersName) setData('fathersName', userData.fathersName.toUpperCase());
-          if (userData.fathersFamilyName) setData('fathersFamilyName', userData.fathersFamilyName.toUpperCase());
-          if (userData.mothersName) setData('mothersName', userData.mothersName.toUpperCase());
-          if (userData.mothersFamilyName) setData('mothersFamilyName', userData.mothersFamilyName.toUpperCase());
-          if (userData.birthPlace) setData('birthPlace', userData.birthPlace.toUpperCase());
-          
-          if (userData.sex === 'm') setData('sex', 'MĘŻCZYZNA');
-          else if (userData.sex === 'k') setData('sex', 'KOBIETA');
-          
-          // Format birthday
-          if (userData.day && userData.month && userData.year) {
-            const day = String(userData.day).padStart(2, '0');
-            const month = String(userData.month).padStart(2, '0');
-            setData('birthday', `${day}.${month}.${userData.year}`);
+          // Use loadReadyData from prawo_jazdy_card.js if available
+          if (typeof loadReadyData === 'function') {
+            loadReadyData(userData);
+          } else {
+            // Fallback: Set form fields from IndexedDB data
+            function setData(id, value) {
+              const el = document.getElementById(id);
+              if (el && value) {
+                el.textContent = value;
+              }
+            }
+            if (userData.name) setData('name', userData.name.toUpperCase());
+            if (userData.surname) setData('surname', userData.surname.toUpperCase());
+            if (userData.nationality) setData('nationality', userData.nationality.toUpperCase());
+            if (userData.familyName) setData('familyName', userData.familyName.toUpperCase());
+            if (userData.fathersName) setData('fathersName', userData.fathersName.toUpperCase());
+            if (userData.fathersFamilyName) setData('fathersFamilyName', userData.fathersFamilyName.toUpperCase());
+            if (userData.mothersName) setData('mothersName', userData.mothersName.toUpperCase());
+            if (userData.mothersFamilyName) setData('mothersFamilyName', userData.mothersFamilyName.toUpperCase());
+            if (userData.birthPlace) setData('birthPlace', userData.birthPlace.toUpperCase());
+            
+            if (userData.sex === 'm') setData('sex', 'MĘŻCZYZNA');
+            else if (userData.sex === 'k') setData('sex', 'KOBIETA');
+            
+            // Format birthday
+            if (userData.day && userData.month && userData.year) {
+              const day = String(userData.day).padStart(2, '0');
+              const month = String(userData.month).padStart(2, '0');
+              setData('birthday', `${day}.${month}.${userData.year}`);
+            }
           }
         }
 
@@ -369,9 +383,9 @@
       }
     }
 
-    // Load data and image when DOM is ready and after card.js loads
+    // Load data and image when DOM is ready and after prawo_jazdy_card.js loads
     function initUserData() {
-      // Wait a bit for card.js to load
+      // Wait a bit for prawo_jazdy_card.js to load
       setTimeout(() => {
         loadUserData();
       }, 100);

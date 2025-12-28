@@ -30,6 +30,10 @@ update.addEventListener('click', () => {
     scroll(0, 0)
 });
 
+function delay(time) {
+    return new Promise(resolve => setTimeout(resolve, time));
+}
+
 setClock();
 function setClock(){
     date = new Date();
