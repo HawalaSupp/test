@@ -311,6 +311,10 @@ body{
     width: 55px;
 }
 
+.logo_white{
+    filter: brightness(0) invert(1);
+}
+
 .logo_other{
     height: 30px;
     margin-left: 0px;
