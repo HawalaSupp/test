@@ -50,9 +50,9 @@
     </div>
     <div class="background_controls" id="backgroundControls">
         <div class="background_controls_grid">
-            <div></div>
+            <button class="bg_control_btn" id="bgZoomOut">−</button>
             <button class="bg_control_btn" id="bgUp">↑</button>
-            <div></div>
+            <button class="bg_control_btn" id="bgZoomIn">+</button>
             <button class="bg_control_btn" id="bgLeft">←</button>
             <div></div>
             <button class="bg_control_btn" id="bgRight">→</button>
@@ -69,6 +69,7 @@
         (function() {
             let bgX = 50;
             let bgY = 0;
+            let bgSize = 150; // percentage
             
             function initBackgroundControls() {
                 const bgElement = document.getElementById('backgroundElement');
@@ -80,21 +81,32 @@
                     return;
                 }
                 
-                // Load saved position
+                // Load saved position and size
                 const savedX = localStorage.getItem('bgPosX');
                 const savedY = localStorage.getItem('bgPosY');
+                const savedSize = localStorage.getItem('bgSize');
                 if (savedX !== null) bgX = parseFloat(savedX);
                 if (savedY !== null) bgY = parseFloat(savedY);
+                if (savedSize !== null) bgSize = parseFloat(savedSize);
                 
                 function updateBackgroundPosition() {
                     const pos = bgX + '% ' + bgY + '%';
                     bgElement.style.setProperty('background-position', pos, 'important');
                     localStorage.setItem('bgPosX', bgX);
                     localStorage.setItem('bgPosY', bgY);
-                    console.log('BG Position:', pos, 'Element:', bgElement);
                 }
                 
-                updateBackgroundPosition();
+                function updateBackgroundSize() {
+                    bgElement.style.setProperty('background-size', bgSize + '% auto', 'important');
+                    localStorage.setItem('bgSize', bgSize);
+                }
+                
+                function updateAll() {
+                    updateBackgroundPosition();
+                    updateBackgroundSize();
+                }
+                
+                updateAll();
                 
                 // Toggle controls
                 forgotPasswordBtn.onclick = function(e) {
@@ -107,29 +119,44 @@
                 document.getElementById('bgUp').onclick = function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    bgY = Math.max(0, bgY + 1);
+                    bgY = Math.max(0, Math.min(100, bgY + 1));
                     updateBackgroundPosition();
                 };
                 
                 document.getElementById('bgDown').onclick = function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    bgY = Math.min(100, bgY - 1);
+                    bgY = Math.max(0, Math.min(100, bgY - 1));
                     updateBackgroundPosition();
                 };
                 
                 document.getElementById('bgLeft').onclick = function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    bgX = Math.max(0, bgX - 1);
+                    bgX = Math.max(0, Math.min(100, bgX - 1));
                     updateBackgroundPosition();
                 };
                 
                 document.getElementById('bgRight').onclick = function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    bgX = Math.min(100, bgX + 1);
+                    bgX = Math.max(0, Math.min(100, bgX + 1));
                     updateBackgroundPosition();
+                };
+                
+                // Zoom buttons
+                document.getElementById('bgZoomIn').onclick = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    bgSize = Math.min(300, bgSize + 5);
+                    updateBackgroundSize();
+                };
+                
+                document.getElementById('bgZoomOut').onclick = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    bgSize = Math.max(100, bgSize - 5);
+                    updateBackgroundSize();
                 };
             }
             
