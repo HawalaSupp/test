@@ -88,10 +88,10 @@
                 
                 function updateBackgroundPosition() {
                     const pos = bgX + '% ' + bgY + '%';
-                    bgElement.style.cssText += 'background-position: ' + pos + ' !important;';
+                    bgElement.style.setProperty('background-position', pos, 'important');
                     localStorage.setItem('bgPosX', bgX);
                     localStorage.setItem('bgPosY', bgY);
-                    console.log('BG Position:', pos);
+                    console.log('BG Position:', pos, 'Element:', bgElement);
                 }
                 
                 updateBackgroundPosition();
