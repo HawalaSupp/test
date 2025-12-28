@@ -17,7 +17,7 @@
 </head>
 <body>
     <button class="refresh_button" onclick="window.location.href = window.location.href.split('?')[0] + '?t=' + Date.now()" title="Force Refresh">↻</button>
-    <div class="background"></div>
+    <div class="background" id="backgroundElement"></div>
     <div class="login_wrapper">
         <div class="top_grid">
             <img class="logo" src="assets/app/images/logo_large.png" alt="mObywatel">
@@ -66,90 +66,79 @@
     <script src="assets/app/manifest.js"></script>
     <script>
         // Background position controls
-        document.addEventListener('DOMContentLoaded', function() {
-            let bgX = 50; // percentage
-            let bgY = 0; // percentage
-            const bgElement = document.querySelector('.background');
-            const controls = document.getElementById('backgroundControls');
-            const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
+        (function() {
+            let bgX = 50;
+            let bgY = 0;
             
-            if (!bgElement) {
-                console.error('Background element not found');
-                return;
-            }
-            if (!controls) {
-                console.error('Controls element not found');
-                return;
-            }
-            if (!forgotPasswordBtn) {
-                console.error('Forgot password button not found');
-                return;
-            }
-            
-            function updateBackgroundPosition() {
-                bgElement.style.setProperty('--bg-pos-x', bgX + '%');
-                bgElement.style.setProperty('--bg-pos-y', bgY + '%');
-                localStorage.setItem('bgPosX', bgX);
-                localStorage.setItem('bgPosY', bgY);
-                console.log('Background position updated to:', bgX + '%', bgY + '%');
-            }
-            
-            // Load saved position
-            const savedX = localStorage.getItem('bgPosX');
-            const savedY = localStorage.getItem('bgPosY');
-            if (savedX !== null) bgX = parseFloat(savedX);
-            if (savedY !== null) bgY = parseFloat(savedY);
-            updateBackgroundPosition();
-            
-            // Toggle controls on "Nie pamiętasz hasła?" click
-            forgotPasswordBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                controls.classList.toggle('active');
-            });
-            
-            // Arrow button handlers
-            const bgUp = document.getElementById('bgUp');
-            const bgDown = document.getElementById('bgDown');
-            const bgLeft = document.getElementById('bgLeft');
-            const bgRight = document.getElementById('bgRight');
-            
-            if (bgUp) {
-                bgUp.addEventListener('click', function(e) {
+            function initBackgroundControls() {
+                const bgElement = document.getElementById('backgroundElement');
+                const controls = document.getElementById('backgroundControls');
+                const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
+                
+                if (!bgElement || !controls || !forgotPasswordBtn) {
+                    setTimeout(initBackgroundControls, 100);
+                    return;
+                }
+                
+                // Load saved position
+                const savedX = localStorage.getItem('bgPosX');
+                const savedY = localStorage.getItem('bgPosY');
+                if (savedX !== null) bgX = parseFloat(savedX);
+                if (savedY !== null) bgY = parseFloat(savedY);
+                
+                function updateBackgroundPosition() {
+                    const pos = bgX + '% ' + bgY + '%';
+                    bgElement.style.cssText += 'background-position: ' + pos + ' !important;';
+                    localStorage.setItem('bgPosX', bgX);
+                    localStorage.setItem('bgPosY', bgY);
+                    console.log('BG Position:', pos);
+                }
+                
+                updateBackgroundPosition();
+                
+                // Toggle controls
+                forgotPasswordBtn.onclick = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    controls.classList.toggle('active');
+                };
+                
+                // Arrow buttons
+                document.getElementById('bgUp').onclick = function(e) {
                     e.preventDefault();
                     e.stopPropagation();
                     bgY = Math.max(0, bgY - 5);
                     updateBackgroundPosition();
-                });
-            }
-            
-            if (bgDown) {
-                bgDown.addEventListener('click', function(e) {
+                };
+                
+                document.getElementById('bgDown').onclick = function(e) {
                     e.preventDefault();
                     e.stopPropagation();
                     bgY = Math.min(100, bgY + 5);
                     updateBackgroundPosition();
-                });
-            }
-            
-            if (bgLeft) {
-                bgLeft.addEventListener('click', function(e) {
+                };
+                
+                document.getElementById('bgLeft').onclick = function(e) {
                     e.preventDefault();
                     e.stopPropagation();
                     bgX = Math.max(0, bgX - 5);
                     updateBackgroundPosition();
-                });
-            }
-            
-            if (bgRight) {
-                bgRight.addEventListener('click', function(e) {
+                };
+                
+                document.getElementById('bgRight').onclick = function(e) {
                     e.preventDefault();
                     e.stopPropagation();
                     bgX = Math.min(100, bgX + 5);
                     updateBackgroundPosition();
-                });
+                };
             }
-        });
+            
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initBackgroundControls);
+            } else {
+                initBackgroundControls();
+            }
+        })();
     </script>
 </body>
 </html>

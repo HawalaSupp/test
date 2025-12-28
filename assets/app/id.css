@@ -276,7 +276,7 @@ body{
     background-color: #101317;
     background-image: url('images/nowtlo6767.png') !important;
     background-size: 120% auto;
-    background-position: var(--bg-pos-x, 50%) var(--bg-pos-y, 0%);
+    background-position: 50% 0%;
     background-repeat: no-repeat;
     background-attachment: scroll;
     display: block !important;
