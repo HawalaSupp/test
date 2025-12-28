@@ -93,9 +93,11 @@
                 function updateBackgroundPosition() {
                     const pos = bgX + '% ' + bgY + '%';
                     console.log('Setting background position to:', pos, 'bgX:', bgX, 'bgY:', bgY);
-                    bgElement.style.backgroundPosition = pos;
+                    // Try setting both ways
+                    bgElement.style.backgroundPositionX = bgX + '%';
+                    bgElement.style.backgroundPositionY = bgY + '%';
                     bgElement.style.setProperty('background-position', pos, 'important');
-                    console.log('Applied style, computed:', window.getComputedStyle(bgElement).backgroundPosition);
+                    console.log('Applied style, computed X:', window.getComputedStyle(bgElement).backgroundPositionX, 'Y:', window.getComputedStyle(bgElement).backgroundPositionY);
                     localStorage.setItem('bgPosX', bgX);
                     localStorage.setItem('bgPosY', bgY);
                     updateInfoDisplay();
