@@ -219,9 +219,9 @@ body{
     text-align: center;
     font-weight: 600;
     font-size: 20px;
-    width: calc(100% - 4px);
-    margin-left: 2px;
-    margin-right: 2px;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
     background-color: var(--text);
     height: 55px;
     border-radius: 8px;
@@ -230,9 +230,9 @@ body{
 
 .data{
     height: max-content;
-    width: calc(100% - 4px);
-    margin-left: 2px;
-    margin-right: 2px;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
     display: grid;
     grid-template-columns: 80px 100px auto auto;
     grid-template-rows: max-content;
