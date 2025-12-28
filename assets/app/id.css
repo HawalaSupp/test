@@ -198,16 +198,17 @@ body{
 .bottom{
     display: grid;
     grid-template-columns: 100%;
-    width: var(--width);
-    max-width: 440px;
+    width: 100%;
+    max-width: 100%;
     grid-template-rows: max-content max-content;
     position: fixed;
     bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 0;
+    right: 0;
+    transform: none;
     margin-top: auto;
     gap: 15px;
-    padding: 0 20px 20px 20px;
+    padding: 0 0 20px 0;
     background-color: transparent;
     z-index: 10;
     box-sizing: border-box;
