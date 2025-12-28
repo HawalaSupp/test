@@ -82,6 +82,15 @@
     z-index: 1;
 }
 
+.card_box:nth-of-type(2) .card_eagle{
+    width: 45px;
+}
+
+.card_box:nth-of-type(2) .card_eagle_background{
+    width: 55px;
+    height: 55px;
+}
+
 .card_background{
     width: 100%;
     height: 100%;
