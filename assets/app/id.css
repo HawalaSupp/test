@@ -175,7 +175,7 @@ body{
 .forgot_password{
     color: var(--text);
     font-size: 14px;
-    font-weight: 300;
+    font-weight: 400;
     margin-bottom: 15px;
     margin-top: 17px;
     margin-right: auto;
@@ -230,9 +230,11 @@ body{
     margin-left: auto;
     margin-right: auto;
     display: grid;
-    grid-template-columns: 80px 100px calc(100% - 180px);
-    grid-template-rows: max-content;
+    grid-template-columns: 80px 100px;
+    grid-template-rows: max-content max-content;
     align-items: center;
+    justify-items: center;
+    gap: 10px;
 }
 
 .logo_text{
