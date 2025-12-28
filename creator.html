@@ -180,6 +180,16 @@
   <div class="container">
     <h1>🪪 Kreator danych</h1>
     
+    <div class="input-group" style="margin-bottom: 20px;">
+      <label>Typ dokumentu *</label>
+      <select id="documentType" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #1a1d24; color: white; font-size: 16px;">
+        <option value="">Wybierz typ dokumentu</option>
+        <option value="mdowod">mDowód</option>
+        <option value="mprawojazdy">mPrawo jazdy</option>
+      </select>
+      <div class="error">To pole jest wymagane</div>
+    </div>
+    
     <div class="upload-box" id="uploadBox">
       <img id="preview" style="display: none;">
       <div id="uploadContent">
@@ -441,36 +451,53 @@
         year: parseInt(form.year.value)
       };
 
-      // Zapisz opcjonalne pola do localStorage
+      // Get document type
+      const documentType = form.documentType.value;
+      const isPrawoJazdy = documentType === 'mprawojazdy';
+      
+      // Zapisz opcjonalne pola do localStorage (with document type prefix)
       const customPesel = form.customPesel.value.trim();
       const customSeriesAndNumber = form.customSeriesAndNumber.value.trim();
       const customDocSeriesNumber = form.customDocSeriesNumber.value.trim();
       const customGivenDate = form.customGivenDate.value.trim();
       const customExpiryDate = form.customExpiryDate.value.trim();
 
+      // Prefix for localStorage keys based on document type
+      const prefix = isPrawoJazdy ? 'prawoJazdy_' : '';
+      
       if (customPesel) {
-        localStorage.setItem('pesel', customPesel);
+        localStorage.setItem(prefix + 'pesel', customPesel);
       }
       if (customSeriesAndNumber) {
-        localStorage.setItem('seriesAndNumber', customSeriesAndNumber);
+        localStorage.setItem(prefix + 'seriesAndNumber', customSeriesAndNumber);
       }
       if (customDocSeriesNumber) {
-        localStorage.setItem('docSeriesNumber', customDocSeriesNumber);
+        // docSeriesNumber is only for mDowód document page
+        if (!isPrawoJazdy) {
+          localStorage.setItem('docSeriesNumber', customDocSeriesNumber);
+        }
       }
       if (customGivenDate) {
-        localStorage.setItem('givenDate', customGivenDate);
+        localStorage.setItem(prefix + 'givenDate', customGivenDate);
       }
       if (customExpiryDate) {
-        localStorage.setItem('expiryDate', customExpiryDate);
+        localStorage.setItem(prefix + 'expiryDate', customExpiryDate);
       }
 
-      // Zapisz dane w IndexedDB
+      // Zapisz dane w IndexedDB (with document type key if prawo jazdy)
       const db = await getDb();
-      await saveData(db, data);
+      if (isPrawoJazdy) {
+        await saveData(db, { ...data, data: 'prawoJazdy_data' });
+      } else {
+        await saveData(db, data);
+      }
 
-      // Zapisz zdjęcie w IndexedDB
+      // Zapisz zdjęcie w IndexedDB (with document type key)
       if (imageBase64) {
-        await saveData(db, { data: 'image', image: imageBase64 });
+        const imageKey = isPrawoJazdy ? 'prawoJazdy_image' : 'image';
+        await saveData(db, { data: imageKey, image: imageBase64 });
+        // Also save to localStorage for quick access
+        localStorage.setItem(prefix + 'userPhoto', imageBase64);
       }
 
       localStorage.setItem('hasUserData', 'true');
