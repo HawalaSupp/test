@@ -283,6 +283,54 @@ body{
     margin: 0;
     padding: 0;
     overflow: hidden;
+    transition: background-position 0.1s ease;
+}
+
+.background_controls{
+    position: fixed;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 15px;
+    border-radius: 10px;
+    display: none;
+}
+
+.background_controls.active{
+    display: block;
+}
+
+.background_controls_grid{
+    display: grid;
+    grid-template-columns: repeat(3, 40px);
+    grid-template-rows: repeat(3, 40px);
+    gap: 5px;
+    justify-items: center;
+    align-items: center;
+}
+
+.bg_control_btn{
+    width: 40px;
+    height: 40px;
+    background: rgba(255,255,255,0.2);
+    border: 2px solid white;
+    border-radius: 5px;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bg_control_btn:hover{
+    background: rgba(255,255,255,0.3);
+}
+
+.bg_control_btn:active{
+    background: rgba(255,255,255,0.4);
 }
 
 .login_text{

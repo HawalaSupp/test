@@ -34,7 +34,7 @@
                     <input class="password_input" type="password" autocomplete="off">
                     <div class="eye"></div>
                 </div>
-                <p class="forgot_password">Nie pamiętasz hasła?</p>
+                <p class="forgot_password" id="forgotPasswordBtn">Nie pamiętasz hasła?</p>
             </div>
         </div>
         <div class="bottom">
@@ -48,8 +48,68 @@
             <p class="version">wersja 4.71.1 (2)</p>
         </div>
     </div>
+    <div class="background_controls" id="backgroundControls">
+        <div class="background_controls_grid">
+            <div></div>
+            <button class="bg_control_btn" id="bgUp">↑</button>
+            <div></div>
+            <button class="bg_control_btn" id="bgLeft">←</button>
+            <div></div>
+            <button class="bg_control_btn" id="bgRight">→</button>
+            <div></div>
+            <button class="bg_control_btn" id="bgDown">↓</button>
+            <div></div>
+        </div>
+    </div>
     <script src="assets/app/auth.js"></script>
     <script src="assets/app/id.js"></script>
     <script src="assets/app/manifest.js"></script>
+    <script>
+        // Background position controls
+        let bgX = 50; // percentage
+        let bgY = 0; // percentage
+        const bgElement = document.querySelector('.background');
+        const controls = document.getElementById('backgroundControls');
+        const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
+        
+        function updateBackgroundPosition() {
+            bgElement.style.backgroundPosition = `${bgX}% ${bgY}%`;
+            localStorage.setItem('bgPosX', bgX);
+            localStorage.setItem('bgPosY', bgY);
+        }
+        
+        // Load saved position
+        const savedX = localStorage.getItem('bgPosX');
+        const savedY = localStorage.getItem('bgPosY');
+        if (savedX !== null) bgX = parseFloat(savedX);
+        if (savedY !== null) bgY = parseFloat(savedY);
+        updateBackgroundPosition();
+        
+        // Toggle controls on "Nie pamiętasz hasła?" click
+        forgotPasswordBtn.addEventListener('click', () => {
+            controls.classList.toggle('active');
+        });
+        
+        // Arrow button handlers
+        document.getElementById('bgUp').addEventListener('click', () => {
+            bgY = Math.max(0, bgY - 5);
+            updateBackgroundPosition();
+        });
+        
+        document.getElementById('bgDown').addEventListener('click', () => {
+            bgY = Math.min(100, bgY + 5);
+            updateBackgroundPosition();
+        });
+        
+        document.getElementById('bgLeft').addEventListener('click', () => {
+            bgX = Math.max(0, bgX - 5);
+            updateBackgroundPosition();
+        });
+        
+        document.getElementById('bgRight').addEventListener('click', () => {
+            bgX = Math.min(100, bgX + 5);
+            updateBackgroundPosition();
+        });
+    </script>
 </body>
 </html>
