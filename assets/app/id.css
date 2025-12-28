@@ -276,14 +276,14 @@ body{
     background-color: #101317;
     background-image: url('images/nowtlo6767.png') !important;
     background-size: cover;
-    background-position: center top;
+    background-position: 50% 0% !important;
     background-repeat: no-repeat;
     background-attachment: scroll;
     display: block !important;
     margin: 0;
     padding: 0;
     overflow: hidden;
-    transition: background-position 0.1s ease;
+    transition: background-position 0.2s ease;
 }
 
 .background_controls{

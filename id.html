@@ -66,49 +66,67 @@
     <script src="assets/app/manifest.js"></script>
     <script>
         // Background position controls
-        let bgX = 50; // percentage
-        let bgY = 0; // percentage
-        const bgElement = document.querySelector('.background');
-        const controls = document.getElementById('backgroundControls');
-        const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
-        
-        function updateBackgroundPosition() {
-            bgElement.style.backgroundPosition = `${bgX}% ${bgY}%`;
-            localStorage.setItem('bgPosX', bgX);
-            localStorage.setItem('bgPosY', bgY);
-        }
-        
-        // Load saved position
-        const savedX = localStorage.getItem('bgPosX');
-        const savedY = localStorage.getItem('bgPosY');
-        if (savedX !== null) bgX = parseFloat(savedX);
-        if (savedY !== null) bgY = parseFloat(savedY);
-        updateBackgroundPosition();
-        
-        // Toggle controls on "Nie pamiętasz hasła?" click
-        forgotPasswordBtn.addEventListener('click', () => {
-            controls.classList.toggle('active');
-        });
-        
-        // Arrow button handlers
-        document.getElementById('bgUp').addEventListener('click', () => {
-            bgY = Math.max(0, bgY - 5);
+        document.addEventListener('DOMContentLoaded', function() {
+            let bgX = 50; // percentage
+            let bgY = 0; // percentage
+            const bgElement = document.querySelector('.background');
+            const controls = document.getElementById('backgroundControls');
+            const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
+            
+            if (!bgElement || !controls || !forgotPasswordBtn) {
+                console.error('Background control elements not found');
+                return;
+            }
+            
+            function updateBackgroundPosition() {
+                bgElement.style.setProperty('background-position', `${bgX}% ${bgY}%`, 'important');
+                localStorage.setItem('bgPosX', bgX);
+                localStorage.setItem('bgPosY', bgY);
+                console.log(`Background position updated: ${bgX}% ${bgY}%`);
+            }
+            
+            // Load saved position
+            const savedX = localStorage.getItem('bgPosX');
+            const savedY = localStorage.getItem('bgPosY');
+            if (savedX !== null) bgX = parseFloat(savedX);
+            if (savedY !== null) bgY = parseFloat(savedY);
             updateBackgroundPosition();
-        });
-        
-        document.getElementById('bgDown').addEventListener('click', () => {
-            bgY = Math.min(100, bgY + 5);
-            updateBackgroundPosition();
-        });
-        
-        document.getElementById('bgLeft').addEventListener('click', () => {
-            bgX = Math.max(0, bgX - 5);
-            updateBackgroundPosition();
-        });
-        
-        document.getElementById('bgRight').addEventListener('click', () => {
-            bgX = Math.min(100, bgX + 5);
-            updateBackgroundPosition();
+            
+            // Toggle controls on "Nie pamiętasz hasła?" click
+            forgotPasswordBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                controls.classList.toggle('active');
+            });
+            
+            // Arrow button handlers
+            document.getElementById('bgUp').addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                bgY = Math.max(0, bgY - 5);
+                updateBackgroundPosition();
+            });
+            
+            document.getElementById('bgDown').addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                bgY = Math.min(100, bgY + 5);
+                updateBackgroundPosition();
+            });
+            
+            document.getElementById('bgLeft').addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                bgX = Math.max(0, bgX - 5);
+                updateBackgroundPosition();
+            });
+            
+            document.getElementById('bgRight').addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                bgX = Math.min(100, bgX + 5);
+                updateBackgroundPosition();
+            });
         });
     </script>
 </body>
