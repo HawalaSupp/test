@@ -95,7 +95,8 @@ body{
 }
 
 .password_box{
-    width: 100%;
+    width: calc(100% - 40px);
+    max-width: 100%;
     margin-top: 10px;
     padding: 25px;
     background-color: var(--secondary);
@@ -104,6 +105,7 @@ body{
     position: relative;
     border-radius: 15px;
     box-shadow: 0 10px 35px rgba(0,0,0,0.35);
+    box-sizing: border-box;
 }
 
 .password_grid{
