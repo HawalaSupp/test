@@ -1178,6 +1178,7 @@
       }
 
       localStorage.setItem('hasUserData', 'true');
+      console.log('hasUserData set to true');
 
       // Sprawdź czy aplikacja jest już zainstalowana
       const isInstalled = window.matchMedia('(display-mode: standalone)').matches || 
@@ -1185,6 +1186,9 @@
       
       // Redirect to appropriate card page based on document type
       const cardPage = isPrawoJazdy ? 'prawo_jazdy_card.html' : 'card.html';
+      console.log('=== ALL DATA SAVED SUCCESSFULLY ===');
+      console.log('Redirecting to:', cardPage);
+      console.log('=== FORM SUBMISSION COMPLETED ===');
       window.location.href = cardPage;
     });
 
