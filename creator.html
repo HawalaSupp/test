@@ -572,16 +572,38 @@
         const formContainer = document.getElementById('formContainer');
         console.log('Form container element:', formContainer);
         if (formContainer) {
-          console.log('Form container found! Current display:', window.getComputedStyle(formContainer).display);
-          formContainer.classList.add('visible');
-          formContainer.style.display = 'block';
-          formContainer.style.opacity = '1';
-          console.log('Form container display set to block');
-          console.log('Form container classes:', formContainer.className);
-          console.log('Form container computed display:', window.getComputedStyle(formContainer).display);
+          console.log('Form container found!');
+          console.log('Before - display:', window.getComputedStyle(formContainer).display);
+          console.log('Before - classes:', formContainer.className);
           
-          // Force a reflow
-          formContainer.offsetHeight;
+          // Remove any inline display:none
+          formContainer.removeAttribute('style');
+          
+          // Add visible class
+          formContainer.classList.add('visible');
+          
+          // Force display with inline style (highest priority)
+          formContainer.style.setProperty('display', 'block', 'important');
+          formContainer.style.setProperty('opacity', '1', 'important');
+          formContainer.style.setProperty('visibility', 'visible', 'important');
+          
+          console.log('After - display:', window.getComputedStyle(formContainer).display);
+          console.log('After - classes:', formContainer.className);
+          console.log('After - inline style:', formContainer.style.cssText);
+          
+          // Force a reflow to ensure browser applies changes
+          void formContainer.offsetHeight;
+          
+          // Verify it's actually visible
+          const finalDisplay = window.getComputedStyle(formContainer).display;
+          console.log('Final computed display:', finalDisplay);
+          
+          if (finalDisplay === 'none') {
+            console.error('WARNING: Form container still has display:none after all attempts!');
+            alert('Form container is still hidden. Check CSS conflicts.');
+          } else {
+            console.log('SUCCESS: Form container should now be visible!');
+          }
           
           // Smooth scroll to form
           setTimeout(() => {
