@@ -1074,7 +1074,9 @@
         const savedKategorie = localStorage.getItem('prawoJazdy_kategorie');
         if (savedKategorie) {
           const categories = savedKategorie.split(',').map(c => c.trim());
-          categoryInputs.forEach(input => {
+          // Query again in case checkboxes weren't available when function was defined
+          const inputs = document.querySelectorAll('.category-input');
+          inputs.forEach(input => {
             input.checked = categories.includes(input.value);
           });
           updateCategoriesInput();
