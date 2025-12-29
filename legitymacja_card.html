@@ -11,6 +11,14 @@
   <meta name="mobile-web-app-capable" content="yes">
   <link rel="stylesheet" href="assets/app/main.css">
   <link rel="stylesheet" href="assets/app/card.css">
+  <style>
+    .legitymacja_under_grid {
+      display: grid !important;
+      grid-template-columns: repeat(2, 1fr) !important;
+      justify-items: center !important;
+      gap: 20px !important;
+    }
+  </style>
   <link rel="icon" type="image/x-icon" href="assets/app/images/ikonka.png">
   <link rel="apple-touch-icon" href="assets/app/images/ikonka.png">
   <link rel="shortcut icon" href="assets/app/images/ikonka.png">
@@ -118,7 +126,7 @@
     </div>
 
     <div class="under_container">
-      <div class="under_grid">
+      <div class="under_grid legitymacja_under_grid">
         <div class="under_icon" onclick="sendTo('scan.html', 'card.html')">
           <div class="under_image_circle">
             <img class="under_image under_image_bright" src="assets/app/images/confirm.png" alt="">
