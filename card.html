@@ -381,10 +381,11 @@
 
     // Load data and image when DOM is ready and after card.js loads
     function initUserData() {
-      // Wait a bit for card.js to load
+      // Wait a bit for card.js to load - increase delay to ensure card.js is loaded
       setTimeout(() => {
+        console.log('initUserData: Checking if loadReadyData is available:', typeof loadReadyData);
         loadUserData();
-      }, 100);
+      }, 500);
     }
 
     if (document.readyState === 'loading') {
