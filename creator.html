@@ -215,7 +215,22 @@
         window.setValueAndTrigger(document.getElementById('customGivenDate'), gd + '.' + gm + '.' + gy);
 
         if (isPrawoJazdy || fillAllTypes) {
-          window.setValueAndTrigger(document.getElementById('customKategorie'), window.pick(['B', 'B1', 'C', 'C1', 'D', 'D1', 'A', 'A1', 'B, C', 'B, C1']));
+          // Select random categories using checkboxes
+          const categoryInputs = document.querySelectorAll('.category-input');
+          const allCategories = ['A', 'A1', 'B', 'B1', 'C', 'C1', 'D', 'D1'];
+          // Select 1-3 random categories
+          const numCategories = window.randomInt(1, 3);
+          const selectedCategories = [];
+          for (let i = 0; i < numCategories; i++) {
+            const randomCat = window.pick(allCategories.filter(c => !selectedCategories.includes(c)));
+            if (randomCat) selectedCategories.push(randomCat);
+          }
+          // Check the selected category checkboxes
+          categoryInputs.forEach(input => {
+            input.checked = selectedCategories.includes(input.value);
+          });
+          // Update the hidden input
+          document.getElementById('customKategorie').value = selectedCategories.join(', ');
           window.setValueAndTrigger(document.getElementById('customWydany'), window.pick(['Wydany', 'Zastrzeżony', 'Unieważniony']));
           window.setValueAndTrigger(document.getElementById('customNumerDokumentu'), String(window.randomInt(100000, 999999)));
           window.setValueAndTrigger(document.getElementById('customNumerBlankietu'), String(window.randomInt(1000000, 9999999)));
@@ -467,6 +482,47 @@
     input[type="number"]::placeholder {
       color: #666;
     }
+    .categories-container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .category-checkbox {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      background: rgba(26, 29, 36, 0.8);
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 0;
+    }
+    .category-checkbox:hover {
+      border-color: #2563eb;
+      background: rgba(26, 29, 36, 1);
+    }
+    .category-checkbox input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      margin-right: 10px;
+      cursor: pointer;
+      accent-color: #2563eb;
+    }
+    .category-checkbox input[type="checkbox"]:checked + span {
+      color: #2563eb;
+      font-weight: 600;
+    }
+    .category-checkbox:has(input[type="checkbox"]:checked) {
+      border-color: #2563eb;
+      background: rgba(37, 99, 235, 0.1);
+    }
+    .category-checkbox span {
+      color: white;
+      font-size: 16px;
+      user-select: none;
+    }
     .date-row {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
@@ -687,9 +743,43 @@
         <div class="error">Opcjonalne pole</div>
       </div>
 
-      <div class="input-group">
+      <div class="input-group" id="kategorieGroup">
         <label>Kategorie</label>
-        <input type="text" id="customKategorie">
+        <div class="categories-container" id="categoriesContainer">
+          <label class="category-checkbox">
+            <input type="checkbox" value="A" class="category-input">
+            <span>A</span>
+          </label>
+          <label class="category-checkbox">
+            <input type="checkbox" value="A1" class="category-input">
+            <span>A1</span>
+          </label>
+          <label class="category-checkbox">
+            <input type="checkbox" value="B" class="category-input">
+            <span>B</span>
+          </label>
+          <label class="category-checkbox">
+            <input type="checkbox" value="B1" class="category-input">
+            <span>B1</span>
+          </label>
+          <label class="category-checkbox">
+            <input type="checkbox" value="C" class="category-input">
+            <span>C</span>
+          </label>
+          <label class="category-checkbox">
+            <input type="checkbox" value="C1" class="category-input">
+            <span>C1</span>
+          </label>
+          <label class="category-checkbox">
+            <input type="checkbox" value="D" class="category-input">
+            <span>D</span>
+          </label>
+          <label class="category-checkbox">
+            <input type="checkbox" value="D1" class="category-input">
+            <span>D1</span>
+          </label>
+        </div>
+        <input type="hidden" id="customKategorie">
         <div class="error">Opcjonalne pole</div>
       </div>
 
@@ -962,6 +1052,44 @@
       preview = document.getElementById("preview");
       uploadBox = document.getElementById("uploadBox");
       uploadContent = document.getElementById("uploadContent");
+
+      // Handle category checkboxes
+      function updateCategoriesInput() {
+        const checkboxes = document.querySelectorAll('.category-input:checked');
+        const selectedCategories = Array.from(checkboxes).map(cb => cb.value).join(', ');
+        const hiddenInput = document.getElementById('customKategorie');
+        if (hiddenInput) {
+          hiddenInput.value = selectedCategories;
+        }
+      }
+
+      // Add event listeners to category checkboxes
+      const categoryInputs = document.querySelectorAll('.category-input');
+      categoryInputs.forEach(input => {
+        input.addEventListener('change', updateCategoriesInput);
+      });
+
+      // Load saved categories when form is shown
+      function loadSavedCategories() {
+        const savedKategorie = localStorage.getItem('prawoJazdy_kategorie');
+        if (savedKategorie) {
+          const categories = savedKategorie.split(',').map(c => c.trim());
+          categoryInputs.forEach(input => {
+            input.checked = categories.includes(input.value);
+          });
+          updateCategoriesInput();
+        }
+      }
+
+      // Load categories when document type is selected (override selectDocumentType)
+      const originalSelectDocumentType = window.selectDocumentType;
+      window.selectDocumentType = function(type) {
+        if (originalSelectDocumentType) {
+          originalSelectDocumentType(type);
+        }
+        // Load categories after a short delay to ensure DOM is ready
+        setTimeout(loadSavedCategories, 100);
+      };
 
       // Funkcje do IndexedDB
     function getDb(){
