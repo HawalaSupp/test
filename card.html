@@ -418,11 +418,18 @@
       }
     }
 
-    function setData(id, value) {
-      const el = document.getElementById(id);
-      if (el && value) {
-        el.textContent = value;
-      }
+    // Don't define setData here - use the one from card.js
+    // If card.js setData doesn't exist, we'll use a fallback
+    if (typeof window.setData !== 'function' && typeof setData !== 'function') {
+      window.setData = function(id, value) {
+        const el = document.getElementById(id);
+        if (el && value) {
+          el.textContent = value;
+        }
+      };
+      console.log('Created fallback setData function');
+    } else {
+      console.log('Using setData from card.js');
     }
 
     // Load data and image when DOM is ready and after card.js loads
