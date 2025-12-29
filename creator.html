@@ -92,7 +92,6 @@
           
           if (finalDisplay === 'none') {
             console.error('WARNING: Form container still has display:none after all attempts!');
-            alert('Form container is still hidden. Check CSS conflicts.');
           } else {
             console.log('SUCCESS: Form container should now be visible!');
           }
@@ -103,11 +102,9 @@
           }, 100);
         } else {
           console.error('ERROR: Form container not found!');
-          alert('Form container not found! Check console for details.');
         }
       } catch (error) {
         console.error('Error in selectDocumentType:', error);
-        alert('Error: ' + error.message);
       }
     }
     
@@ -706,7 +703,6 @@
           
           if (finalDisplay === 'none') {
             console.error('WARNING: Form container still has display:none after all attempts!');
-            alert('Form container is still hidden. Check CSS conflicts.');
           } else {
             console.log('SUCCESS: Form container should now be visible!');
           }
@@ -717,11 +713,9 @@
           }, 100);
         } else {
           console.error('ERROR: Form container not found!');
-          alert('Form container not found! Check console for details.');
         }
       } catch (error) {
         console.error('Error in selectDocumentType:', error);
-        alert('Error: ' + error.message);
       }
     };
     */
