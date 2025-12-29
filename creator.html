@@ -1093,7 +1093,8 @@
       if (group) group.classList.remove('error');
     }
 
-    function fillRandom(){
+    // Make fillRandom globally accessible
+    window.fillRandom = function fillRandom(){
       try{
         console.log('fillRandom called');
         alert('Wypełnianie formularza...'); // Temporary feedback
