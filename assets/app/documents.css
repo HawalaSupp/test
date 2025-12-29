@@ -97,16 +97,6 @@
     display: none !important;
 }
 
-.radcowskiego_card .card_eagle_background{
-    width: 60px !important;
-    height: 60px !important;
-}
-
-.radcowskiego_card .card_eagle{
-    width: 50px !important;
-    height: auto !important;
-}
-
 .card_background{
     width: 100%;
     height: 100%;
