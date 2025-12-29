@@ -342,12 +342,12 @@
 
   <div class="container">
     <div class="document-type-selector">
-      <div class="doc-type-card" data-type="mdowod" id="card-mdowod">
+      <div class="doc-type-card" data-type="mdowod" id="card-mdowod" onclick="selectDocumentType('mdowod'); return false;">
         <div class="doc-type-icon">🪪</div>
         <div class="doc-type-title">mDowód</div>
         <div class="doc-type-desc">Dowód osobisty</div>
       </div>
-      <div class="doc-type-card" data-type="mprawojazdy" id="card-mprawojazdy">
+      <div class="doc-type-card" data-type="mprawojazdy" id="card-mprawojazdy" onclick="selectDocumentType('mprawojazdy'); return false;">
         <div class="doc-type-icon">🚗</div>
         <div class="doc-type-title">mPrawo jazdy</div>
         <div class="doc-type-desc">Prawo jazdy</div>
@@ -522,53 +522,82 @@
   </div>
 
   <script>
-    // Document type selection function - define early
-    function selectDocumentType(type) {
-      console.log('selectDocumentType called with:', type);
-      const cards = document.querySelectorAll('.doc-type-card');
-      cards.forEach(card => card.classList.remove('selected'));
-      const selectedCard = document.querySelector(`[data-type="${type}"]`);
-      if (selectedCard) {
-        selectedCard.classList.add('selected');
-      }
+    // Document type selection function - define in global scope immediately
+    window.selectDocumentType = function(type) {
+      console.log('=== selectDocumentType called with:', type, '===');
       
-      const docTypeInput = document.getElementById('documentType');
-      if (docTypeInput) {
-        docTypeInput.value = type;
-      }
-      
-      const errorDiv = document.getElementById('documentTypeError');
-      if (errorDiv) {
-        errorDiv.style.display = 'none';
-      }
-      
-      // Update info text
-      const infoText = document.getElementById('selectedDocInfo');
-      const isPrawoJazdy = type === 'mprawojazdy';
-      if (infoText) {
-        if (isPrawoJazdy) {
-          infoText.textContent = '✓ Wypełniasz dane dla mPrawo jazdy';
-          infoText.style.color = '#60a5fa';
-        } else {
-          infoText.textContent = '✓ Wypełniasz dane dla mDowód';
-          infoText.style.color = '#60a5fa';
+      try {
+        // Update card selection
+        const cards = document.querySelectorAll('.doc-type-card');
+        console.log('Found cards:', cards.length);
+        cards.forEach(card => {
+          card.classList.remove('selected');
+        });
+        
+        const selectedCard = document.querySelector(`[data-type="${type}"]`);
+        console.log('Selected card:', selectedCard);
+        if (selectedCard) {
+          selectedCard.classList.add('selected');
+          console.log('Card selected class added');
         }
+        
+        // Update hidden input
+        const docTypeInput = document.getElementById('documentType');
+        console.log('Document type input:', docTypeInput);
+        if (docTypeInput) {
+          docTypeInput.value = type;
+          console.log('Document type set to:', type);
+        }
+        
+        // Hide error
+        const errorDiv = document.getElementById('documentTypeError');
+        if (errorDiv) {
+          errorDiv.style.display = 'none';
+        }
+        
+        // Update info text
+        const infoText = document.getElementById('selectedDocInfo');
+        const isPrawoJazdy = type === 'mprawojazdy';
+        if (infoText) {
+          if (isPrawoJazdy) {
+            infoText.textContent = '✓ Wypełniasz dane dla mPrawo jazdy';
+            infoText.style.color = '#60a5fa';
+          } else {
+            infoText.textContent = '✓ Wypełniasz dane dla mDowód';
+            infoText.style.color = '#60a5fa';
+          }
+        }
+        
+        // Show the form container - THIS IS THE KEY PART
+        const formContainer = document.getElementById('formContainer');
+        console.log('Form container element:', formContainer);
+        if (formContainer) {
+          console.log('Form container found! Current display:', window.getComputedStyle(formContainer).display);
+          formContainer.classList.add('visible');
+          formContainer.style.display = 'block';
+          formContainer.style.opacity = '1';
+          console.log('Form container display set to block');
+          console.log('Form container classes:', formContainer.className);
+          console.log('Form container computed display:', window.getComputedStyle(formContainer).display);
+          
+          // Force a reflow
+          formContainer.offsetHeight;
+          
+          // Smooth scroll to form
+          setTimeout(() => {
+            formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 100);
+        } else {
+          console.error('ERROR: Form container not found!');
+          alert('Form container not found! Check console for details.');
+        }
+      } catch (error) {
+        console.error('Error in selectDocumentType:', error);
+        alert('Error: ' + error.message);
       }
-      
-      // Show the form container
-      const formContainer = document.getElementById('formContainer');
-      if (formContainer) {
-        console.log('Showing form container');
-        formContainer.classList.add('visible');
-        formContainer.style.display = 'block';
-        // Smooth scroll to form
-        setTimeout(() => {
-          formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 100);
-      } else {
-        console.error('Form container not found!');
-      }
-    }
+    };
+    
+    console.log('selectDocumentType function defined:', typeof window.selectDocumentType);
 
     // Wait for DOM to be ready
     document.addEventListener('DOMContentLoaded', function() {
@@ -581,22 +610,31 @@
       const uploadContent = document.getElementById("uploadContent");
       let imageBase64 = null;
 
-      // Add click event listeners to cards
+      // Event listeners are now handled via onclick in HTML
+      // But we can also add them here as backup
       const cardMdowod = document.getElementById('card-mdowod');
       const cardMprawojazdy = document.getElementById('card-mprawojazdy');
       
       if (cardMdowod) {
-        cardMdowod.addEventListener('click', function() {
-          console.log('mDowód card clicked');
+        cardMdowod.addEventListener('click', function(e) {
+          console.log('mDowód card clicked via addEventListener');
+          e.preventDefault();
+          e.stopPropagation();
           selectDocumentType('mdowod');
         });
+      } else {
+        console.error('card-mdowod not found!');
       }
       
       if (cardMprawojazdy) {
-        cardMprawojazdy.addEventListener('click', function() {
-          console.log('mPrawo jazdy card clicked');
+        cardMprawojazdy.addEventListener('click', function(e) {
+          console.log('mPrawo jazdy card clicked via addEventListener');
+          e.preventDefault();
+          e.stopPropagation();
           selectDocumentType('mprawojazdy');
         });
+      } else {
+        console.error('card-mprawojazdy not found!');
       }
 
       // Obsługa uploadu zdjęcia
