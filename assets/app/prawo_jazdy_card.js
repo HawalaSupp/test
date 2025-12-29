@@ -92,14 +92,10 @@ function loadReadyData(result){
     setData("mothersFamilyName", result['mothersFamilyName'].toUpperCase());
     setData("birthPlace", result['birthPlace'].toUpperCase());
     
-    // Duplicate data for second "Twoje dodatkowe dane" box
-    setData("familyName2", result['familyName'].toUpperCase());
-    setData("sex2", textSex.toUpperCase());
-    setData("fathersFamilyName2", result['fathersFamilyName'].toUpperCase());
-    setData("mothersFamilyName2", result['mothersFamilyName'].toUpperCase());
-    setData("birthPlace2", result['birthPlace'].toUpperCase());
-    
     setData('givenDate', localStorage.getItem('prawoJazdy_givenDate'));
+    
+    // Create category boxes after data is loaded
+    setTimeout(createCategoryBoxes, 100);
     
     // Prawo jazdy specific fields
     const wydanyValue = localStorage.getItem('prawoJazdy_wydany') || 'Wydany';
@@ -198,6 +194,93 @@ function setData(id, value){
     }
 }
 
+// Function to create category boxes dynamically
+function createCategoryBoxes() {
+    const categoriesContainer = document.getElementById('categoriesContainer');
+    if (!categoriesContainer) {
+        console.log('categoriesContainer not found');
+        return;
+    }
+    
+    // Get categories from localStorage
+    const kategorieValue = localStorage.getItem('prawoJazdy_kategorie');
+    if (!kategorieValue || kategorieValue.trim() === '') {
+        console.log('No categories found');
+        return;
+    }
+    
+    // Parse categories (comma-separated, e.g., "B, C, D1")
+    const categories = kategorieValue.split(',').map(c => c.trim()).filter(c => c.length > 0);
+    console.log('Creating boxes for categories:', categories);
+    
+    // Try to get data from JSON first, then fall back to individual localStorage items
+    let userData = null;
+    try {
+        const userDataJson = localStorage.getItem('prawoJazdy_userData');
+        if (userDataJson) {
+            userData = JSON.parse(userDataJson);
+        }
+    } catch (e) {
+        console.warn('Could not parse prawoJazdy_userData JSON:', e);
+    }
+    
+    // Get additional data values (from JSON or individual localStorage items)
+    const familyName = (userData && userData.familyName) ? userData.familyName.toUpperCase() : (localStorage.getItem('prawoJazdy_familyName') || '').toUpperCase();
+    const sexValue = (userData && userData.sex) ? userData.sex : localStorage.getItem('prawoJazdy_sex');
+    const textSex = sexValue === 'm' ? 'MĘŻCZYZNA' : sexValue === 'k' ? 'KOBIETA' : '';
+    const fathersFamilyName = (userData && userData.fathersFamilyName) ? userData.fathersFamilyName.toUpperCase() : (localStorage.getItem('prawoJazdy_fathersFamilyName') || '').toUpperCase();
+    const mothersFamilyName = (userData && userData.mothersFamilyName) ? userData.mothersFamilyName.toUpperCase() : (localStorage.getItem('prawoJazdy_mothersFamilyName') || '').toUpperCase();
+    const birthPlace = (userData && userData.birthPlace) ? userData.birthPlace.toUpperCase() : (localStorage.getItem('prawoJazdy_birthPlace') || '').toUpperCase();
+    
+    // Clear existing boxes
+    categoriesContainer.innerHTML = '';
+    
+    // Create one box for each category
+    categories.forEach((category, index) => {
+        const box = document.createElement('div');
+        box.className = 'bottom_holder info_holder';
+        box.innerHTML = `
+          <div class="bottom_grid">
+            <p class="bottom_text" style="margin-left:0px;">Kategoria ${category}</p>
+          </div>
+          <img class="action_arrow" src="assets/app/images/right_arrow_sharp.png" alt="">
+          <div class="additional_holder">
+            <div class="additional_grid">
+              <p class="additional_title">Nazwisko rodowe</p>
+              <p class="additional_subtitle">${familyName}</p>
+            </div>
+            <div class="additional_grid">
+              <p class="additional_title">Płeć</p>
+              <p class="additional_subtitle">${textSex}</p>
+            </div>
+            <div class="additional_grid">
+              <p class="additional_title">Nazwisko rodowe ojca</p>
+              <p class="additional_subtitle">${fathersFamilyName}</p>
+            </div>
+            <div class="additional_grid">
+              <p class="additional_title">Nazwisko rodowe matki</p>
+              <p class="additional_subtitle">${mothersFamilyName}</p>
+            </div>
+            <div class="additional_grid">
+              <p class="additional_title">Miejsce urodzenia</p>
+              <p class="additional_subtitle">${birthPlace}</p>
+            </div>
+          </div>
+        `;
+        categoriesContainer.appendChild(box);
+        
+        // Add event listener for unfold/fold functionality
+        const unfoldElement = box;
+        unfoldElement.addEventListener('click', () => {
+            if (unfoldElement.classList.contains("unfolded")){
+                unfoldElement.classList.remove("unfolded");
+            }else{
+                unfoldElement.classList.add("unfolded");
+            }
+        });
+    });
+}
+
 // Ensure displayed PESEL, givenDate and expiryDate always reflect localStorage
 document.addEventListener('DOMContentLoaded', () => {
     try {
@@ -230,6 +313,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (updateVal && updateText) {
             updateText.innerHTML = updateVal;
         }
+        
+        // Create category boxes dynamically
+        createCategoryBoxes();
     } catch (e) {
         console.error('Error applying localStorage values to card:', e);
     }
