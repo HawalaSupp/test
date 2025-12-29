@@ -1152,13 +1152,24 @@
       }
 
       // Also save to IndexedDB as backup (but don't fail if it doesn't work)
+      // IMPORTANT: This ensures IndexedDB has the same data as localStorage
       let db;
       try {
         console.log('Attempting to save to IndexedDB as backup...');
         db = await getDb();
         const dataToSave = isPrawoJazdy ? { ...data, data: 'prawoJazdy_data' } : { ...data, data: 'data' };
+        console.log('Saving to IndexedDB with key:', dataToSave.data);
         await saveData(db, dataToSave);
         console.log('✓ Also saved to IndexedDB successfully');
+        
+        // Verify IndexedDB save
+        const verifyKey = isPrawoJazdy ? 'prawoJazdy_data' : 'data';
+        const verifyData = await getData(db, verifyKey);
+        if (verifyData && verifyData.name === data.name && verifyData.surname === data.surname) {
+          console.log('✓✓✓ IndexedDB verified - name and surname match:', verifyData.name, verifyData.surname);
+        } else {
+          console.warn('⚠ IndexedDB verification failed - data mismatch');
+        }
       } catch (error) {
         console.warn('⚠ IndexedDB save failed (but localStorage worked):', error);
         // Don't fail the whole process if IndexedDB fails
