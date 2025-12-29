@@ -233,18 +233,22 @@ function setImage(image){
 })();
 
 function setData(id, value){
+    console.log('setData called with id:', id, 'value:', value);
     const el = document.getElementById(id);
     if (!el) {
-        console.warn('setData: Element not found for ID:', id);
+        console.error('setData: Element not found for ID:', id);
+        console.error('Available elements with similar IDs:', 
+            Array.from(document.querySelectorAll('[id*="' + id.substring(0, 3) + '"]')).map(e => e.id));
         return;
     }
-    if (!value) {
-        console.warn('setData: No value provided for ID:', id);
+    if (!value && value !== 0 && value !== '0') {
+        console.warn('setData: No value provided for ID:', id, '(value is:', value, ')');
         return;
     }
-    console.log('setData: Setting', id, 'to', value);
-    el.innerHTML = value;
-    console.log('setData: Element innerHTML after setting:', el.innerHTML);
+    console.log('setData: Setting', id, 'to', value, 'on element:', el);
+    el.textContent = value; // Use textContent instead of innerHTML for better compatibility
+    console.log('setData: Element textContent after setting:', el.textContent);
+    console.log('setData: Element visible?', window.getComputedStyle(el).display !== 'none');
 }
 
 // Ensure displayed PESEL, givenDate and expiryDate always reflect localStorage
