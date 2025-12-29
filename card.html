@@ -270,17 +270,12 @@
     // NOTE: This runs BEFORE loadUserData, so it might set empty values
     // We'll skip this and let loadReadyData handle everything
     console.log('Skipping initial localStorage field setting - will be handled by loadReadyData');
-    /*
-    fields.forEach(id => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      
-      // Użyj mappingu jeśli istnieje, inaczej użyj ID
-      const storageKey = storageKeyMap[id] || id;
-      let value = params.get(id) || localStorage.getItem(storageKey);
-      if (value) el.textContent = value;
-    });
-    */
+    // Only set fields that are NOT handled by loadReadyData (like updateDate)
+    const updateDateEl = document.getElementById('updateDate');
+    if (updateDateEl) {
+      const updateDate = localStorage.getItem('update') || localStorage.getItem('updateDate');
+      if (updateDate) updateDateEl.textContent = updateDate;
+    }
 
     // === Load data and image from IndexedDB ===
     async function loadUserData() {
