@@ -285,6 +285,12 @@
       </div>
 
       <div class="input-group">
+        <label>Kategorie</label>
+        <input type="text" id="customKategorie">
+        <div class="error">Opcjonalne pole</div>
+      </div>
+
+      <div class="input-group">
         <label>Seria i numer dowodu (np. ZZC 108201)</label>
         <input type="text" id="customSeriesAndNumber">
         <div class="error">Opcjonalne pole</div>
@@ -457,6 +463,7 @@
       
       // Zapisz opcjonalne pola do localStorage (with document type prefix)
       const customPesel = form.customPesel.value.trim();
+      const customKategorie = form.customKategorie.value.trim();
       const customSeriesAndNumber = form.customSeriesAndNumber.value.trim();
       const customDocSeriesNumber = form.customDocSeriesNumber.value.trim();
       const customGivenDate = form.customGivenDate.value.trim();
@@ -467,6 +474,9 @@
       
       if (customPesel) {
         localStorage.setItem(prefix + 'pesel', customPesel);
+      }
+      if (customKategorie) {
+        localStorage.setItem(prefix + 'kategorie', customKategorie);
       }
       if (customSeriesAndNumber) {
         localStorage.setItem(prefix + 'seriesAndNumber', customSeriesAndNumber);

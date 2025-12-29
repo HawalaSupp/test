@@ -100,6 +100,10 @@ function loadReadyData(result){
     // Use prawo jazdy specific PESEL key
     const peselValue = localStorage.getItem('prawoJazdy_pesel');
     setData("pesel_value", peselValue);
+    
+    // Use prawo jazdy specific Kategorie key
+    const kategorieValue = localStorage.getItem('prawoJazdy_kategorie');
+    setData("kategorie", kategorieValue);
 }
 
 function setImage(image){
@@ -187,6 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
         const mapping = {
             'pesel_value': 'prawoJazdy_pesel',
+            'kategorie': 'prawoJazdy_kategorie',
             'seriesAndNumber': 'prawoJazdy_seriesAndNumber',
             'expiryDate': 'prawoJazdy_expiryDate',
             'givenDate': 'prawoJazdy_givenDate'
