@@ -62,8 +62,12 @@
         
         // Show/hide fields based on document type
         const nationalityGroup = document.getElementById('nationalityGroup');
+        const familyNameGroup = document.getElementById('familyNameGroup');
         const fathersNameGroup = document.getElementById('fathersNameGroup');
+        const fathersFamilyNameGroup = document.getElementById('fathersFamilyNameGroup');
         const mothersNameGroup = document.getElementById('mothersNameGroup');
+        const mothersFamilyNameGroup = document.getElementById('mothersFamilyNameGroup');
+        const peselGroup = document.getElementById('peselGroup');
         const kategorieGroup = document.getElementById('kategorieGroup');
         const docSeriesGroup = document.getElementById('docSeriesGroup');
         const mdowodExpiryGroup = document.getElementById('mdowodExpiryGroup');
@@ -76,8 +80,12 @@
         const prawoJazdyOgraniczeniaGroup = document.getElementById('prawoJazdyFields5');
 
         if (nationalityGroup) nationalityGroup.style.display = isPrawoJazdy ? 'none' : 'block';
+        if (familyNameGroup) familyNameGroup.style.display = isPrawoJazdy ? 'none' : 'block';
         if (fathersNameGroup) fathersNameGroup.style.display = isPrawoJazdy ? 'none' : 'block';
+        if (fathersFamilyNameGroup) fathersFamilyNameGroup.style.display = isPrawoJazdy ? 'none' : 'block';
         if (mothersNameGroup) mothersNameGroup.style.display = isPrawoJazdy ? 'none' : 'block';
+        if (mothersFamilyNameGroup) mothersFamilyNameGroup.style.display = isPrawoJazdy ? 'none' : 'block';
+        if (peselGroup) peselGroup.style.display = isPrawoJazdy ? 'none' : 'block';
         
         if (kategorieGroup) kategorieGroup.style.display = isPrawoJazdy ? 'block' : 'none';
         if (docSeriesGroup) docSeriesGroup.style.display = isPrawoJazdy ? 'none' : 'block';
@@ -198,15 +206,23 @@
         // Common fields (always filled)
         window.setValueAndTrigger(document.getElementById('name'), window.pick(window.FIRST_NAMES));
         window.setValueAndTrigger(document.getElementById('surname'), window.pick(window.LAST_NAMES));
-        window.setValueAndTrigger(document.getElementById('familyName'), window.pick(window.LAST_NAMES));
-        window.setValueAndTrigger(document.getElementById('fathersFamilyName'), window.pick(window.LAST_NAMES));
-        window.setValueAndTrigger(document.getElementById('mothersFamilyName'), window.pick(window.LAST_NAMES));
+        
+        // Only fill these fields for mDowód
+        if (!isPrawoJazdy || fillAllTypes) {
+          window.setValueAndTrigger(document.getElementById('familyName'), window.pick(window.LAST_NAMES));
+          window.setValueAndTrigger(document.getElementById('fathersFamilyName'), window.pick(window.LAST_NAMES));
+          window.setValueAndTrigger(document.getElementById('mothersFamilyName'), window.pick(window.LAST_NAMES));
+        }
         window.setValueAndTrigger(document.getElementById('birthPlace'), 'Warszawa');
         window.setValueAndTrigger(document.getElementById('sex'), window.pick(['m', 'k']));
         window.setValueAndTrigger(document.getElementById('day'), window.pad(window.randomInt(1,28)));
         window.setValueAndTrigger(document.getElementById('month'), window.pad(window.randomInt(1,12)));
         window.setValueAndTrigger(document.getElementById('year'), window.randomInt(1950, 2004));
-        window.setValueAndTrigger(document.getElementById('customPesel'), window.randomPeselLike());
+        
+        // Only fill PESEL for mDowód
+        if (!isPrawoJazdy || fillAllTypes) {
+          window.setValueAndTrigger(document.getElementById('customPesel'), window.randomPeselLike());
+        }
         
         // givenDate
         const gy = window.randomInt(2010,2023);
@@ -676,31 +692,31 @@
         <div class="error">To pole jest wymagane</div>
       </div>
 
-      <div class="input-group">
+      <div class="input-group" id="familyNameGroup">
         <label>Nazwisko rodowe *</label>
         <input type="text" id="familyName" required>
         <div class="error">To pole jest wymagane</div>
       </div>
 
-      <div class="input-group">
+      <div class="input-group" id="fathersNameGroup">
         <label>Imię ojca *</label>
         <input type="text" id="fathersName" required>
         <div class="error">To pole jest wymagane</div>
       </div>
 
-      <div class="input-group">
+      <div class="input-group" id="fathersFamilyNameGroup">
         <label>Nazwisko rodowe ojca *</label>
         <input type="text" id="fathersFamilyName" required>
         <div class="error">To pole jest wymagane</div>
       </div>
 
-      <div class="input-group">
+      <div class="input-group" id="mothersNameGroup">
         <label>Imię matki *</label>
         <input type="text" id="mothersName" required>
         <div class="error">To pole jest wymagane</div>
       </div>
 
-      <div class="input-group">
+      <div class="input-group" id="mothersFamilyNameGroup">
         <label>Nazwisko rodowe matki *</label>
         <input type="text" id="mothersFamilyName" required>
         <div class="error">To pole jest wymagane</div>
@@ -737,7 +753,7 @@
       <div class="form-section">
         <p class="section-title">📄 Dane dokumentu (opcjonalnie)</p>
 
-      <div class="input-group">
+      <div class="input-group" id="peselGroup">
         <label>Numer PESEL</label>
         <input type="text" id="customPesel">
         <div class="error">Opcjonalne pole</div>
@@ -1194,14 +1210,14 @@
       }
       console.log('Form validation passed');
 
-      // Build data object
+      // Get document type
+      const isPrawoJazdy = documentType === 'mprawojazdy';
+      console.log('Is prawo jazdy:', isPrawoJazdy);
+      
+      // Build data object - exclude certain fields for mPrawo jazdy
       const data = {
         name: form.name.value.trim(),
         surname: form.surname.value.trim(),
-        nationality: form.nationality.value.trim(),
-        familyName: form.familyName.value.trim(),
-        fathersFamilyName: form.fathersFamilyName.value.trim(),
-        mothersFamilyName: form.mothersFamilyName.value.trim(),
         birthPlace: form.birthPlace.value.trim(),
         sex: form.sex.value,
         day: parseInt(form.day.value),
@@ -1209,14 +1225,14 @@
         year: parseInt(form.year.value)
       };
       
-      // Get document type
-      const isPrawoJazdy = documentType === 'mprawojazdy';
-      console.log('Is prawo jazdy:', isPrawoJazdy);
-      
-      // Only add fathersName and mothersName for mDowód
+      // Only add these fields for mDowód
       if (!isPrawoJazdy) {
+        data.nationality = form.nationality.value.trim();
+        data.familyName = form.familyName.value.trim();
         data.fathersName = form.fathersName.value.trim();
+        data.fathersFamilyName = form.fathersFamilyName.value.trim();
         data.mothersName = form.mothersName.value.trim();
+        data.mothersFamilyName = form.mothersFamilyName.value.trim();
       }
       
       console.log('Data object created:', data);
@@ -1250,7 +1266,6 @@
       }
       
       // Zapisz opcjonalne pola do localStorage (with document type prefix)
-      const customPesel = form.customPesel.value.trim();
       const customKategorie = form.customKategorie.value.trim();
       const customSeriesAndNumber = form.customSeriesAndNumber.value.trim();
       const customDocSeriesNumber = form.customDocSeriesNumber.value.trim();
@@ -1267,8 +1282,12 @@
       // Prefix for localStorage keys based on document type
       const prefix = isPrawoJazdy ? 'prawoJazdy_' : '';
       
-      if (customPesel) {
-        localStorage.setItem(prefix + 'pesel', customPesel);
+      // Only save PESEL for mDowód
+      if (!isPrawoJazdy) {
+        const customPesel = form.customPesel.value.trim();
+        if (customPesel) {
+          localStorage.setItem(prefix + 'pesel', customPesel);
+        }
       }
       if (customKategorie && isPrawoJazdy) {
         localStorage.setItem(prefix + 'kategorie', customKategorie);
