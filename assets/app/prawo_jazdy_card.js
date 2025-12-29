@@ -195,9 +195,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const mapping = {
             'pesel_value': 'prawoJazdy_pesel',
             'kategorie': 'prawoJazdy_kategorie',
-            'seriesAndNumber': 'prawoJazdy_seriesAndNumber',
-            'expiryDate': 'prawoJazdy_expiryDate',
-            'givenDate': 'prawoJazdy_givenDate'
+            'givenDate': 'prawoJazdy_givenDate',
+            'wydany': 'prawoJazdy_wydany',
+            'numerDokumentu': 'prawoJazdy_numerDokumentu',
+            'numerBlankietu': 'prawoJazdy_numerBlankietu',
+            'organWydajacy': 'prawoJazdy_organWydajacy',
+            'ograniczenia': 'prawoJazdy_ograniczenia'
         };
         Object.keys(mapping).forEach(id => {
             const key = mapping[id];
