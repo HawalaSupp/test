@@ -13,6 +13,109 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="mObywatel">
   <script src="assets/app/manifest.js"></script>
+  <script>
+    // Define function IMMEDIATELY in head - before any HTML loads
+    function selectDocumentType(type) {
+      alert('Function called with: ' + type); // Temporary alert to test
+      console.log('=== selectDocumentType called with:', type, '===');
+      
+      try {
+        // Update card selection
+        const cards = document.querySelectorAll('.doc-type-card');
+        console.log('Found cards:', cards.length);
+        cards.forEach(card => {
+          card.classList.remove('selected');
+        });
+        
+        const selectedCard = document.querySelector(`[data-type="${type}"]`);
+        console.log('Selected card:', selectedCard);
+        if (selectedCard) {
+          selectedCard.classList.add('selected');
+          console.log('Card selected class added');
+        }
+        
+        // Update hidden input
+        const docTypeInput = document.getElementById('documentType');
+        console.log('Document type input:', docTypeInput);
+        if (docTypeInput) {
+          docTypeInput.value = type;
+          console.log('Document type set to:', type);
+        }
+        
+        // Hide error
+        const errorDiv = document.getElementById('documentTypeError');
+        if (errorDiv) {
+          errorDiv.style.display = 'none';
+        }
+        
+        // Update info text
+        const infoText = document.getElementById('selectedDocInfo');
+        const isPrawoJazdy = type === 'mprawojazdy';
+        if (infoText) {
+          if (isPrawoJazdy) {
+            infoText.textContent = '✓ Wypełniasz dane dla mPrawo jazdy';
+            infoText.style.color = '#60a5fa';
+          } else {
+            infoText.textContent = '✓ Wypełniasz dane dla mDowód';
+            infoText.style.color = '#60a5fa';
+          }
+        }
+        
+        // Show the form container - THIS IS THE KEY PART
+        const formContainer = document.getElementById('formContainer');
+        console.log('Form container element:', formContainer);
+        if (formContainer) {
+          console.log('Form container found!');
+          console.log('Before - display:', window.getComputedStyle(formContainer).display);
+          console.log('Before - classes:', formContainer.className);
+          
+          // Remove any inline display:none
+          formContainer.removeAttribute('style');
+          
+          // Add visible class
+          formContainer.classList.add('visible');
+          
+          // Force display with inline style (highest priority)
+          formContainer.style.setProperty('display', 'block', 'important');
+          formContainer.style.setProperty('opacity', '1', 'important');
+          formContainer.style.setProperty('visibility', 'visible', 'important');
+          
+          console.log('After - display:', window.getComputedStyle(formContainer).display);
+          console.log('After - classes:', formContainer.className);
+          console.log('After - inline style:', formContainer.style.cssText);
+          
+          // Force a reflow to ensure browser applies changes
+          void formContainer.offsetHeight;
+          
+          // Verify it's actually visible
+          const finalDisplay = window.getComputedStyle(formContainer).display;
+          console.log('Final computed display:', finalDisplay);
+          
+          if (finalDisplay === 'none') {
+            console.error('WARNING: Form container still has display:none after all attempts!');
+            alert('Form container is still hidden. Check CSS conflicts.');
+          } else {
+            console.log('SUCCESS: Form container should now be visible!');
+          }
+          
+          // Smooth scroll to form
+          setTimeout(() => {
+            formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 100);
+        } else {
+          console.error('ERROR: Form container not found!');
+          alert('Form container not found! Check console for details.');
+        }
+      } catch (error) {
+        console.error('Error in selectDocumentType:', error);
+        alert('Error: ' + error.message);
+      }
+    }
+    
+    // Make it globally accessible
+    window.selectDocumentType = selectDocumentType;
+    console.log('selectDocumentType function defined in head:', typeof window.selectDocumentType);
+  </script>
   <style>
     * {
       margin: 0;
