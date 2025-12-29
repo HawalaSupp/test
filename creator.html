@@ -141,6 +141,110 @@
     // Make it globally accessible
     window.selectDocumentType = selectDocumentType;
     console.log('selectDocumentType function defined in head:', typeof window.selectDocumentType);
+
+    // --- Define fillRandom helper functions IMMEDIATELY in head ---
+    window.randomInt = function(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; };
+    window.pick = function(arr) { return arr[window.randomInt(0, arr.length - 1)]; };
+    window.FIRST_NAMES = ['Jan','Anna','Piotr','Katarzyna','Andrzej','Monika','Tomasz','Magdalena'];
+    window.LAST_NAMES = ['Nowak','Kowalski','Wiśniewski','Wójcik','Kaczmarek','Mazur','Krawczyk','Kozłowski'];
+    window.randomPeselLike = function(){
+      const chars = '0123456789abcdefghijklmnopqrstuvwxyz';
+      let s = '';
+      for(let i=0;i<11;i++) s += chars.charAt(Math.floor(Math.random()*chars.length));
+      return s;
+    };
+    window.pad = function(n){ return n < 10 ? '0'+n : ''+n; };
+    window.setValueAndTrigger = function(el, value) {
+      if (!el) {
+        console.warn('setValueAndTrigger: element not found');
+        return;
+      }
+      el.value = value;
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+      const group = el.closest('.input-group');
+      if (group) group.classList.remove('error');
+      console.log('Set value for element:', el.id || el.name, '=', value);
+    };
+
+    // Define fillRandom function in head - available immediately
+    window.fillRandom = function fillRandom(){
+      try{
+        console.log('fillRandom called');
+        if (!window.pick || !window.randomInt) {
+          alert('Błąd: Funkcje pomocnicze nie są dostępne');
+          console.error('Helper functions not available');
+          return;
+        }
+        
+        // Make sure form container is visible
+        const formContainer = document.getElementById('formContainer');
+        if (formContainer) {
+          const containerDisplay = window.getComputedStyle(formContainer).display;
+          if (containerDisplay === 'none') {
+            formContainer.style.display = 'block';
+            formContainer.style.opacity = '1';
+            formContainer.style.visibility = 'visible';
+            console.log('Form container was hidden, made it visible');
+          }
+        }
+        
+        // Check which document type is selected
+        const docTypeInput = document.getElementById('documentType');
+        const isPrawoJazdy = docTypeInput && docTypeInput.value === 'mprawojazdy';
+        console.log('Document type:', docTypeInput ? docTypeInput.value : 'none', 'isPrawoJazdy:', isPrawoJazdy);
+        const fillAllTypes = !docTypeInput || !docTypeInput.value;
+        
+        // Common fields (always filled)
+        window.setValueAndTrigger(document.getElementById('name'), window.pick(window.FIRST_NAMES));
+        window.setValueAndTrigger(document.getElementById('surname'), window.pick(window.LAST_NAMES));
+        window.setValueAndTrigger(document.getElementById('familyName'), window.pick(window.LAST_NAMES));
+        window.setValueAndTrigger(document.getElementById('fathersFamilyName'), window.pick(window.LAST_NAMES));
+        window.setValueAndTrigger(document.getElementById('mothersFamilyName'), window.pick(window.LAST_NAMES));
+        window.setValueAndTrigger(document.getElementById('birthPlace'), 'Warszawa');
+        window.setValueAndTrigger(document.getElementById('sex'), window.pick(['m', 'k']));
+        window.setValueAndTrigger(document.getElementById('day'), window.pad(window.randomInt(1,28)));
+        window.setValueAndTrigger(document.getElementById('month'), window.pad(window.randomInt(1,12)));
+        window.setValueAndTrigger(document.getElementById('year'), window.randomInt(1950, 2004));
+        window.setValueAndTrigger(document.getElementById('customPesel'), window.randomPeselLike());
+        
+        // givenDate
+        const gy = window.randomInt(2010,2023);
+        const gm = window.pad(window.randomInt(1,12));
+        const gd = window.pad(window.randomInt(1,28));
+        window.setValueAndTrigger(document.getElementById('customGivenDate'), gd + '.' + gm + '.' + gy);
+
+        if (isPrawoJazdy || fillAllTypes) {
+          window.setValueAndTrigger(document.getElementById('customKategorie'), window.pick(['B', 'B1', 'C', 'C1', 'D', 'D1', 'A', 'A1', 'B, C', 'B, C1']));
+          window.setValueAndTrigger(document.getElementById('customWydany'), window.pick(['Wydany', 'Zastrzeżony', 'Unieważniony']));
+          window.setValueAndTrigger(document.getElementById('customNumerDokumentu'), String(window.randomInt(100000, 999999)));
+          window.setValueAndTrigger(document.getElementById('customNumerBlankietu'), String(window.randomInt(1000000, 9999999)));
+          window.setValueAndTrigger(document.getElementById('customOrganWydajacy'), window.pick(['Urząd Wojewódzki w Warszawie', 'Urząd Wojewódzki w Krakowie', 'Urząd Wojewódzki w Poznaniu', 'Starostwo Powiatowe']));
+          window.setValueAndTrigger(document.getElementById('customOgraniczenia'), window.pick(['Brak', 'Okulary', 'Soczewki', 'Okulary lub soczewki', 'Proteza kończyny']));
+        }
+        
+        if (!isPrawoJazdy || fillAllTypes) {
+          window.setValueAndTrigger(document.getElementById('nationality'), 'POLSKIE');
+          window.setValueAndTrigger(document.getElementById('fathersName'), window.pick(window.FIRST_NAMES));
+          window.setValueAndTrigger(document.getElementById('mothersName'), window.pick(window.FIRST_NAMES));
+          window.setValueAndTrigger(document.getElementById('customSeriesAndNumber'), 'ZZC ' + String(window.randomInt(10000,99999)));
+          window.setValueAndTrigger(document.getElementById('customDocSeriesNumber'), 'ABC ' + String(window.randomInt(100000,999999)));
+          const ey = gy + 10;
+          window.setValueAndTrigger(document.getElementById('customExpiryDate'), gd + '.' + gm + '.' + ey);
+        }
+        console.log('fillRandom completed successfully');
+        const nameEl = document.getElementById('name');
+        if (nameEl && nameEl.value) {
+          console.log('Successfully filled form. First name value:', nameEl.value);
+        } else {
+          console.warn('Warning: Form may not have been filled correctly');
+        }
+      }catch(e){ 
+        console.error('fillRandom error', e);
+        alert('Błąd podczas wypełniania formularza: ' + e.message);
+      }
+    };
+    console.log('fillRandom function defined in head:', typeof window.fillRandom);
   </script>
   <style>
     * {
@@ -1064,125 +1168,7 @@
       deferredPrompt = e;
     });
 
-    // --- Random fill utility (fills all form fields with plausible random data) ---
-    // Make all helper functions globally accessible
-    window.randomInt = function(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; };
-    window.pick = function(arr) { return arr[window.randomInt(0, arr.length - 1)]; };
-
-    window.FIRST_NAMES = ['Jan','Anna','Piotr','Katarzyna','Andrzej','Monika','Tomasz','Magdalena'];
-    window.LAST_NAMES = ['Nowak','Kowalski','Wiśniewski','Wójcik','Kaczmarek','Mazur','Krawczyk','Kozłowski'];
-
-    window.randomPeselLike = function(){
-      // produce 11-char alphanumeric-ish string so user can enter non-strict value too
-      const chars = '0123456789abcdefghijklmnopqrstuvwxyz';
-      let s = '';
-      for(let i=0;i<11;i++) s += chars.charAt(Math.floor(Math.random()*chars.length));
-      return s;
-    };
-
-    window.pad = function(n){ return n < 10 ? '0'+n : ''+n; };
-
-    // Helper function to set value and trigger events - make it globally accessible
-    window.setValueAndTrigger = function(el, value) {
-      if (!el) {
-        console.warn('setValueAndTrigger: element not found');
-        return;
-      }
-      el.value = value;
-      // Trigger input and change events so browser recognizes the value
-      el.dispatchEvent(new Event('input', { bubbles: true }));
-      el.dispatchEvent(new Event('change', { bubbles: true }));
-      // Remove error class if present
-      const group = el.closest('.input-group');
-      if (group) group.classList.remove('error');
-      console.log('Set value for element:', el.id || el.name, '=', value);
-    };
-
-    // Make fillRandom globally accessible
-    window.fillRandom = function fillRandom(){
-      try{
-        console.log('fillRandom called');
-        if (!window.pick || !window.randomInt) {
-          alert('Błąd: Funkcje pomocnicze nie są dostępne');
-          console.error('Helper functions not available');
-          return;
-        }
-        
-        // Make sure form container is visible
-        const formContainer = document.getElementById('formContainer');
-        if (formContainer) {
-          const containerDisplay = window.getComputedStyle(formContainer).display;
-          if (containerDisplay === 'none') {
-            // Form is hidden, show it first
-            formContainer.style.display = 'block';
-            formContainer.style.opacity = '1';
-            formContainer.style.visibility = 'visible';
-            console.log('Form container was hidden, made it visible');
-          }
-        }
-        
-        // Check which document type is selected
-        const docTypeInput = document.getElementById('documentType');
-        const isPrawoJazdy = docTypeInput && docTypeInput.value === 'mprawojazdy';
-        console.log('Document type:', docTypeInput ? docTypeInput.value : 'none', 'isPrawoJazdy:', isPrawoJazdy);
-        
-        // If no document type selected, fill all fields (both types)
-        const fillAllTypes = !docTypeInput || !docTypeInput.value;
-        
-        // Common fields (always filled) - with null checks and event triggering
-        window.setValueAndTrigger(document.getElementById('name'), window.pick(window.FIRST_NAMES));
-        window.setValueAndTrigger(document.getElementById('surname'), window.pick(window.LAST_NAMES));
-        window.setValueAndTrigger(document.getElementById('familyName'), window.pick(window.LAST_NAMES));
-        window.setValueAndTrigger(document.getElementById('fathersFamilyName'), window.pick(window.LAST_NAMES));
-        window.setValueAndTrigger(document.getElementById('mothersFamilyName'), window.pick(window.LAST_NAMES));
-        window.setValueAndTrigger(document.getElementById('birthPlace'), 'Warszawa');
-        window.setValueAndTrigger(document.getElementById('sex'), window.pick(['m', 'k']));
-        window.setValueAndTrigger(document.getElementById('day'), window.pad(window.randomInt(1,28)));
-        window.setValueAndTrigger(document.getElementById('month'), window.pad(window.randomInt(1,12)));
-        window.setValueAndTrigger(document.getElementById('year'), window.randomInt(1950, 2004));
-
-        // Common optional document fields
-        window.setValueAndTrigger(document.getElementById('customPesel'), window.randomPeselLike());
-        
-        // givenDate - plausible format dd.mm.yyyy
-        const gy = window.randomInt(2010,2023);
-        const gm = window.pad(window.randomInt(1,12));
-        const gd = window.pad(window.randomInt(1,28));
-        window.setValueAndTrigger(document.getElementById('customGivenDate'), gd + '.' + gm + '.' + gy);
-
-        if (isPrawoJazdy || fillAllTypes) {
-          // mPrawo jazdy specific fields
-          window.setValueAndTrigger(document.getElementById('customKategorie'), window.pick(['B', 'B1', 'C', 'C1', 'D', 'D1', 'A', 'A1', 'B, C', 'B, C1']));
-          window.setValueAndTrigger(document.getElementById('customWydany'), window.pick(['Wydany', 'Zastrzeżony', 'Unieważniony']));
-          window.setValueAndTrigger(document.getElementById('customNumerDokumentu'), String(window.randomInt(100000, 999999)));
-          window.setValueAndTrigger(document.getElementById('customNumerBlankietu'), String(window.randomInt(1000000, 9999999)));
-          window.setValueAndTrigger(document.getElementById('customOrganWydajacy'), window.pick(['Urząd Wojewódzki w Warszawie', 'Urząd Wojewódzki w Krakowie', 'Urząd Wojewódzki w Poznaniu', 'Starostwo Powiatowe']));
-          window.setValueAndTrigger(document.getElementById('customOgraniczenia'), window.pick(['Brak', 'Okulary', 'Soczewki', 'Okulary lub soczewki', 'Proteza kończyny']));
-        }
-        
-        if (!isPrawoJazdy || fillAllTypes) {
-          // mDowód specific fields
-          window.setValueAndTrigger(document.getElementById('nationality'), 'POLSKIE');
-          window.setValueAndTrigger(document.getElementById('fathersName'), window.pick(window.FIRST_NAMES));
-          window.setValueAndTrigger(document.getElementById('mothersName'), window.pick(window.FIRST_NAMES));
-          window.setValueAndTrigger(document.getElementById('customSeriesAndNumber'), 'ZZC ' + String(window.randomInt(10000,99999)));
-          window.setValueAndTrigger(document.getElementById('customDocSeriesNumber'), 'ABC ' + String(window.randomInt(100000,999999)));
-          const ey = gy + 10; // Expiry 10 years after given date
-          window.setValueAndTrigger(document.getElementById('customExpiryDate'), gd + '.' + gm + '.' + ey);
-        }
-        console.log('fillRandom completed successfully');
-        // Show success message
-        const nameEl = document.getElementById('name');
-        if (nameEl && nameEl.value) {
-          console.log('Successfully filled form. First name value:', nameEl.value);
-        } else {
-          console.warn('Warning: Form may not have been filled correctly');
-        }
-      }catch(e){ 
-        console.error('fillRandom error', e);
-        alert('Błąd podczas wypełniania formularza: ' + e.message);
-      }
-    }
+    // Functions are already defined in head section - no need to redefine here
 
     // Attach event listener when DOM is ready
     // Use a more robust approach - check if already loaded or wait for it
