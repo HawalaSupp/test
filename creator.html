@@ -988,6 +988,16 @@
       });
     }
 
+    function getData(db, key){
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction('data','readonly');
+        const store = tx.objectStore('data');
+        const req = store.get(key);
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = e => reject(e.target.error);
+      });
+    }
+
     function validateForm() {
       let isValid = true;
       const inputs = form.querySelectorAll('input[required], select[required]');
@@ -1114,14 +1124,23 @@
 
       // Zapisz dane w IndexedDB (with document type key if prawo jazdy)
       const db = await getDb();
-      const dataToSave = isPrawoJazdy ? { ...data, data: 'prawoJazdy_data' } : data;
+      // IndexedDB uses 'data' property as keyPath, so we must include it
+      const dataToSave = isPrawoJazdy ? { ...data, data: 'prawoJazdy_data' } : { ...data, data: 'data' };
       console.log('Saving data to IndexedDB:', dataToSave);
-      if (isPrawoJazdy) {
-        await saveData(db, dataToSave);
-      } else {
-        await saveData(db, dataToSave);
-      }
+      console.log('Data object structure:', JSON.stringify(dataToSave, null, 2));
+      
+      await saveData(db, dataToSave);
       console.log('Data saved to IndexedDB successfully');
+      
+      // Verify the save worked
+      const verifyData = await getData(db, isPrawoJazdy ? 'prawoJazdy_data' : 'data');
+      if (verifyData) {
+        console.log('✓ Data verified in IndexedDB:', verifyData);
+        console.log('✓ Data keys:', Object.keys(verifyData));
+      } else {
+        console.error('✗ Data NOT found in IndexedDB after save!');
+        alert('Błąd: Dane nie zostały zapisane do IndexedDB');
+      }
 
       // Zapisz zdjęcie w IndexedDB (with document type key)
       if (imageBase64) {
