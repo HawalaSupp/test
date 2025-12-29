@@ -625,7 +625,11 @@
   </div>
 
   <script>
-    // Document type selection function - define in global scope immediately
+    // Function is already defined in head, just verify
+    console.log('Body script loaded - selectDocumentType available:', typeof window.selectDocumentType);
+    
+    // Remove this duplicate - function is in head
+    /*
     window.selectDocumentType = function(type) {
       console.log('=== selectDocumentType called with:', type, '===');
       
@@ -721,8 +725,7 @@
         alert('Error: ' + error.message);
       }
     };
-    
-    console.log('selectDocumentType function defined:', typeof window.selectDocumentType);
+    */
 
     // Wait for DOM to be ready
     document.addEventListener('DOMContentLoaded', function() {
@@ -789,8 +792,8 @@
       }
     }); // End of DOMContentLoaded
 
-    // Make function globally accessible
-    window.selectDocumentType = selectDocumentType;
+    // Function is already global from head section
+    // window.selectDocumentType = selectDocumentType;
 
     // Variables for form handling (will be set in DOMContentLoaded)
     let form, imageInput, preview, uploadBox, uploadContent, imageBase64 = null;
