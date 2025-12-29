@@ -11,6 +11,20 @@
   <meta name="mobile-web-app-capable" content="yes">
   <link rel="stylesheet" href="assets/app/main.css">
   <link rel="stylesheet" href="assets/app/card.css">
+  <style>
+    /* Hide content initially to prevent flicker */
+    .id_data_grid,
+    .confirm_info,
+    .id_bottom {
+      opacity: 0;
+      transition: opacity 0.3s ease-in;
+    }
+    .content-loaded .id_data_grid,
+    .content-loaded .confirm_info,
+    .content-loaded .id_bottom {
+      opacity: 1;
+    }
+  </style>
   <link rel="icon" type="image/x-icon" href="assets/app/images/ikonka.png">
   <link rel="apple-touch-icon" href="assets/app/images/ikonka.png">
   <link rel="shortcut icon" href="assets/app/images/ikonka.png">
@@ -376,8 +390,11 @@
             }
           }
         } else {
-          console.log('No userData found in IndexedDB');
+          console.log('No userData found');
         }
+        
+        // Show content once data is loaded (or even if no data)
+        document.body.classList.add('content-loaded');
 
         // Load image from IndexedDB
         const urlParams = new URLSearchParams(window.location.search);
@@ -450,19 +467,46 @@
 
     // Load data and image when DOM is ready and after card.js loads
     let dataLoaded = false; // Prevent duplicate loads
+    
+    // Try to load data synchronously from localStorage first (instant, no flicker)
+    (function loadDataSync() {
+      try {
+        const jsonData = localStorage.getItem('userData');
+        if (jsonData) {
+          const userData = JSON.parse(jsonData);
+          if (typeof loadReadyData === 'function' && userData && Object.keys(userData).length > 0) {
+            // Load data immediately
+            loadReadyData(userData);
+            // Show content
+            if (document.body) {
+              document.body.classList.add('content-loaded');
+            } else {
+              document.addEventListener('DOMContentLoaded', () => {
+                document.body.classList.add('content-loaded');
+              });
+            }
+            dataLoaded = true;
+            console.log('Data loaded synchronously from localStorage');
+            return true;
+          }
+        }
+      } catch (e) {
+        console.log('Could not load data synchronously:', e);
+      }
+      return false;
+    })();
+    
     function initUserData() {
       if (dataLoaded) {
         console.log('initUserData: Data already loaded, skipping');
         return;
       }
-      // Wait a bit for card.js to load - increase delay to ensure card.js is loaded
-      setTimeout(() => {
-        console.log('initUserData: Checking if loadReadyData is available:', typeof loadReadyData);
-        if (!dataLoaded) {
-          dataLoaded = true;
-          loadUserData();
-        }
-      }, 500);
+      // Load data immediately - no delay to prevent flicker
+      console.log('initUserData: Checking if loadReadyData is available:', typeof loadReadyData);
+      if (!dataLoaded) {
+        dataLoaded = true;
+        loadUserData();
+      }
     }
 
     if (document.readyState === 'loading') {

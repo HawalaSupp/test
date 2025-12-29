@@ -112,6 +112,9 @@ function loadReadyData(result){
     // Use prawo jazdy specific Kategorie key
     const kategorieValue = localStorage.getItem('prawoJazdy_kategorie');
     setData("kategorie", kategorieValue);
+    
+    // Show content once data is loaded
+    document.body.classList.add('content-loaded');
 }
 
 function setImage(image){
