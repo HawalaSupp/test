@@ -290,22 +290,61 @@
       try {
         const db = await getDb();
         
-        // Load user data from IndexedDB (prawo jazdy specific, fallback to shared data)
-        let userData = await getData(db, 'prawoJazdy_data');
-        if (!userData) {
-          userData = await getData(db, 'data');
+        // NEW APPROACH: Load from localStorage first (more reliable)
+        console.log('Loading data from localStorage for prawo jazdy...');
+        let userData = null;
+        
+        // Try to load from localStorage JSON first
+        const jsonData = localStorage.getItem('prawoJazdy_userData');
+        if (jsonData) {
+          try {
+            userData = JSON.parse(jsonData);
+            console.log('✓ Loaded data from localStorage JSON:', userData);
+          } catch (e) {
+            console.error('Error parsing localStorage JSON:', e);
+          }
         }
-        console.log('Raw userData from IndexedDB:', userData);
-        if (userData) {
-          // Remove the 'data' property if it exists (it's just the key, not actual data)
-          const cleanData = { ...userData };
-          delete cleanData.data;
-          console.log('Cleaned userData (without data key):', cleanData);
+        
+        // If not in localStorage, try IndexedDB
+        if (!userData) {
+          console.log('Not in localStorage, trying IndexedDB...');
+          let indexedData = await getData(db, 'prawoJazdy_data');
+          if (!indexedData) {
+            indexedData = await getData(db, 'data');
+          }
+          if (indexedData) {
+            userData = { ...indexedData };
+            delete userData.data;
+            console.log('✓ Loaded data from IndexedDB:', userData);
+          }
+        }
+        
+        // If still no data, try loading individual fields from localStorage
+        if (!userData) {
+          console.log('Not in IndexedDB, trying individual localStorage fields...');
+          userData = {
+            name: localStorage.getItem('prawoJazdy_name') || localStorage.getItem('name'),
+            surname: localStorage.getItem('prawoJazdy_surname') || localStorage.getItem('surname'),
+            nationality: localStorage.getItem('prawoJazdy_nationality') || localStorage.getItem('nationality'),
+            familyName: localStorage.getItem('prawoJazdy_familyName') || localStorage.getItem('familyName'),
+            fathersFamilyName: localStorage.getItem('prawoJazdy_fathersFamilyName') || localStorage.getItem('fathersFamilyName'),
+            mothersFamilyName: localStorage.getItem('prawoJazdy_mothersFamilyName') || localStorage.getItem('mothersFamilyName'),
+            birthPlace: localStorage.getItem('prawoJazdy_birthPlace') || localStorage.getItem('birthPlace'),
+            sex: localStorage.getItem('prawoJazdy_sex') || localStorage.getItem('sex'),
+            day: parseInt(localStorage.getItem('prawoJazdy_day') || localStorage.getItem('day')) || 1,
+            month: parseInt(localStorage.getItem('prawoJazdy_month') || localStorage.getItem('month')) || 1,
+            year: parseInt(localStorage.getItem('prawoJazdy_year') || localStorage.getItem('year')) || 2000
+          };
+          console.log('✓ Loaded data from individual localStorage fields:', userData);
+        }
+        
+        if (userData && Object.keys(userData).length > 0) {
+          console.log('Final userData to display:', userData);
           
           // Use loadReadyData from prawo_jazdy_card.js if available
           if (typeof loadReadyData === 'function') {
-            console.log('Calling loadReadyData from prawo_jazdy_card.js with:', cleanData);
-            loadReadyData(cleanData);
+            console.log('Calling loadReadyData from prawo_jazdy_card.js with:', userData);
+            loadReadyData(userData);
           } else {
             // Fallback: Set form fields from IndexedDB data
             function setData(id, value) {
