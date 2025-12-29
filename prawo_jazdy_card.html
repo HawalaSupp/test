@@ -148,26 +148,32 @@
 
     <div class="confirm_info">
       <div class="confirm_box">
-        <p class="box_top">Seria i numer mPrawo jazdy</p>
-        <p class="box_value box_highlight" id="seriesAndNumber"></p>
-        <button class="main_button_filled" onclick="navigator.clipboard.writeText(document.getElementById('seriesAndNumber').textContent)">Kopiuj</button>
-        <p class="box_description">Dane mPrawo jazdy i dowodu osobistego są inne - to dwa różne dokumenty.</p>
-      </div>
-      <div class="confirm_box">
         <p class="box_top">Termin ważności mPrawo jazdy</p>
-        <p class="box_value" id="expiryDate"></p>
+        <p class="box_value">Bezterminowo</p>
       </div>
       <div class="confirm_box">
         <p class="box_top">Data wydania mPrawo jazdy</p>
         <p class="box_value" id="givenDate"></p>
       </div>
       <div class="confirm_box">
-        <p class="box_top">Imię ojca</p>
-        <p class="box_value" id="fathersName"></p>
+        <p class="box_top">Wydany</p>
+        <p class="box_value" id="wydany"></p>
+      </div>
+      <div class="confirm_box">
+        <p class="box_top">Numer Dokumentu</p>
+        <p class="box_value" id="numerDokumentu"></p>
+      </div>
+      <div class="confirm_box">
+        <p class="box_top">Numer blankietu</p>
+        <p class="box_value" id="numerBlankietu"></p>
+      </div>
+      <div class="confirm_box">
+        <p class="box_top">Organ wydający</p>
+        <p class="box_value" id="organWydajacy"></p>
       </div>
       <div class="confirm_box" style="border:none;">
-        <p class="box_top">Imię matki</p>
-        <p class="box_value" id="mothersName"></p>
+        <p class="box_top">Ograniczenia</p>
+        <p class="box_value" id="ograniczenia"></p>
       </div>
     </div>
 
@@ -252,8 +258,9 @@
 
     // === Wczytywanie danych z localStorage lub URL ===
     const fields = [
-      'name','surname','nationality','birthday','pesel_value','kategorie','seriesAndNumber','expiryDate',
-      'givenDate','fathersName','mothersName','familyName','sex','fathersFamilyName',
+      'name','surname','nationality','birthday','pesel_value','kategorie',
+      'givenDate','wydany','numerDokumentu','numerBlankietu','organWydajacy','ograniczenia',
+      'familyName','sex','fathersFamilyName',
       'mothersFamilyName','birthPlace','updateDate'
     ];
     

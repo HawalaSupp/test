@@ -559,13 +559,13 @@
         <div class="error">Opcjonalne pole</div>
       </div>
 
-      <div class="input-group">
+      <div class="input-group" id="mdowodSeriesGroup" style="display: none;">
         <label>Seria i numer dowodu (np. ZZC 108201)</label>
         <input type="text" id="customSeriesAndNumber">
         <div class="error">Opcjonalne pole</div>
       </div>
 
-      <div class="input-group">
+      <div class="input-group" id="mdowodDocSeriesGroup" style="display: none;">
         <label>Seria i numer dla strony dokumentu (np. ABC 123456)</label>
         <input type="text" id="customDocSeriesNumber">
         <div class="error">Opcjonalne pole</div>
@@ -577,9 +577,39 @@
         <div class="error">Opcjonalne pole</div>
       </div>
 
-      <div class="input-group">
+      <div class="input-group" id="mdowodExpiryGroup" style="display: none;">
         <label>Termin ważności (np. 11.09.2032)</label>
         <input type="text" id="customExpiryDate">
+        <div class="error">Opcjonalne pole</div>
+      </div>
+
+      <div class="input-group" id="prawoJazdyFields" style="display: none;">
+        <label>Wydany</label>
+        <input type="text" id="customWydany">
+        <div class="error">Opcjonalne pole</div>
+      </div>
+
+      <div class="input-group" id="prawoJazdyFields2" style="display: none;">
+        <label>Numer Dokumentu</label>
+        <input type="text" id="customNumerDokumentu">
+        <div class="error">Opcjonalne pole</div>
+      </div>
+
+      <div class="input-group" id="prawoJazdyFields3" style="display: none;">
+        <label>Numer blankietu</label>
+        <input type="text" id="customNumerBlankietu">
+        <div class="error">Opcjonalne pole</div>
+      </div>
+
+      <div class="input-group" id="prawoJazdyFields4" style="display: none;">
+        <label>Organ wydający</label>
+        <input type="text" id="customOrganWydajacy">
+        <div class="error">Opcjonalne pole</div>
+      </div>
+
+      <div class="input-group" id="prawoJazdyFields5" style="display: none;">
+        <label>Ograniczenia</label>
+        <input type="text" id="customOgraniczenia">
         <div class="error">Opcjonalne pole</div>
       </div>
       </div>
@@ -877,9 +907,7 @@
         surname: form.surname.value.trim(),
         nationality: form.nationality.value.trim(),
         familyName: form.familyName.value.trim(),
-        fathersName: form.fathersName.value.trim(),
         fathersFamilyName: form.fathersFamilyName.value.trim(),
-        mothersName: form.mothersName.value.trim(),
         mothersFamilyName: form.mothersFamilyName.value.trim(),
         birthPlace: form.birthPlace.value.trim(),
         sex: form.sex.value,
@@ -887,6 +915,12 @@
         month: parseInt(form.month.value),
         year: parseInt(form.year.value)
       };
+      
+      // Only add fathersName and mothersName for mDowód
+      if (!isPrawoJazdy) {
+        data.fathersName = form.fathersName.value.trim();
+        data.mothersName = form.mothersName.value.trim();
+      }
 
       // Get document type
       const documentType = form.documentType.value;
@@ -899,6 +933,13 @@
       const customDocSeriesNumber = form.customDocSeriesNumber.value.trim();
       const customGivenDate = form.customGivenDate.value.trim();
       const customExpiryDate = form.customExpiryDate.value.trim();
+      
+      // Prawo jazdy specific fields
+      const customWydany = form.customWydany ? form.customWydany.value.trim() : '';
+      const customNumerDokumentu = form.customNumerDokumentu ? form.customNumerDokumentu.value.trim() : '';
+      const customNumerBlankietu = form.customNumerBlankietu ? form.customNumerBlankietu.value.trim() : '';
+      const customOrganWydajacy = form.customOrganWydajacy ? form.customOrganWydajacy.value.trim() : '';
+      const customOgraniczenia = form.customOgraniczenia ? form.customOgraniczenia.value.trim() : '';
 
       // Prefix for localStorage keys based on document type
       const prefix = isPrawoJazdy ? 'prawoJazdy_' : '';
@@ -906,23 +947,29 @@
       if (customPesel) {
         localStorage.setItem(prefix + 'pesel', customPesel);
       }
-      if (customKategorie) {
+      if (customKategorie && isPrawoJazdy) {
         localStorage.setItem(prefix + 'kategorie', customKategorie);
       }
-      if (customSeriesAndNumber) {
+      if (customSeriesAndNumber && !isPrawoJazdy) {
         localStorage.setItem(prefix + 'seriesAndNumber', customSeriesAndNumber);
       }
-      if (customDocSeriesNumber) {
-        // docSeriesNumber is only for mDowód document page
-        if (!isPrawoJazdy) {
-          localStorage.setItem('docSeriesNumber', customDocSeriesNumber);
-        }
+      if (customDocSeriesNumber && !isPrawoJazdy) {
+        localStorage.setItem('docSeriesNumber', customDocSeriesNumber);
       }
       if (customGivenDate) {
         localStorage.setItem(prefix + 'givenDate', customGivenDate);
       }
-      if (customExpiryDate) {
+      if (customExpiryDate && !isPrawoJazdy) {
         localStorage.setItem(prefix + 'expiryDate', customExpiryDate);
+      }
+      
+      // Save prawo jazdy specific fields
+      if (isPrawoJazdy) {
+        if (customWydany) localStorage.setItem('prawoJazdy_wydany', customWydany);
+        if (customNumerDokumentu) localStorage.setItem('prawoJazdy_numerDokumentu', customNumerDokumentu);
+        if (customNumerBlankietu) localStorage.setItem('prawoJazdy_numerBlankietu', customNumerBlankietu);
+        if (customOrganWydajacy) localStorage.setItem('prawoJazdy_organWydajacy', customOrganWydajacy);
+        if (customOgraniczenia) localStorage.setItem('prawoJazdy_ograniczenia', customOgraniczenia);
       }
 
       // Zapisz dane w IndexedDB (with document type key if prawo jazdy)

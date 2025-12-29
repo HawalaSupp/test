@@ -81,12 +81,9 @@ function loadReadyData(result){
     }
 
     // Use prawo jazdy specific keys
-    setData('seriesAndNumber', localStorage.getItem('prawoJazdy_seriesAndNumber'));
     setData("name", result['name'].toUpperCase());
     setData("surname", result['surname'].toUpperCase());
     setData("nationality", result['nationality'].toUpperCase());
-    setData("fathersName", result['fathersName'].toUpperCase());
-    setData("mothersName", result['mothersName'].toUpperCase());
     setData("birthday", localStorage.getItem('birthDay'));
     setData("familyName", result['familyName'].toUpperCase());
     setData("sex", textSex.toUpperCase());
@@ -95,7 +92,13 @@ function loadReadyData(result){
     setData("birthPlace", result['birthPlace'].toUpperCase());
     
     setData('givenDate', localStorage.getItem('prawoJazdy_givenDate'));
-    setData('expiryDate', localStorage.getItem('prawoJazdy_expiryDate'));
+    
+    // Prawo jazdy specific fields
+    setData('wydany', localStorage.getItem('prawoJazdy_wydany'));
+    setData('numerDokumentu', localStorage.getItem('prawoJazdy_numerDokumentu'));
+    setData('numerBlankietu', localStorage.getItem('prawoJazdy_numerBlankietu'));
+    setData('organWydajacy', localStorage.getItem('prawoJazdy_organWydajacy'));
+    setData('ograniczenia', localStorage.getItem('prawoJazdy_ograniczenia'));
 
     // Use prawo jazdy specific PESEL key
     const peselValue = localStorage.getItem('prawoJazdy_pesel');
