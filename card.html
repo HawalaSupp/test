@@ -283,51 +283,67 @@
         const db = await getDb();
         
         // NEW APPROACH: Load from localStorage first (more reliable)
-        console.log('Loading data from localStorage...');
+        console.log('=== Loading data from localStorage ===');
         let userData = null;
+        let dataSource = 'none';
         
-        // Try to load from localStorage JSON first
+        // Try to load from localStorage JSON first (MOST RECENT)
         const jsonData = localStorage.getItem('userData');
+        const jsonTimestamp = localStorage.getItem('userData_timestamp');
         if (jsonData) {
           try {
             userData = JSON.parse(jsonData);
-            console.log('✓ Loaded data from localStorage JSON:', userData);
+            dataSource = 'localStorage JSON';
+            console.log('✓ Loaded data from localStorage JSON');
+            console.log('  Timestamp:', jsonTimestamp ? new Date(parseInt(jsonTimestamp)).toISOString() : 'unknown');
+            console.log('  Data:', userData);
+            console.log('  Name:', userData.name, 'Surname:', userData.surname);
           } catch (e) {
             console.error('Error parsing localStorage JSON:', e);
           }
         }
         
-        // If not in localStorage, try IndexedDB
+        // If not in localStorage JSON, try IndexedDB
         if (!userData) {
-          console.log('Not in localStorage, trying IndexedDB...');
+          console.log('Not in localStorage JSON, trying IndexedDB...');
           const indexedData = await getData(db, 'data');
           if (indexedData) {
             userData = { ...indexedData };
             delete userData.data;
+            dataSource = 'IndexedDB';
             console.log('✓ Loaded data from IndexedDB:', userData);
+            console.log('  Name:', userData.name, 'Surname:', userData.surname);
           }
         }
         
         // If still no data, try loading individual fields from localStorage
         if (!userData) {
           console.log('Not in IndexedDB, trying individual localStorage fields...');
-          userData = {
-            name: localStorage.getItem('name'),
-            surname: localStorage.getItem('surname'),
-            nationality: localStorage.getItem('nationality'),
-            familyName: localStorage.getItem('familyName'),
-            fathersName: localStorage.getItem('fathersName'),
-            mothersName: localStorage.getItem('mothersName'),
-            fathersFamilyName: localStorage.getItem('fathersFamilyName'),
-            mothersFamilyName: localStorage.getItem('mothersFamilyName'),
-            birthPlace: localStorage.getItem('birthPlace'),
-            sex: localStorage.getItem('sex'),
-            day: parseInt(localStorage.getItem('day')) || 1,
-            month: parseInt(localStorage.getItem('month')) || 1,
-            year: parseInt(localStorage.getItem('year')) || 2000
-          };
-          console.log('✓ Loaded data from individual localStorage fields:', userData);
+          const name = localStorage.getItem('name');
+          const surname = localStorage.getItem('surname');
+          if (name || surname) {
+            userData = {
+              name: name,
+              surname: surname,
+              nationality: localStorage.getItem('nationality'),
+              familyName: localStorage.getItem('familyName'),
+              fathersName: localStorage.getItem('fathersName'),
+              mothersName: localStorage.getItem('mothersName'),
+              fathersFamilyName: localStorage.getItem('fathersFamilyName'),
+              mothersFamilyName: localStorage.getItem('mothersFamilyName'),
+              birthPlace: localStorage.getItem('birthPlace'),
+              sex: localStorage.getItem('sex'),
+              day: parseInt(localStorage.getItem('day')) || 1,
+              month: parseInt(localStorage.getItem('month')) || 1,
+              year: parseInt(localStorage.getItem('year')) || 2000
+            };
+            dataSource = 'individual localStorage fields';
+            console.log('✓ Loaded data from individual localStorage fields:', userData);
+            console.log('  Name:', userData.name, 'Surname:', userData.surname);
+          }
         }
+        
+        console.log('=== Data source:', dataSource, '===');
         
         if (userData && Object.keys(userData).length > 0) {
           console.log('Final userData to display:', userData);

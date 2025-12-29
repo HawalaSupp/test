@@ -1081,13 +1081,20 @@
       const storageKey = isPrawoJazdy ? 'prawoJazdy_userData' : 'userData';
       localStorage.setItem(storageKey, JSON.stringify(data));
       console.log('✓ Saved data to localStorage as JSON with key:', storageKey);
+      console.log('✓ Saved data content:', JSON.stringify(data, null, 2));
       
-      // Also save individual fields for compatibility
+      // Also save individual fields for compatibility (OVERWRITE old values)
       Object.keys(data).forEach(key => {
         const itemKey = isPrawoJazdy ? `prawoJazdy_${key}` : key;
-        localStorage.setItem(itemKey, String(data[key]));
+        const value = String(data[key]);
+        localStorage.setItem(itemKey, value);
+        console.log('  - Saved', itemKey, '=', value);
       });
       console.log('✓ Saved individual fields to localStorage');
+      
+      // Add timestamp to track when data was saved
+      localStorage.setItem(storageKey + '_timestamp', Date.now().toString());
+      console.log('✓ Saved timestamp:', new Date().toISOString());
       
       // Save birthDay to localStorage in format DD.MM.YYYY
       const day = String(data.day).padStart(2, '0');
