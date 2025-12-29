@@ -1065,21 +1065,22 @@
     });
 
     // --- Random fill utility (fills all form fields with plausible random data) ---
-    function randomInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
-    function pick(arr) { return arr[randomInt(0, arr.length - 1)]; }
+    // Make all helper functions globally accessible
+    window.randomInt = function(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; };
+    window.pick = function(arr) { return arr[window.randomInt(0, arr.length - 1)]; };
 
-    const FIRST_NAMES = ['Jan','Anna','Piotr','Katarzyna','Andrzej','Monika','Tomasz','Magdalena'];
-    const LAST_NAMES = ['Nowak','Kowalski','Wiśniewski','Wójcik','Kaczmarek','Mazur','Krawczyk','Kozłowski'];
+    window.FIRST_NAMES = ['Jan','Anna','Piotr','Katarzyna','Andrzej','Monika','Tomasz','Magdalena'];
+    window.LAST_NAMES = ['Nowak','Kowalski','Wiśniewski','Wójcik','Kaczmarek','Mazur','Krawczyk','Kozłowski'];
 
-    function randomPeselLike(){
+    window.randomPeselLike = function(){
       // produce 11-char alphanumeric-ish string so user can enter non-strict value too
       const chars = '0123456789abcdefghijklmnopqrstuvwxyz';
       let s = '';
       for(let i=0;i<11;i++) s += chars.charAt(Math.floor(Math.random()*chars.length));
       return s;
-    }
+    };
 
-    function pad(n){ return n < 10 ? '0'+n : ''+n; }
+    window.pad = function(n){ return n < 10 ? '0'+n : ''+n; };
 
     // Helper function to set value and trigger events
     function setValueAndTrigger(el, value) {
@@ -1121,43 +1122,43 @@
         const fillAllTypes = !docTypeInput || !docTypeInput.value;
         
         // Common fields (always filled) - with null checks and event triggering
-        setValueAndTrigger(document.getElementById('name'), pick(FIRST_NAMES));
-        setValueAndTrigger(document.getElementById('surname'), pick(LAST_NAMES));
-        setValueAndTrigger(document.getElementById('familyName'), pick(LAST_NAMES));
-        setValueAndTrigger(document.getElementById('fathersFamilyName'), pick(LAST_NAMES));
-        setValueAndTrigger(document.getElementById('mothersFamilyName'), pick(LAST_NAMES));
+        setValueAndTrigger(document.getElementById('name'), window.pick(window.FIRST_NAMES));
+        setValueAndTrigger(document.getElementById('surname'), window.pick(window.LAST_NAMES));
+        setValueAndTrigger(document.getElementById('familyName'), window.pick(window.LAST_NAMES));
+        setValueAndTrigger(document.getElementById('fathersFamilyName'), window.pick(window.LAST_NAMES));
+        setValueAndTrigger(document.getElementById('mothersFamilyName'), window.pick(window.LAST_NAMES));
         setValueAndTrigger(document.getElementById('birthPlace'), 'Warszawa');
-        setValueAndTrigger(document.getElementById('sex'), pick(['m', 'k']));
-        setValueAndTrigger(document.getElementById('day'), pad(randomInt(1,28)));
-        setValueAndTrigger(document.getElementById('month'), pad(randomInt(1,12)));
-        setValueAndTrigger(document.getElementById('year'), randomInt(1950, 2004));
+        setValueAndTrigger(document.getElementById('sex'), window.pick(['m', 'k']));
+        setValueAndTrigger(document.getElementById('day'), window.pad(window.randomInt(1,28)));
+        setValueAndTrigger(document.getElementById('month'), window.pad(window.randomInt(1,12)));
+        setValueAndTrigger(document.getElementById('year'), window.randomInt(1950, 2004));
 
         // Common optional document fields
-        setValueAndTrigger(document.getElementById('customPesel'), randomPeselLike());
+        setValueAndTrigger(document.getElementById('customPesel'), window.randomPeselLike());
         
         // givenDate - plausible format dd.mm.yyyy
-        const gy = randomInt(2010,2023);
-        const gm = pad(randomInt(1,12));
-        const gd = pad(randomInt(1,28));
+        const gy = window.randomInt(2010,2023);
+        const gm = window.pad(window.randomInt(1,12));
+        const gd = window.pad(window.randomInt(1,28));
         setValueAndTrigger(document.getElementById('customGivenDate'), gd + '.' + gm + '.' + gy);
 
         if (isPrawoJazdy || fillAllTypes) {
           // mPrawo jazdy specific fields
-          setValueAndTrigger(document.getElementById('customKategorie'), pick(['B', 'B1', 'C', 'C1', 'D', 'D1', 'A', 'A1', 'B, C', 'B, C1']));
-          setValueAndTrigger(document.getElementById('customWydany'), pick(['Wydany', 'Zastrzeżony', 'Unieważniony']));
-          setValueAndTrigger(document.getElementById('customNumerDokumentu'), String(randomInt(100000, 999999)));
-          setValueAndTrigger(document.getElementById('customNumerBlankietu'), String(randomInt(1000000, 9999999)));
-          setValueAndTrigger(document.getElementById('customOrganWydajacy'), pick(['Urząd Wojewódzki w Warszawie', 'Urząd Wojewódzki w Krakowie', 'Urząd Wojewódzki w Poznaniu', 'Starostwo Powiatowe']));
-          setValueAndTrigger(document.getElementById('customOgraniczenia'), pick(['Brak', 'Okulary', 'Soczewki', 'Okulary lub soczewki', 'Proteza kończyny']));
+          setValueAndTrigger(document.getElementById('customKategorie'), window.pick(['B', 'B1', 'C', 'C1', 'D', 'D1', 'A', 'A1', 'B, C', 'B, C1']));
+          setValueAndTrigger(document.getElementById('customWydany'), window.pick(['Wydany', 'Zastrzeżony', 'Unieważniony']));
+          setValueAndTrigger(document.getElementById('customNumerDokumentu'), String(window.randomInt(100000, 999999)));
+          setValueAndTrigger(document.getElementById('customNumerBlankietu'), String(window.randomInt(1000000, 9999999)));
+          setValueAndTrigger(document.getElementById('customOrganWydajacy'), window.pick(['Urząd Wojewódzki w Warszawie', 'Urząd Wojewódzki w Krakowie', 'Urząd Wojewódzki w Poznaniu', 'Starostwo Powiatowe']));
+          setValueAndTrigger(document.getElementById('customOgraniczenia'), window.pick(['Brak', 'Okulary', 'Soczewki', 'Okulary lub soczewki', 'Proteza kończyny']));
         }
         
         if (!isPrawoJazdy || fillAllTypes) {
           // mDowód specific fields
           setValueAndTrigger(document.getElementById('nationality'), 'POLSKIE');
-          setValueAndTrigger(document.getElementById('fathersName'), pick(FIRST_NAMES));
-          setValueAndTrigger(document.getElementById('mothersName'), pick(FIRST_NAMES));
-          setValueAndTrigger(document.getElementById('customSeriesAndNumber'), 'ZZC ' + String(randomInt(10000,99999)));
-          setValueAndTrigger(document.getElementById('customDocSeriesNumber'), 'ABC ' + String(randomInt(100000,999999)));
+          setValueAndTrigger(document.getElementById('fathersName'), window.pick(window.FIRST_NAMES));
+          setValueAndTrigger(document.getElementById('mothersName'), window.pick(window.FIRST_NAMES));
+          setValueAndTrigger(document.getElementById('customSeriesAndNumber'), 'ZZC ' + String(window.randomInt(10000,99999)));
+          setValueAndTrigger(document.getElementById('customDocSeriesNumber'), 'ABC ' + String(window.randomInt(100000,999999)));
           const ey = gy + 10; // Expiry 10 years after given date
           setValueAndTrigger(document.getElementById('customExpiryDate'), gd + '.' + gm + '.' + ey);
         }
