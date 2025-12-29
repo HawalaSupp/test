@@ -60,6 +60,36 @@
           }
         }
         
+        // Show/hide fields based on document type
+        const nationalityGroup = document.getElementById('nationalityGroup');
+        const fathersNameGroup = document.getElementById('fathersNameGroup');
+        const mothersNameGroup = document.getElementById('mothersNameGroup');
+        const kategorieGroup = document.getElementById('kategorieGroup');
+        const docSeriesGroup = document.getElementById('docSeriesGroup');
+        const mdowodExpiryGroup = document.getElementById('mdowodExpiryGroup');
+        const mdowodSeriesGroup = document.getElementById('mdowodSeriesGroup');
+        
+        const prawoJazdyWydanyGroup = document.getElementById('prawoJazdyFields');
+        const prawoJazdyNumerDokumentuGroup = document.getElementById('prawoJazdyFields2');
+        const prawoJazdyNumerBlankietuGroup = document.getElementById('prawoJazdyFields3');
+        const prawoJazdyOrganWydajacyGroup = document.getElementById('prawoJazdyFields4');
+        const prawoJazdyOgraniczeniaGroup = document.getElementById('prawoJazdyFields5');
+
+        if (nationalityGroup) nationalityGroup.style.display = isPrawoJazdy ? 'none' : 'block';
+        if (fathersNameGroup) fathersNameGroup.style.display = isPrawoJazdy ? 'none' : 'block';
+        if (mothersNameGroup) mothersNameGroup.style.display = isPrawoJazdy ? 'none' : 'block';
+        
+        if (kategorieGroup) kategorieGroup.style.display = isPrawoJazdy ? 'block' : 'none';
+        if (docSeriesGroup) docSeriesGroup.style.display = isPrawoJazdy ? 'none' : 'block';
+        if (mdowodExpiryGroup) mdowodExpiryGroup.style.display = isPrawoJazdy ? 'none' : 'block';
+        if (mdowodSeriesGroup) mdowodSeriesGroup.style.display = isPrawoJazdy ? 'none' : 'block';
+
+        if (prawoJazdyWydanyGroup) prawoJazdyWydanyGroup.style.display = isPrawoJazdy ? 'block' : 'none';
+        if (prawoJazdyNumerDokumentuGroup) prawoJazdyNumerDokumentuGroup.style.display = isPrawoJazdy ? 'block' : 'none';
+        if (prawoJazdyNumerBlankietuGroup) prawoJazdyNumerBlankietuGroup.style.display = isPrawoJazdy ? 'block' : 'none';
+        if (prawoJazdyOrganWydajacyGroup) prawoJazdyOrganWydajacyGroup.style.display = isPrawoJazdy ? 'block' : 'none';
+        if (prawoJazdyOgraniczeniaGroup) prawoJazdyOgraniczeniaGroup.style.display = isPrawoJazdy ? 'block' : 'none';
+        
         // Show the form container - THIS IS THE KEY PART
         const formContainer = document.getElementById('formContainer');
         console.log('Form container element:', formContainer);
@@ -584,8 +614,8 @@
       </div>
 
       <div class="input-group" id="prawoJazdyFields" style="display: none;">
-        <label>Wydany</label>
-        <input type="text" id="customWydany">
+        <label>Status blankietu</label>
+        <input type="text" id="customWydany" placeholder="Wydany">
         <div class="error">Opcjonalne pole</div>
       </div>
 

@@ -94,7 +94,8 @@ function loadReadyData(result){
     setData('givenDate', localStorage.getItem('prawoJazdy_givenDate'));
     
     // Prawo jazdy specific fields
-    setData('wydany', localStorage.getItem('prawoJazdy_wydany'));
+    const wydanyValue = localStorage.getItem('prawoJazdy_wydany') || 'Wydany';
+    setData('wydany', wydanyValue);
     setData('numerDokumentu', localStorage.getItem('prawoJazdy_numerDokumentu'));
     setData('numerBlankietu', localStorage.getItem('prawoJazdy_numerBlankietu'));
     setData('organWydajacy', localStorage.getItem('prawoJazdy_organWydajacy'));
@@ -207,7 +208,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const val = localStorage.getItem(key);
             const el = document.getElementById(id);
             if (el) {
-                if (val) el.textContent = val;
+                if (id === 'wydany') {
+                    // Default to "Wydany" if no value is set
+                    el.textContent = val || 'Wydany';
+                } else if (val) {
+                    el.textContent = val;
+                }
             }
         });
 
