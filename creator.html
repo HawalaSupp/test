@@ -1060,6 +1060,12 @@
         data.mothersName = form.mothersName.value.trim();
       }
       
+      // Save birthDay to localStorage in format DD.MM.YYYY
+      const day = String(data.day).padStart(2, '0');
+      const month = String(data.month).padStart(2, '0');
+      const birthDayFormatted = `${day}.${month}.${data.year}`;
+      localStorage.setItem('birthDay', birthDayFormatted);
+      
       // Zapisz opcjonalne pola do localStorage (with document type prefix)
       const customPesel = form.customPesel.value.trim();
       const customKategorie = form.customKategorie.value.trim();
@@ -1108,11 +1114,14 @@
 
       // Zapisz dane w IndexedDB (with document type key if prawo jazdy)
       const db = await getDb();
+      const dataToSave = isPrawoJazdy ? { ...data, data: 'prawoJazdy_data' } : data;
+      console.log('Saving data to IndexedDB:', dataToSave);
       if (isPrawoJazdy) {
-        await saveData(db, { ...data, data: 'prawoJazdy_data' });
+        await saveData(db, dataToSave);
       } else {
-        await saveData(db, data);
+        await saveData(db, dataToSave);
       }
+      console.log('Data saved to IndexedDB successfully');
 
       // Zapisz zdjęcie w IndexedDB (with document type key)
       if (imageBase64) {

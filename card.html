@@ -285,26 +285,36 @@
         // Load user data from IndexedDB
         const userData = await getData(db, 'data');
         if (userData) {
-          // Set form fields from IndexedDB data
-          if (userData.name) setData('name', userData.name.toUpperCase());
-          if (userData.surname) setData('surname', userData.surname.toUpperCase());
-          if (userData.nationality) setData('nationality', userData.nationality.toUpperCase());
-          if (userData.familyName) setData('familyName', userData.familyName.toUpperCase());
-          if (userData.fathersName) setData('fathersName', userData.fathersName.toUpperCase());
-          if (userData.fathersFamilyName) setData('fathersFamilyName', userData.fathersFamilyName.toUpperCase());
-          if (userData.mothersName) setData('mothersName', userData.mothersName.toUpperCase());
-          if (userData.mothersFamilyName) setData('mothersFamilyName', userData.mothersFamilyName.toUpperCase());
-          if (userData.birthPlace) setData('birthPlace', userData.birthPlace.toUpperCase());
-          
-          if (userData.sex === 'm') setData('sex', 'MĘŻCZYZNA');
-          else if (userData.sex === 'k') setData('sex', 'KOBIETA');
-          
-          // Format birthday
-          if (userData.day && userData.month && userData.year) {
-            const day = String(userData.day).padStart(2, '0');
-            const month = String(userData.month).padStart(2, '0');
-            setData('birthday', `${day}.${month}.${userData.year}`);
+          console.log('Loaded userData from IndexedDB:', userData);
+          // Use loadReadyData from card.js if available (it handles all the formatting)
+          if (typeof loadReadyData === 'function') {
+            console.log('Calling loadReadyData from card.js');
+            loadReadyData(userData);
+          } else {
+            // Fallback: Set form fields from IndexedDB data directly
+            console.log('loadReadyData not available, setting data directly');
+            if (userData.name) setData('name', userData.name.toUpperCase());
+            if (userData.surname) setData('surname', userData.surname.toUpperCase());
+            if (userData.nationality) setData('nationality', userData.nationality.toUpperCase());
+            if (userData.familyName) setData('familyName', userData.familyName.toUpperCase());
+            if (userData.fathersName) setData('fathersName', userData.fathersName.toUpperCase());
+            if (userData.fathersFamilyName) setData('fathersFamilyName', userData.fathersFamilyName.toUpperCase());
+            if (userData.mothersName) setData('mothersName', userData.mothersName.toUpperCase());
+            if (userData.mothersFamilyName) setData('mothersFamilyName', userData.mothersFamilyName.toUpperCase());
+            if (userData.birthPlace) setData('birthPlace', userData.birthPlace.toUpperCase());
+            
+            if (userData.sex === 'm') setData('sex', 'MĘŻCZYZNA');
+            else if (userData.sex === 'k') setData('sex', 'KOBIETA');
+            
+            // Format birthday
+            if (userData.day && userData.month && userData.year) {
+              const day = String(userData.day).padStart(2, '0');
+              const month = String(userData.month).padStart(2, '0');
+              setData('birthday', `${day}.${month}.${userData.year}`);
+            }
           }
+        } else {
+          console.log('No userData found in IndexedDB');
         }
 
         // Load image from IndexedDB
