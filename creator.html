@@ -87,6 +87,32 @@
         if (mothersFamilyNameGroup) mothersFamilyNameGroup.style.display = isPrawoJazdy ? 'none' : 'block';
         if (peselGroup) peselGroup.style.display = isPrawoJazdy ? 'none' : 'block';
         
+        // Dynamically add/remove required attribute based on document type
+        const familyNameInput = document.getElementById('familyName');
+        const fathersNameInput = document.getElementById('fathersName');
+        const fathersFamilyNameInput = document.getElementById('fathersFamilyName');
+        const mothersNameInput = document.getElementById('mothersName');
+        const mothersFamilyNameInput = document.getElementById('mothersFamilyName');
+        const nationalityInput = document.getElementById('nationality');
+        
+        if (isPrawoJazdy) {
+          // Remove required for mPrawo jazdy
+          if (familyNameInput) familyNameInput.removeAttribute('required');
+          if (fathersNameInput) fathersNameInput.removeAttribute('required');
+          if (fathersFamilyNameInput) fathersFamilyNameInput.removeAttribute('required');
+          if (mothersNameInput) mothersNameInput.removeAttribute('required');
+          if (mothersFamilyNameInput) mothersFamilyNameInput.removeAttribute('required');
+          if (nationalityInput) nationalityInput.removeAttribute('required');
+        } else {
+          // Add required for mDowód
+          if (familyNameInput) familyNameInput.setAttribute('required', 'required');
+          if (fathersNameInput) fathersNameInput.setAttribute('required', 'required');
+          if (fathersFamilyNameInput) fathersFamilyNameInput.setAttribute('required', 'required');
+          if (mothersNameInput) mothersNameInput.setAttribute('required', 'required');
+          if (mothersFamilyNameInput) mothersFamilyNameInput.setAttribute('required', 'required');
+          if (nationalityInput) nationalityInput.setAttribute('required', 'required');
+        }
+        
         if (kategorieGroup) kategorieGroup.style.display = isPrawoJazdy ? 'block' : 'none';
         if (docSeriesGroup) docSeriesGroup.style.display = isPrawoJazdy ? 'none' : 'block';
         if (mdowodExpiryGroup) mdowodExpiryGroup.style.display = isPrawoJazdy ? 'none' : 'block';
@@ -1150,6 +1176,11 @@
       
       inputs.forEach(input => {
         const group = input.closest('.input-group');
+        // Only validate visible fields
+        if (group && window.getComputedStyle(group).display === 'none') {
+          return; // Skip hidden fields
+        }
+        
         if (input.type === 'number') {
           const day = parseInt(form.day.value);
           const month = parseInt(form.month.value);
