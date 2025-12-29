@@ -84,7 +84,7 @@
       animation: fadeIn 0.4s ease;
     }
     .form-container.visible {
-      display: block;
+      display: block !important;
     }
     .doc-type-card {
       background: rgba(26, 29, 36, 0.6);
@@ -528,35 +528,53 @@
     const uploadContent = document.getElementById("uploadContent");
     let imageBase64 = null;
 
-    // Document type selection
-    function selectDocumentType(type) {
+    // Document type selection - make it global
+    window.selectDocumentType = function(type) {
+      console.log('selectDocumentType called with:', type);
       const cards = document.querySelectorAll('.doc-type-card');
       cards.forEach(card => card.classList.remove('selected'));
-      document.querySelector(`[data-type="${type}"]`).classList.add('selected');
-      document.getElementById('documentType').value = type;
-      document.getElementById('documentTypeError').style.display = 'none';
+      const selectedCard = document.querySelector(`[data-type="${type}"]`);
+      if (selectedCard) {
+        selectedCard.classList.add('selected');
+      }
+      
+      const docTypeInput = document.getElementById('documentType');
+      if (docTypeInput) {
+        docTypeInput.value = type;
+      }
+      
+      const errorDiv = document.getElementById('documentTypeError');
+      if (errorDiv) {
+        errorDiv.style.display = 'none';
+      }
       
       // Update info text
       const infoText = document.getElementById('selectedDocInfo');
       const isPrawoJazdy = type === 'mprawojazdy';
-      if (isPrawoJazdy) {
-        infoText.textContent = '✓ Wypełniasz dane dla mPrawo jazdy';
-        infoText.style.color = '#60a5fa';
-      } else {
-        infoText.textContent = '✓ Wypełniasz dane dla mDowód';
-        infoText.style.color = '#60a5fa';
+      if (infoText) {
+        if (isPrawoJazdy) {
+          infoText.textContent = '✓ Wypełniasz dane dla mPrawo jazdy';
+          infoText.style.color = '#60a5fa';
+        } else {
+          infoText.textContent = '✓ Wypełniasz dane dla mDowód';
+          infoText.style.color = '#60a5fa';
+        }
       }
       
       // Show the form container
       const formContainer = document.getElementById('formContainer');
       if (formContainer) {
+        console.log('Showing form container');
         formContainer.classList.add('visible');
+        formContainer.style.display = 'block';
         // Smooth scroll to form
         setTimeout(() => {
           formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 100);
+      } else {
+        console.error('Form container not found!');
       }
-    }
+    };
 
     // Obsługa uploadu zdjęcia
     uploadBox.addEventListener("click", () => {
