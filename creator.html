@@ -623,28 +623,23 @@
           reader.readAsDataURL(file);
         });
       }
+    }); // End of DOMContentLoaded
 
-    // Obsługa uploadu zdjęcia
-    uploadBox.addEventListener("click", () => {
-      imageInput.click();
-    });
+    // Make function globally accessible
+    window.selectDocumentType = selectDocumentType;
 
-    imageInput.addEventListener("change", () => {
-      const file = imageInput.files[0];
-      if (!file) return;
-      
-      const reader = new FileReader();
-      reader.onload = e => {
-        imageBase64 = e.target.result;
-        preview.src = imageBase64;
-        preview.style.display = "block";
-        uploadContent.style.display = "none";
-        uploadBox.classList.add("has-image");
-      };
-      reader.readAsDataURL(file);
-    });
+    // Variables for form handling (will be set in DOMContentLoaded)
+    let form, imageInput, preview, uploadBox, uploadContent, imageBase64 = null;
 
-    // Funkcje do IndexedDB
+    // Wait for DOM to be ready for form handling
+    document.addEventListener('DOMContentLoaded', function() {
+      form = document.getElementById("creatorForm");
+      imageInput = document.getElementById("imageInput");
+      preview = document.getElementById("preview");
+      uploadBox = document.getElementById("uploadBox");
+      uploadContent = document.getElementById("uploadContent");
+
+      // Funkcje do IndexedDB
     function getDb(){
       return new Promise((resolve, reject) => {
         const r = indexedDB.open('fobywatel', 1);
