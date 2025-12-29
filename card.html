@@ -433,11 +433,19 @@
     }
 
     // Load data and image when DOM is ready and after card.js loads
+    let dataLoaded = false; // Prevent duplicate loads
     function initUserData() {
+      if (dataLoaded) {
+        console.log('initUserData: Data already loaded, skipping');
+        return;
+      }
       // Wait a bit for card.js to load - increase delay to ensure card.js is loaded
       setTimeout(() => {
         console.log('initUserData: Checking if loadReadyData is available:', typeof loadReadyData);
-        loadUserData();
+        if (!dataLoaded) {
+          dataLoaded = true;
+          loadUserData();
+        }
       }, 500);
     }
 
