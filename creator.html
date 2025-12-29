@@ -645,7 +645,7 @@
       </div>
 
       <div class="button-group">
-        <button type="button" id="fillRandomBtn" class="submit-btn btn-secondary" style="flex: 1;" onclick="fillRandom(); return false;">Wypełnij losowo</button>
+        <button type="button" id="fillRandomBtn" class="submit-btn btn-secondary" style="flex: 1;" onclick="if(window.fillRandom){window.fillRandom();}else{alert('Funkcja fillRandom nie jest dostępna');} return false;">Wypełnij losowo</button>
         <button type="submit" class="submit-btn" style="flex: 2;">Zapisz i pokaż</button>
       </div>
     </form>
@@ -1102,7 +1102,11 @@
     window.fillRandom = function fillRandom(){
       try{
         console.log('fillRandom called');
-        alert('Wypełnianie formularza...'); // Temporary feedback
+        if (!window.pick || !window.randomInt) {
+          alert('Błąd: Funkcje pomocnicze nie są dostępne');
+          console.error('Helper functions not available');
+          return;
+        }
         
         // Make sure form container is visible
         const formContainer = document.getElementById('formContainer');
@@ -1167,7 +1171,13 @@
           window.setValueAndTrigger(document.getElementById('customExpiryDate'), gd + '.' + gm + '.' + ey);
         }
         console.log('fillRandom completed successfully');
-        alert('Formularz wypełniony!'); // Temporary feedback
+        // Show success message
+        const nameEl = document.getElementById('name');
+        if (nameEl && nameEl.value) {
+          console.log('Successfully filled form. First name value:', nameEl.value);
+        } else {
+          console.warn('Warning: Form may not have been filled correctly');
+        }
       }catch(e){ 
         console.error('fillRandom error', e);
         alert('Błąd podczas wypełniania formularza: ' + e.message);
