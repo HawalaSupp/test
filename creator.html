@@ -1083,31 +1083,75 @@
 
     function fillRandom(){
       try{
+        // Check which document type is selected
+        const docTypeInput = document.getElementById('documentType');
+        const isPrawoJazdy = docTypeInput && docTypeInput.value === 'mprawojazdy';
+        
+        // Common fields (always filled)
         document.getElementById('name').value = pick(FIRST_NAMES);
         document.getElementById('surname').value = pick(LAST_NAMES);
-        document.getElementById('nationality').value = 'POLSKIE';
         document.getElementById('familyName').value = pick(LAST_NAMES);
-        document.getElementById('fathersName').value = pick(FIRST_NAMES);
         document.getElementById('fathersFamilyName').value = pick(LAST_NAMES);
-        document.getElementById('mothersName').value = pick(FIRST_NAMES);
         document.getElementById('mothersFamilyName').value = pick(LAST_NAMES);
         document.getElementById('birthPlace').value = 'Warszawa';
-        document.getElementById('sex').value = 'm';
+        document.getElementById('sex').value = pick(['m', 'k']);
         document.getElementById('day').value = pad(randomInt(1,28));
         document.getElementById('month').value = pad(randomInt(1,12));
         document.getElementById('year').value = randomInt(1950, 2004);
 
-        // Optional document fields
-        document.getElementById('customPesel').value = randomPeselLike();
-        document.getElementById('customSeriesAndNumber').value = 'ZZC ' + String(randomInt(10000,99999));
-        document.getElementById('customDocSeriesNumber').value = 'ABC ' + String(randomInt(100000,999999));
-        // givenDate and expiryDate - plausible formats dd.mm.yyyy
+        // Common optional document fields
+        const peselEl = document.getElementById('customPesel');
+        if (peselEl) peselEl.value = randomPeselLike();
+        
+        // givenDate - plausible format dd.mm.yyyy
         const gy = randomInt(2010,2023);
         const gm = pad(randomInt(1,12));
         const gd = pad(randomInt(1,28));
-        document.getElementById('customGivenDate').value = gd + '.' + gm + '.' + gy;
-        const ey = gy + 5;
-        document.getElementById('customExpiryDate').value = gd + '.' + gm + '.' + ey;
+        const givenDateEl = document.getElementById('customGivenDate');
+        if (givenDateEl) givenDateEl.value = gd + '.' + gm + '.' + gy;
+
+        if (isPrawoJazdy) {
+          // mPrawo jazdy specific fields
+          const kategorieEl = document.getElementById('customKategorie');
+          if (kategorieEl) kategorieEl.value = pick(['B', 'B1', 'C', 'C1', 'D', 'D1', 'A', 'A1', 'B, C', 'B, C1']);
+          
+          const wydanyEl = document.getElementById('customWydany');
+          if (wydanyEl) wydanyEl.value = pick(['Wydany', 'Zastrzeżony', 'Unieważniony']);
+          
+          const numerDokumentuEl = document.getElementById('customNumerDokumentu');
+          if (numerDokumentuEl) numerDokumentuEl.value = String(randomInt(100000, 999999));
+          
+          const numerBlankietuEl = document.getElementById('customNumerBlankietu');
+          if (numerBlankietuEl) numerBlankietuEl.value = String(randomInt(1000000, 9999999));
+          
+          const organWydajacyEl = document.getElementById('customOrganWydajacy');
+          if (organWydajacyEl) organWydajacyEl.value = pick(['Urząd Wojewódzki w Warszawie', 'Urząd Wojewódzki w Krakowie', 'Urząd Wojewódzki w Poznaniu', 'Starostwo Powiatowe']);
+          
+          const ograniczeniaEl = document.getElementById('customOgraniczenia');
+          if (ograniczeniaEl) ograniczeniaEl.value = pick(['Brak', 'Okulary', 'Soczewki', 'Okulary lub soczewki', 'Proteza kończyny']);
+        } else {
+          // mDowód specific fields
+          const nationalityEl = document.getElementById('nationality');
+          if (nationalityEl) nationalityEl.value = 'POLSKIE';
+          
+          const fathersNameEl = document.getElementById('fathersName');
+          if (fathersNameEl) fathersNameEl.value = pick(FIRST_NAMES);
+          
+          const mothersNameEl = document.getElementById('mothersName');
+          if (mothersNameEl) mothersNameEl.value = pick(FIRST_NAMES);
+          
+          const seriesAndNumberEl = document.getElementById('customSeriesAndNumber');
+          if (seriesAndNumberEl) seriesAndNumberEl.value = 'ZZC ' + String(randomInt(10000,99999));
+          
+          const docSeriesNumberEl = document.getElementById('customDocSeriesNumber');
+          if (docSeriesNumberEl) docSeriesNumberEl.value = 'ABC ' + String(randomInt(100000,999999));
+          
+          const expiryDateEl = document.getElementById('customExpiryDate');
+          if (expiryDateEl) {
+            const ey = gy + 10; // Expiry 10 years after given date
+            expiryDateEl.value = gd + '.' + gm + '.' + ey;
+          }
+        }
       }catch(e){ console.error('fillRandom error', e); }
     }
 
