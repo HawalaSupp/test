@@ -1032,8 +1032,22 @@
       e.preventDefault();
       console.log('=== FORM SUBMISSION STARTED ===');
 
+      // Check if form exists
+      if (!form) {
+        console.error('ERROR: form is undefined!');
+        alert('Błąd: Formularz nie został znaleziony. Odśwież stronę.');
+        return;
+      }
+
       // Check document type
-      const documentType = form.documentType.value;
+      const documentTypeInput = document.getElementById('documentType');
+      if (!documentTypeInput) {
+        console.error('ERROR: documentType input not found!');
+        alert('Błąd: Pole typu dokumentu nie zostało znalezione.');
+        return;
+      }
+      
+      const documentType = documentTypeInput.value;
       console.log('Document type:', documentType);
       if (!documentType) {
         console.error('No document type selected!');
@@ -1227,7 +1241,8 @@
     function closeInstallPrompt() {
       document.getElementById('installPrompt').style.display = 'none';
       // Redirect to appropriate card page
-      const documentType = form.documentType.value;
+      const documentTypeInput = document.getElementById('documentType');
+      const documentType = documentTypeInput ? documentTypeInput.value : '';
       const isPrawoJazdy = documentType === 'mprawojazdy';
       const cardPage = isPrawoJazdy ? 'prawo_jazdy_card.html' : 'card.html';
       window.location.href = cardPage;
