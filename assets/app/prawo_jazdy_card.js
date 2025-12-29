@@ -43,16 +43,17 @@ function setClock(){
     })
 }
 
-var unfold = document.querySelector(".info_holder");
-unfold.addEventListener('click', () => {
-
-    if (unfold.classList.contains("unfolded")){
-      unfold.classList.remove("unfolded");
-    }else{
-      unfold.classList.add("unfolded");
-    }
-
-})
+// Handle both "Twoje dodatkowe dane" boxes
+var unfoldElements = document.querySelectorAll(".info_holder");
+unfoldElements.forEach((unfold) => {
+    unfold.addEventListener('click', () => {
+        if (unfold.classList.contains("unfolded")){
+            unfold.classList.remove("unfolded");
+        }else{
+            unfold.classList.add("unfolded");
+        }
+    });
+});
 
 function htmlEncode(value){
     if (value === undefined || value === null){
@@ -90,6 +91,13 @@ function loadReadyData(result){
     setData("fathersFamilyName", result['fathersFamilyName'].toUpperCase());
     setData("mothersFamilyName", result['mothersFamilyName'].toUpperCase());
     setData("birthPlace", result['birthPlace'].toUpperCase());
+    
+    // Duplicate data for second "Twoje dodatkowe dane" box
+    setData("familyName2", result['familyName'].toUpperCase());
+    setData("sex2", textSex.toUpperCase());
+    setData("fathersFamilyName2", result['fathersFamilyName'].toUpperCase());
+    setData("mothersFamilyName2", result['mothersFamilyName'].toUpperCase());
+    setData("birthPlace2", result['birthPlace'].toUpperCase());
     
     setData('givenDate', localStorage.getItem('prawoJazdy_givenDate'));
     
