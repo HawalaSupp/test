@@ -63,16 +63,29 @@ function htmlEncode(value){
 }
 
 function loadReadyData(result){
+    console.log('=== loadReadyData START ===');
     console.log('loadReadyData called with:', result);
+    console.log('Result keys:', result ? Object.keys(result) : 'null');
+    console.log('Result values:', result);
+    
     if (!result) {
       console.error('loadReadyData: result is null or undefined!');
       return;
     }
+    
+    // Log each field before processing
+    console.log('Name:', result['name']);
+    console.log('Surname:', result['surname']);
+    console.log('Sex:', result['sex']);
+    
     Object.keys(result).forEach((key) => {
-      result[key] = htmlEncode(result[key])
+      if (result[key] !== null && result[key] !== undefined) {
+        result[key] = htmlEncode(result[key]);
+      }
     })
     
     var sex = result['sex'];
+    console.log('Processed sex value:', sex);
     
     var textSex;
     if (sex === "m"){
@@ -80,22 +93,54 @@ function loadReadyData(result){
     }else if (sex === "k"){
         textSex = "Kobieta"
     }
+    console.log('Converted textSex:', textSex);
 
+    console.log('=== Setting data fields ===');
     setData('seriesAndNumber', localStorage.getItem('seriesAndNumber'));
+    
+    console.log('Setting name:', result['name']);
     if (result['name']) setData("name", result['name'].toUpperCase());
+    
+    console.log('Setting surname:', result['surname']);
     if (result['surname']) setData("surname", result['surname'].toUpperCase());
+    
+    console.log('Setting nationality:', result['nationality']);
     if (result['nationality']) setData("nationality", result['nationality'].toUpperCase());
+    
+    console.log('Setting fathersName:', result['fathersName']);
     if (result['fathersName']) setData("fathersName", result['fathersName'].toUpperCase());
+    
+    console.log('Setting mothersName:', result['mothersName']);
     if (result['mothersName']) setData("mothersName", result['mothersName'].toUpperCase());
-    setData("birthday", localStorage.getItem('birthDay'));
+    
+    const birthDay = localStorage.getItem('birthDay');
+    console.log('Setting birthday:', birthDay);
+    setData("birthday", birthDay);
+    
+    console.log('Setting familyName:', result['familyName']);
     if (result['familyName']) setData("familyName", result['familyName'].toUpperCase());
+    
+    console.log('Setting sex:', textSex);
     if (textSex) setData("sex", textSex.toUpperCase());
+    
+    console.log('Setting fathersFamilyName:', result['fathersFamilyName']);
     if (result['fathersFamilyName']) setData("fathersFamilyName", result['fathersFamilyName'].toUpperCase());
+    
+    console.log('Setting mothersFamilyName:', result['mothersFamilyName']);
     if (result['mothersFamilyName']) setData("mothersFamilyName", result['mothersFamilyName'].toUpperCase());
+    
+    console.log('Setting birthPlace:', result['birthPlace']);
     if (result['birthPlace']) setData("birthPlace", result['birthPlace'].toUpperCase());
     
-    setData('givenDate', localStorage.getItem('givenDate'));
-    setData('expiryDate', localStorage.getItem('expiryDate'));
+    const givenDate = localStorage.getItem('givenDate');
+    console.log('Setting givenDate:', givenDate);
+    setData('givenDate', givenDate);
+    
+    const expiryDate = localStorage.getItem('expiryDate');
+    console.log('Setting expiryDate:', expiryDate);
+    setData('expiryDate', expiryDate);
+    
+    console.log('=== Finished setting data fields ===');
 
     // DEBUG: Sprawdzenie czy dane się pobierają
     console.log('PESEL z localStorage:', localStorage.getItem('pesel'));
@@ -189,9 +234,17 @@ function setImage(image){
 
 function setData(id, value){
     const el = document.getElementById(id);
-    if (el && value) {
-        el.innerHTML = value;
+    if (!el) {
+        console.warn('setData: Element not found for ID:', id);
+        return;
     }
+    if (!value) {
+        console.warn('setData: No value provided for ID:', id);
+        return;
+    }
+    console.log('setData: Setting', id, 'to', value);
+    el.innerHTML = value;
+    console.log('setData: Element innerHTML after setting:', el.innerHTML);
 }
 
 // Ensure displayed PESEL, givenDate and expiryDate always reflect localStorage
