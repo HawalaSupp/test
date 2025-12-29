@@ -267,6 +267,10 @@
     
     // Declare params in global scope
     var params = new URLSearchParams(window.location.search);
+    // NOTE: This runs BEFORE loadUserData, so it might set empty values
+    // We'll skip this and let loadReadyData handle everything
+    console.log('Skipping initial localStorage field setting - will be handled by loadReadyData');
+    /*
     fields.forEach(id => {
       const el = document.getElementById(id);
       if (!el) return;
@@ -276,6 +280,7 @@
       let value = params.get(id) || localStorage.getItem(storageKey);
       if (value) el.textContent = value;
     });
+    */
 
     // === Load data and image from IndexedDB ===
     async function loadUserData() {
