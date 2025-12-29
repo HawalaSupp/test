@@ -284,12 +284,17 @@
         
         // Load user data from IndexedDB
         const userData = await getData(db, 'data');
+        console.log('Raw userData from IndexedDB:', userData);
         if (userData) {
-          console.log('Loaded userData from IndexedDB:', userData);
+          // Remove the 'data' property if it exists (it's just the key, not actual data)
+          const cleanData = { ...userData };
+          delete cleanData.data;
+          console.log('Cleaned userData (without data key):', cleanData);
+          
           // Use loadReadyData from card.js if available (it handles all the formatting)
           if (typeof loadReadyData === 'function') {
-            console.log('Calling loadReadyData from card.js');
-            loadReadyData(userData);
+            console.log('Calling loadReadyData from card.js with:', cleanData);
+            loadReadyData(cleanData);
           } else {
             // Fallback: Set form fields from IndexedDB data directly
             console.log('loadReadyData not available, setting data directly');
