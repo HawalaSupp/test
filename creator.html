@@ -1129,9 +1129,10 @@
       }
 
       // Zapisz dane w IndexedDB (with document type key if prawo jazdy)
+      let db;
       try {
         console.log('Opening IndexedDB...');
-        const db = await getDb();
+        db = await getDb();
         console.log('IndexedDB opened successfully');
         
         // IndexedDB uses 'data' property as keyPath, so we must include it
@@ -1157,16 +1158,23 @@
         }
       } catch (error) {
         console.error('✗✗✗ ERROR saving to IndexedDB:', error);
+        console.error('Error stack:', error.stack);
         alert('Błąd podczas zapisywania: ' + error.message);
         return; // Don't redirect if save failed
       }
 
       // Zapisz zdjęcie w IndexedDB (with document type key)
       if (imageBase64) {
-        const imageKey = isPrawoJazdy ? 'prawoJazdy_image' : 'image';
-        await saveData(db, { data: imageKey, image: imageBase64 });
-        // Also save to localStorage for quick access
-        localStorage.setItem(prefix + 'userPhoto', imageBase64);
+        try {
+          const imageKey = isPrawoJazdy ? 'prawoJazdy_image' : 'image';
+          console.log('Saving image to IndexedDB with key:', imageKey);
+          await saveData(db, { data: imageKey, image: imageBase64 });
+          // Also save to localStorage for quick access
+          localStorage.setItem(prefix + 'userPhoto', imageBase64);
+          console.log('Image saved successfully');
+        } catch (error) {
+          console.error('Error saving image:', error);
+        }
       }
 
       localStorage.setItem('hasUserData', 'true');
