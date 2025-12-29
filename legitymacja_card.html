@@ -1,0 +1,727 @@
+<html lang="pl">
+<head>
+  <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoiIiwic2hvcnRfbmFtZSI6IiIsInRoZW1lX2NvbG9yIjoiIzEwMTMxNyIsImJhY2tncm91bmRfY29sb3IiOiIjMTAxMzE3IiwiZGlzcGxheSI6InN0YW5kYWxvbmUifQ==">
+  <title>mObywatel</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="viewport" content="width=device-width, initial-scale=0.8, user-scalable=no">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" href="assets/app/main.css">
+  <link rel="stylesheet" href="assets/app/card.css">
+  <link rel="icon" type="image/x-icon" href="assets/app/images/ikonka.png">
+  <link rel="apple-touch-icon" href="assets/app/images/ikonka.png">
+  <link rel="shortcut icon" href="assets/app/images/ikonka.png">
+</head>
+<body>
+  <button class="refresh_button" onclick="window.location.href = window.location.href.split("?")[0] + "?t=" + Date.now()" title="Force Refresh">↻</button>
+
+  <div class="top_grid_fixed">
+    <div class="action_grid_fixed">
+      <img src="assets/app/images/back_blue.png" class="back_img_fixed" alt="">
+      <p onclick="sendTo('documents.html')" class="back_text_fixed">Dokumenty</p>
+    </div>
+    <p class="title_text_fixed">Legitymacja aplikanta radcowskiego</p>
+    <img src="assets/app/images/help.png" class="help_img_fixed" id="helpIconBtn" alt="" style="cursor: pointer; pointer-events: auto !important; z-index: 1000; position: relative;" onclick="if(window.toggleEagleDrag){window.toggleEagleDrag();}else{console.log('Function not ready');}">
+  </div>
+
+  <div class="bottom_bar">
+    <div class="bottom_bar_grid">
+      <div class="bottom_element_grid" send="documents.html">
+        <div class="bottom_element_image documents_open"></div>
+        <p class="bottom_element_text open">Dokumenty</p>
+      </div>
+      <div class="bottom_element_grid" send="services.html">
+        <div class="bottom_element_image services"></div>
+        <p class="bottom_element_text">Usługi</p>
+      </div>
+      <div class="bottom_element_grid" send="qr.html">
+        <div class="bottom_element_image qr"></div>
+        <p class="bottom_element_text">Kod QR</p>
+      </div>
+      <div class="bottom_element_grid" send="more.html">
+        <div class="bottom_element_image more"></div>
+        <p class="bottom_element_text">Więcej</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <p class="time_text" id="time">Czas: 01:28:22 27.10.2025</p>
+
+    <div class="id_wrapper">
+      <div class="id_image_data">
+        <div id="bg_image_controls" style="display: none; position: fixed; top: 100px; right: 20px; background: rgba(0,0,0,0.8); padding: 15px; border-radius: 10px; z-index: 1000;">
+          <label style="color: white; display: block; margin-bottom: 10px;">Width: <span id="widthValue">100</span>%</label>
+          <input type="range" id="widthSlider" min="50" max="150" value="100" style="width: 200px; margin-bottom: 15px;">
+          <label style="color: white; display: block; margin-bottom: 10px;">Height: <span id="heightValue">100</span>%</label>
+          <input type="range" id="heightSlider" min="50" max="150" value="100" style="width: 200px;">
+        </div>
+        <div id="eagle_arrow_controls" style="display: none; position: fixed; bottom: 120px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); padding: 15px; border-radius: 10px; z-index: 1000;">
+          <div style="display: grid; grid-template-columns: repeat(3, 40px); grid-template-rows: repeat(3, 40px); gap: 5px; justify-items: center; align-items: center;">
+            <div></div>
+            <button id="arrowUp" style="width: 40px; height: 40px; background: rgba(255,255,255,0.2); border: 2px solid white; border-radius: 5px; color: white; font-size: 20px; cursor: pointer;">↑</button>
+            <div></div>
+            <button id="arrowLeft" style="width: 40px; height: 40px; background: rgba(255,255,255,0.2); border: 2px solid white; border-radius: 5px; color: white; font-size: 20px; cursor: pointer;">←</button>
+            <div></div>
+            <button id="arrowRight" style="width: 40px; height: 40px; background: rgba(255,255,255,0.2); border: 2px solid white; border-radius: 5px; color: white; font-size: 20px; cursor: pointer;">→</button>
+            <div></div>
+            <button id="arrowDown" style="width: 40px; height: 40px; background: rgba(255,255,255,0.2); border: 2px solid white; border-radius: 5px; color: white; font-size: 20px; cursor: pointer;">↓</button>
+            <div></div>
+          </div>
+        </div>
+        <img draggable="false" class="id_image" id="bgImage" src="assets/app/images/idCardBackground.png" alt="">
+        <img draggable="false" class="id_image_effect" src="assets/app/images/idCardEffect.png" alt="">
+        <div class="inset"></div>
+
+        <div class="id_own_image" id="userPhoto" style="background-image:url('assets/app/images/blank.png');"></div>
+
+        <img draggable="false" src="assets/app/images/nowa flaga.gif" class="flag_video" alt="">
+        <div class="eagle_wrapper">
+          <img draggable="false" src="assets/app/images/newandreworked.png" class="eagle_video" alt="">
+          <div class="hologram_shine"></div>
+        </div>
+        <p class="eagle_text">Rzeczpospolita<br>Polska</p>
+
+        <div class="id_data_grid">
+          <div class="data_holder">
+            <p class="data_title firstname" id="name"></p>
+            <p class="data_value">Imię (imiona)</p>
+          </div>
+          <div class="data_holder">
+            <p class="data_title surname" id="surname"></p>
+            <p class="data_value">Nazwisko</p>
+          </div>
+          <div class="data_holder">
+            <p class="data_title" id="nationality"></p>
+            <p class="data_value">Obywatelstwo</p>
+          </div>
+          <div class="data_holder">
+            <p class="data_title" id="birthday"></p>
+            <p class="data_value">Data urodzenia</p>
+          </div>
+          <div class="data_holder">
+            <p class="data_title" id="pesel_value"></p>
+            <p class="data_value">Numer PESEL</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="id_bottom">
+        <div class="bottom_grid" style="position:relative;top:4px;">
+          <img class="bottom_image" src="./assets/app/images/kutasnowy123.png" alt="checkmark">
+          <p class="bottom_text" style="color:#5ae675;font-weight:450;font-size:13px;margin-left:5px;position:relative;top:-1.5px;">Dokument ważny</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="under_container">
+      <div class="under_grid">
+        <div class="under_icon" onclick="sendTo('scan.html', 'card.html')">
+          <div class="under_image_circle">
+            <img class="under_image under_image_bright" src="assets/app/images/confirm.png" alt="">
+          </div>
+          <p class="under_text">Potwierdź swoje dane</p>
+        </div>
+        <div class="under_icon" onclick="sendTo('document.html')">
+          <div class="under_image_circle">
+            <img class="under_image" src="assets/app/images/IB025_Dane_dowoduosobistego_card_mini@3x.png" alt="">
+          </div>
+          <p class="under_text">Dane dowodu osobistego</p>
+        </div>
+        <div class="under_icon" onclick="sendTo('pesel.html')">
+          <div class="under_image_circle">
+            <img class="under_image under_image_blue under_image_larger" src="assets/app/images/AC004_Lock_pesel@3x.png" alt="">
+          </div>
+          <p class="under_text">Zastrzeż<br>PESEL</p>
+        </div>
+        <div class="under_icon" onclick="sendTo('shortcuts.html')">
+          <div class="under_image_circle">
+            <img class="under_image under_image_small under_image_blue" src="assets/app/images/more.png" alt="">
+          </div>
+          <p class="under_text">Pozostałe skróty</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="confirm_info">
+      <div class="confirm_box">
+        <p class="box_top">Seria i numer mDowodu</p>
+        <p class="box_value box_highlight" id="seriesAndNumber"></p>
+        <button class="main_button_filled" onclick="navigator.clipboard.writeText(document.getElementById('seriesAndNumber').textContent)">Kopiuj</button>
+        <p class="box_description">Dane mDowodu i dowodu osobistego są inne - to dwa różne dokumenty.</p>
+      </div>
+      <div class="confirm_box">
+        <p class="box_top">Termin ważności mDowodu</p>
+        <p class="box_value" id="expiryDate"></p>
+      </div>
+      <div class="confirm_box">
+        <p class="box_top">Data wydania mDowodu</p>
+        <p class="box_value" id="givenDate"></p>
+      </div>
+      <div class="confirm_box">
+        <p class="box_top">Imię ojca</p>
+        <p class="box_value" id="fathersName"></p>
+      </div>
+      <div class="confirm_box" style="border:none;">
+        <p class="box_top">Imię matki</p>
+        <p class="box_value" id="mothersName"></p>
+      </div>
+    </div>
+
+    <div class="other_grid">
+      <div class="bottom_holder info_holder">
+        <div class="bottom_grid">
+          <p class="bottom_text" style="margin-left:0px;">Twoje dodatkowe dane</p>
+        </div>
+  <img class="action_arrow" src="assets/app/images/right_arrow_sharp.png" alt="">
+        <div class="additional_holder">
+          <div class="additional_grid">
+            <p class="additional_title">Nazwisko rodowe</p>
+            <p class="additional_subtitle" id="familyName"></p>
+          </div>
+          <div class="additional_grid">
+            <p class="additional_title">Płeć</p>
+            <p class="additional_subtitle" id="sex"></p>
+          </div>
+          <div class="additional_grid">
+            <p class="additional_title">Nazwisko rodowe ojca</p>
+            <p class="additional_subtitle" id="fathersFamilyName"></p>
+          </div>
+          <div class="additional_grid">
+            <p class="additional_title">Nazwisko rodowe matki</p>
+            <p class="additional_subtitle" id="mothersFamilyName"></p>
+          </div>
+          <div class="additional_grid">
+            <p class="additional_title">Miejsce urodzenia</p>
+            <p class="additional_subtitle" id="birthPlace"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bottom_holder" style="height:95px;margin-bottom:130px;">
+        <div class="bottom_update">
+          <div class="bottom_update_grid">
+            <p class="bottom_update_text" style="margin-left:0px;">Ostatnia aktualizacja</p>
+            <p class="bottom_update_value" id="updateDate" style="margin-left:0px;"></p>
+          </div>
+          <button class="main_button_filled update" style="right:20px;" onclick="location.reload()">Aktualizuj</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/app/bar.js"></script>
+  <script src="assets/app/card.js"></script>
+  <script src="assets/app/manifest.js"></script>
+  <script src="assets/app/cache.js"></script>
+
+  <script>
+    // === Global toggle function - define immediately ===
+    window.toggleEagleDrag = function() {
+      // This will be replaced by the actual function once setup completes
+      console.log('Function not ready yet, please wait...');
+    };
+
+    // === IndexedDB Functions ===
+    function getDb(){
+      return new Promise((resolve, reject) => {
+        const r = indexedDB.open('fobywatel', 1);
+        r.onupgradeneeded = e => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains('data')){
+            db.createObjectStore('data', { keyPath: 'data' });
+          }
+        };
+        r.onsuccess = e => resolve(e.target.result);
+        r.onerror = e => reject(e.target.error);
+      });
+    }
+
+    function getData(db, key){
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction('data','readonly');
+        const store = tx.objectStore('data');
+        const req = store.get(key);
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = e => reject(e.target.error);
+      });
+    }
+
+    // === Wczytywanie danych z localStorage lub URL ===
+    const fields = [
+      'name','surname','nationality','birthday','pesel_value','seriesAndNumber','expiryDate',
+      'givenDate','fathersName','mothersName','familyName','sex','fathersFamilyName',
+      'mothersFamilyName','birthPlace','updateDate'
+    ];
+    
+    // Mapowanie ID elementów do kluczy localStorage
+    const storageKeyMap = {
+      'pesel_value': 'pesel',
+      'seriesAndNumber': 'seriesAndNumber',
+      'expiryDate': 'expiryDate',
+      'givenDate': 'givenDate'
+    };
+    
+    // Declare params in global scope
+    var params = new URLSearchParams(window.location.search);
+    // NOTE: This runs BEFORE loadUserData, so it might set empty values
+    // We'll skip this and let loadReadyData handle everything
+    console.log('Skipping initial localStorage field setting - will be handled by loadReadyData');
+    // Only set fields that are NOT handled by loadReadyData (like updateDate)
+    const updateDateEl = document.getElementById('updateDate');
+    if (updateDateEl) {
+      const updateDate = localStorage.getItem('update') || localStorage.getItem('updateDate');
+      if (updateDate) updateDateEl.textContent = updateDate;
+    }
+
+    // === Load data and image from IndexedDB ===
+    async function loadUserData() {
+      try {
+        const db = await getDb();
+        
+        // NEW APPROACH: Load from localStorage first (more reliable)
+        console.log('=== Loading data from localStorage ===');
+        let userData = null;
+        let dataSource = 'none';
+        
+        // Try to load from localStorage JSON first (MOST RECENT) - use legitymacja_ prefix
+        const jsonData = localStorage.getItem('legitymacja_userData');
+        const jsonTimestamp = localStorage.getItem('legitymacja_userData_timestamp');
+        if (jsonData) {
+          try {
+            userData = JSON.parse(jsonData);
+            dataSource = 'localStorage JSON (legitymacja_userData)';
+            console.log('✓ Loaded data from localStorage JSON');
+            console.log('  Timestamp:', jsonTimestamp ? new Date(parseInt(jsonTimestamp)).toISOString() : 'unknown');
+            console.log('  Data:', userData);
+            console.log('  Name:', userData.name, 'Surname:', userData.surname);
+          } catch (e) {
+            console.error('Error parsing localStorage JSON:', e);
+          }
+        }
+        
+        // If not in localStorage JSON, try IndexedDB with legitymacja_ prefix
+        if (!userData) {
+          console.log('Not in localStorage JSON, trying IndexedDB with legitymacja_ prefix...');
+          const indexedData = await getData(db, 'legitymacja_data');
+          if (indexedData) {
+            userData = { ...indexedData };
+            delete userData.data;
+            dataSource = 'IndexedDB';
+            console.log('✓ Loaded data from IndexedDB:', userData);
+            console.log('  Name:', userData.name, 'Surname:', userData.surname);
+          }
+        }
+        
+        // If still no data, try loading individual fields from localStorage with legitymacja_ prefix
+        if (!userData) {
+          console.log('Not in IndexedDB, trying individual localStorage fields with legitymacja_ prefix...');
+          const name = localStorage.getItem('legitymacja_name');
+          const surname = localStorage.getItem('legitymacja_surname');
+          if (name || surname) {
+            userData = {
+              name: name,
+              surname: surname,
+              nationality: localStorage.getItem('legitymacja_nationality'),
+              familyName: localStorage.getItem('legitymacja_familyName'),
+              fathersName: localStorage.getItem('legitymacja_fathersName'),
+              mothersName: localStorage.getItem('legitymacja_mothersName'),
+              fathersFamilyName: localStorage.getItem('legitymacja_fathersFamilyName'),
+              mothersFamilyName: localStorage.getItem('legitymacja_mothersFamilyName'),
+              birthPlace: localStorage.getItem('legitymacja_birthPlace'),
+              sex: localStorage.getItem('legitymacja_sex'),
+              day: parseInt(localStorage.getItem('legitymacja_day')) || 1,
+              month: parseInt(localStorage.getItem('legitymacja_month')) || 1,
+              year: parseInt(localStorage.getItem('legitymacja_year')) || 2000
+            };
+            dataSource = 'individual localStorage fields (legitymacja_)';
+            console.log('✓ Loaded data from individual localStorage fields:', userData);
+            console.log('  Name:', userData.name, 'Surname:', userData.surname);
+          }
+        }
+        
+        console.log('=== Data source:', dataSource, '===');
+        
+        if (userData && Object.keys(userData).length > 0) {
+          console.log('Final userData to display:', userData);
+          
+          // Use loadReadyData from card.js if available (it handles all the formatting)
+          if (typeof loadReadyData === 'function') {
+            console.log('Calling loadReadyData from card.js with:', userData);
+            loadReadyData(userData);
+          } else {
+            // Fallback: Set form fields from IndexedDB data directly
+            console.log('loadReadyData not available, setting data directly');
+            if (userData.name) setData('name', userData.name.toUpperCase());
+            if (userData.surname) setData('surname', userData.surname.toUpperCase());
+            if (userData.nationality) setData('nationality', userData.nationality.toUpperCase());
+            if (userData.familyName) setData('familyName', userData.familyName.toUpperCase());
+            if (userData.fathersName) setData('fathersName', userData.fathersName.toUpperCase());
+            if (userData.fathersFamilyName) setData('fathersFamilyName', userData.fathersFamilyName.toUpperCase());
+            if (userData.mothersName) setData('mothersName', userData.mothersName.toUpperCase());
+            if (userData.mothersFamilyName) setData('mothersFamilyName', userData.mothersFamilyName.toUpperCase());
+            if (userData.birthPlace) setData('birthPlace', userData.birthPlace.toUpperCase());
+            
+            if (userData.sex === 'm') setData('sex', 'MĘŻCZYZNA');
+            else if (userData.sex === 'k') setData('sex', 'KOBIETA');
+            
+            // Format birthday
+            if (userData.day && userData.month && userData.year) {
+              const day = String(userData.day).padStart(2, '0');
+              const month = String(userData.month).padStart(2, '0');
+              setData('birthday', `${day}.${month}.${userData.year}`);
+            }
+          }
+        } else {
+          console.log('No userData found in IndexedDB');
+        }
+
+        // Load image from IndexedDB
+        const urlParams = new URLSearchParams(window.location.search);
+        const photoUrl = urlParams.get('image');
+        if (photoUrl) {
+          // Use setImage function from card.js if available, otherwise set directly
+          if (typeof setImage === 'function') {
+            setImage(photoUrl);
+          } else {
+            const photoEl = document.getElementById('userPhoto') || document.querySelector('.id_own_image');
+            if (photoEl) {
+              photoEl.style.backgroundImage = `url(${photoUrl})`;
+            }
+          }
+          console.log('Image loaded from URL:', photoUrl);
+          return;
+        }
+
+        // Try localStorage first (for legitymacja)
+        const photoFromLocalStorage = localStorage.getItem('legitymacja_userPhoto');
+        if (photoFromLocalStorage) {
+          if (typeof setImage === 'function') {
+            setImage(photoFromLocalStorage);
+          } else {
+            const photoEl = document.getElementById('userPhoto') || document.querySelector('.id_own_image');
+            if (photoEl) {
+              photoEl.style.backgroundImage = `url(${photoFromLocalStorage})`;
+            }
+          }
+          console.log('Image loaded from localStorage (legitymacja_userPhoto)');
+          return;
+        }
+
+        // Load from IndexedDB with legitymacja_ prefix
+        const imageData = await getData(db, 'legitymacja_image');
+        console.log('Image data from IndexedDB:', imageData);
+        if (imageData && imageData.image) {
+          if (typeof setImage === 'function') {
+            setImage(imageData.image);
+          } else {
+            const photoEl = document.getElementById('userPhoto') || document.querySelector('.id_own_image');
+            if (photoEl) {
+              photoEl.style.backgroundImage = `url(${imageData.image})`;
+              console.log('Image loaded from IndexedDB');
+            } else {
+              console.error('Photo element not found');
+            }
+          }
+        } else {
+          console.log('No image data found in IndexedDB');
+        }
+      } catch (error) {
+        console.error('Error loading data from IndexedDB:', error);
+      }
+    }
+
+    // Don't define setData here - use the one from card.js
+    // If card.js setData doesn't exist, we'll use a fallback
+    if (typeof window.setData !== 'function' && typeof setData !== 'function') {
+      window.setData = function(id, value) {
+        const el = document.getElementById(id);
+        if (el && value) {
+          el.textContent = value;
+        }
+      };
+      console.log('Created fallback setData function');
+    } else {
+      console.log('Using setData from card.js');
+    }
+
+    // Load data and image when DOM is ready and after card.js loads
+    let dataLoaded = false; // Prevent duplicate loads
+    function initUserData() {
+      if (dataLoaded) {
+        console.log('initUserData: Data already loaded, skipping');
+        return;
+      }
+      // Wait a bit for card.js to load - increase delay to ensure card.js is loaded
+      setTimeout(() => {
+        console.log('initUserData: Checking if loadReadyData is available:', typeof loadReadyData);
+        if (!dataLoaded) {
+          dataLoaded = true;
+          loadUserData();
+        }
+      }, 500);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initUserData);
+    } else {
+      initUserData();
+    }
+
+    // === Simple Background Draggable Functionality ===
+    (function() {
+      let isDraggable = false;
+      let isDragging = false;
+      let xOffset = 0;
+      let yOffset = 0;
+      let currentWidth = 100;
+      let currentHeight = 100;
+      let initialX = 0;
+      let initialY = 0;
+      let bgImage = null;
+      let controlsDiv = null;
+      let widthSlider = null;
+      let heightSlider = null;
+      let widthValue = null;
+      let heightValue = null;
+
+      // Eagle draggable state
+      let eagleDraggable = false;
+      let eagleDragging = false;
+      let eagleXOffset = 0;
+      let eagleYOffset = 0;
+      let eagleInitialX = 0;
+      let eagleInitialY = 0;
+      let eagleWrapper = null;
+
+      function updateTransform() {
+        if (bgImage) {
+          bgImage.style.transform = `translate(${xOffset}px, ${yOffset}px) scaleX(${currentWidth / 100}) scaleY(${currentHeight / 100})`;
+        }
+      }
+
+      function updateEagleTransform() {
+        if (eagleWrapper) {
+          eagleWrapper.style.transform = `translate(${eagleXOffset}px, ${eagleYOffset}px)`;
+        }
+      }
+
+      function setupDraggable() {
+        bgImage = document.getElementById('bgImage');
+        const helpIcon = document.getElementById('helpIconBtn') || document.querySelector('.help_img_fixed');
+        controlsDiv = document.getElementById('bg_image_controls');
+        widthSlider = document.getElementById('widthSlider');
+        heightSlider = document.getElementById('heightSlider');
+        widthValue = document.getElementById('widthValue');
+        heightValue = document.getElementById('heightValue');
+        eagleWrapper = document.querySelector('.eagle_wrapper');
+
+        if (!bgImage || !helpIcon || !controlsDiv || !eagleWrapper) {
+          console.log('Waiting for elements...');
+          setTimeout(setupDraggable, 200);
+          return;
+        }
+
+        console.log('Setting up draggable functionality');
+
+        // Load saved values for background
+        const savedX = localStorage.getItem('bgImageX');
+        const savedY = localStorage.getItem('bgImageY');
+        const savedWidth = localStorage.getItem('bgImageWidth');
+        const savedHeight = localStorage.getItem('bgImageHeight');
+        
+        if (savedX !== null) xOffset = parseFloat(savedX);
+        if (savedY !== null) yOffset = parseFloat(savedY);
+        if (savedWidth !== null) {
+          currentWidth = parseFloat(savedWidth);
+          if (widthSlider) widthSlider.value = currentWidth;
+          if (widthValue) widthValue.textContent = Math.round(currentWidth);
+        }
+        if (savedHeight !== null) {
+          currentHeight = parseFloat(savedHeight);
+          if (heightSlider) heightSlider.value = currentHeight;
+          if (heightValue) heightValue.textContent = Math.round(currentHeight);
+        }
+
+        // Load saved values for eagle
+        const savedEagleX = localStorage.getItem('eagleX');
+        const savedEagleY = localStorage.getItem('eagleY');
+        if (savedEagleX !== null) eagleXOffset = parseFloat(savedEagleX);
+        if (savedEagleY !== null) eagleYOffset = parseFloat(savedEagleY);
+
+        // Apply saved transforms
+        updateTransform();
+        updateEagleTransform();
+
+        // Toggle function - make it globally accessible
+        window.toggleEagleDrag = function() {
+          if (!bgImage || !controlsDiv || !eagleWrapper) {
+            console.log('Elements not ready, calling setup...');
+            setupDraggable();
+            setTimeout(() => window.toggleEagleDrag(), 100);
+            return;
+          }
+          
+          isDraggable = !isDraggable;
+          eagleDraggable = !eagleDraggable;
+          console.log('Toggle controls:', isDraggable);
+          
+          const arrowControls = document.getElementById('eagle_arrow_controls');
+          
+          if (isDraggable) {
+            bgImage.style.pointerEvents = 'auto';
+            bgImage.style.cursor = 'move';
+            controlsDiv.style.display = 'block';
+            if (arrowControls) arrowControls.style.display = 'block';
+            updateTransform();
+            updateEagleTransform();
+          } else {
+            bgImage.style.pointerEvents = 'none';
+            bgImage.style.cursor = 'default';
+            controlsDiv.style.display = 'none';
+            if (arrowControls) arrowControls.style.display = 'none';
+            isDragging = false;
+            localStorage.setItem('bgImageX', xOffset);
+            localStorage.setItem('bgImageY', yOffset);
+            localStorage.setItem('bgImageWidth', currentWidth);
+            localStorage.setItem('bgImageHeight', currentHeight);
+            localStorage.setItem('eagleX', eagleXOffset);
+            localStorage.setItem('eagleY', eagleYOffset);
+          }
+        };
+
+        // Attach click handler multiple ways
+        helpIcon.onclick = function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          window.toggleEagleDrag();
+        };
+        helpIcon.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          window.toggleEagleDrag();
+        }, true);
+        helpIcon.style.cursor = 'pointer';
+        helpIcon.style.pointerEvents = 'auto';
+        helpIcon.style.zIndex = '10000';
+
+        // Arrow button handlers
+        const arrowUp = document.getElementById('arrowUp');
+        const arrowDown = document.getElementById('arrowDown');
+        const arrowLeft = document.getElementById('arrowLeft');
+        const arrowRight = document.getElementById('arrowRight');
+
+        const moveStep = 1; // pixels to move per click
+
+        if (arrowUp) {
+          arrowUp.addEventListener('click', function() {
+            eagleYOffset -= moveStep;
+            updateEagleTransform();
+            localStorage.setItem('eagleY', eagleYOffset);
+          });
+        }
+
+        if (arrowDown) {
+          arrowDown.addEventListener('click', function() {
+            eagleYOffset += moveStep;
+            updateEagleTransform();
+            localStorage.setItem('eagleY', eagleYOffset);
+          });
+        }
+
+        if (arrowLeft) {
+          arrowLeft.addEventListener('click', function() {
+            eagleXOffset -= moveStep;
+            updateEagleTransform();
+            localStorage.setItem('eagleX', eagleXOffset);
+          });
+        }
+
+        if (arrowRight) {
+          arrowRight.addEventListener('click', function() {
+            eagleXOffset += moveStep;
+            updateEagleTransform();
+            localStorage.setItem('eagleX', eagleXOffset);
+          });
+        }
+
+        // Background drag handlers
+        bgImage.addEventListener('mousedown', function(e) {
+          if (!isDraggable) return;
+          e.preventDefault();
+          initialX = e.clientX - xOffset;
+          initialY = e.clientY - yOffset;
+          isDragging = true;
+        });
+
+        document.addEventListener('mousemove', function(e) {
+          if (isDragging && isDraggable) {
+            e.preventDefault();
+            xOffset = e.clientX - initialX;
+            yOffset = e.clientY - initialY;
+            updateTransform();
+          }
+        });
+
+        document.addEventListener('mouseup', function() {
+          isDragging = false;
+        });
+
+        // Background touch handlers
+        bgImage.addEventListener('touchstart', function(e) {
+          if (!isDraggable) return;
+          e.preventDefault();
+          const touch = e.touches[0];
+          initialX = touch.clientX - xOffset;
+          initialY = touch.clientY - yOffset;
+          isDragging = true;
+        });
+
+        document.addEventListener('touchmove', function(e) {
+          if (isDragging && isDraggable) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            xOffset = touch.clientX - initialX;
+            yOffset = touch.clientY - initialY;
+            updateTransform();
+          }
+        });
+
+        document.addEventListener('touchend', function() {
+          isDragging = false;
+        });
+
+        // Slider handlers
+        if (widthSlider) {
+          widthSlider.addEventListener('input', function(e) {
+            currentWidth = parseFloat(e.target.value);
+            if (widthValue) widthValue.textContent = Math.round(currentWidth);
+            updateTransform();
+          });
+        }
+
+        if (heightSlider) {
+          heightSlider.addEventListener('input', function(e) {
+            currentHeight = parseFloat(e.target.value);
+            if (heightValue) heightValue.textContent = Math.round(currentHeight);
+            updateTransform();
+          });
+        }
+      }
+
+      // Start setup
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupDraggable);
+      } else {
+        setupDraggable();
+      }
+      setTimeout(setupDraggable, 500);
+      setTimeout(setupDraggable, 1000);
+    })();
+  </script>
+
+</body>
+</html>

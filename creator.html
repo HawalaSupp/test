@@ -79,6 +79,8 @@
         const prawoJazdyOrganWydajacyGroup = document.getElementById('prawoJazdyFields4');
         const prawoJazdyOgraniczeniaGroup = document.getElementById('prawoJazdyFields5');
 
+        const isLegitymacja = type === 'legitymacja';
+        
         if (nationalityGroup) nationalityGroup.style.display = isPrawoJazdy ? 'none' : 'block';
         if (familyNameGroup) familyNameGroup.style.display = isPrawoJazdy ? 'none' : 'block';
         if (fathersNameGroup) fathersNameGroup.style.display = isPrawoJazdy ? 'none' : 'block';
@@ -104,7 +106,7 @@
           if (mothersFamilyNameInput) mothersFamilyNameInput.removeAttribute('required');
           if (nationalityInput) nationalityInput.removeAttribute('required');
         } else {
-          // Add required for mDowód
+          // Add required for mDowód and legitymacja
           if (familyNameInput) familyNameInput.setAttribute('required', 'required');
           if (fathersNameInput) fathersNameInput.setAttribute('required', 'required');
           if (fathersFamilyNameInput) fathersFamilyNameInput.setAttribute('required', 'required');
@@ -683,6 +685,11 @@
         <div class="doc-type-title">mPrawo jazdy</div>
         <div class="doc-type-desc">Prawo jazdy</div>
       </div>
+      <div class="doc-type-card" data-type="legitymacja" id="card-legitymacja" onclick="selectDocumentType('legitymacja'); return false;">
+        <div class="doc-type-icon">⚖️</div>
+        <div class="doc-type-title">Legitymacja aplikanta radcowskiego</div>
+        <div class="doc-type-desc">Legitymacja</div>
+      </div>
     </div>
     <div style="text-align: center; margin-top: -15px; margin-bottom: 20px; font-size: 14px; color: #888; min-height: 20px;" id="selectedDocInfo"></div>
     <input type="hidden" id="documentType" required>
@@ -1243,7 +1250,8 @@
 
       // Get document type
       const isPrawoJazdy = documentType === 'mprawojazdy';
-      console.log('Is prawo jazdy:', isPrawoJazdy);
+      const isLegitymacja = documentType === 'legitymacja';
+      console.log('Is prawo jazdy:', isPrawoJazdy, 'Is legitymacja:', isLegitymacja);
       
       // Build data object - exclude certain fields for mPrawo jazdy
       const data = {
@@ -1256,7 +1264,7 @@
         year: parseInt(form.year.value)
       };
       
-      // Only add these fields for mDowód
+      // Only add these fields for mDowód and legitymacja
       if (!isPrawoJazdy) {
         data.nationality = form.nationality.value.trim();
         data.familyName = form.familyName.value.trim();
@@ -1269,14 +1277,24 @@
       console.log('Data object created:', data);
       
       // Save ALL data as JSON to localStorage (PRIMARY METHOD)
-      const storageKey = isPrawoJazdy ? 'prawoJazdy_userData' : 'userData';
+      let storageKey = 'userData';
+      if (isPrawoJazdy) {
+        storageKey = 'prawoJazdy_userData';
+      } else if (isLegitymacja) {
+        storageKey = 'legitymacja_userData';
+      }
       localStorage.setItem(storageKey, JSON.stringify(data));
       console.log('✓ Saved data to localStorage as JSON with key:', storageKey);
       console.log('✓ Saved data content:', JSON.stringify(data, null, 2));
       
       // Also save individual fields for compatibility (OVERWRITE old values)
       Object.keys(data).forEach(key => {
-        const itemKey = isPrawoJazdy ? `prawoJazdy_${key}` : key;
+        let itemKey = key;
+        if (isPrawoJazdy) {
+          itemKey = `prawoJazdy_${key}`;
+        } else if (isLegitymacja) {
+          itemKey = `legitymacja_${key}`;
+        }
         const value = String(data[key]);
         localStorage.setItem(itemKey, value);
         console.log('  - Saved', itemKey, '=', value);
@@ -1294,6 +1312,8 @@
       localStorage.setItem('birthDay', birthDayFormatted);
       if (isPrawoJazdy) {
         localStorage.setItem('prawoJazdy_birthDay', birthDayFormatted);
+      } else if (isLegitymacja) {
+        localStorage.setItem('legitymacja_birthDay', birthDayFormatted);
       }
       
       // Zapisz opcjonalne pola do localStorage (with document type prefix)
@@ -1311,7 +1331,12 @@
       const customOgraniczenia = form.customOgraniczenia ? form.customOgraniczenia.value.trim() : '';
 
       // Prefix for localStorage keys based on document type
-      const prefix = isPrawoJazdy ? 'prawoJazdy_' : '';
+      let prefix = '';
+      if (isPrawoJazdy) {
+        prefix = 'prawoJazdy_';
+      } else if (isLegitymacja) {
+        prefix = 'legitymacja_';
+      }
       
       // Only save PESEL for mDowód
       if (!isPrawoJazdy) {
@@ -1351,14 +1376,19 @@
       try {
         console.log('Attempting to save to IndexedDB as backup...');
         db = await getDb();
-        const dataToSave = isPrawoJazdy ? { ...data, data: 'prawoJazdy_data' } : { ...data, data: 'data' };
+        let dataKey = 'data';
+        if (isPrawoJazdy) {
+          dataKey = 'prawoJazdy_data';
+        } else if (isLegitymacja) {
+          dataKey = 'legitymacja_data';
+        }
+        const dataToSave = { ...data, data: dataKey };
         console.log('Saving to IndexedDB with key:', dataToSave.data);
         await saveData(db, dataToSave);
         console.log('✓ Also saved to IndexedDB successfully');
         
         // Verify IndexedDB save
-        const verifyKey = isPrawoJazdy ? 'prawoJazdy_data' : 'data';
-        const verifyData = await getData(db, verifyKey);
+        const verifyData = await getData(db, dataKey);
         if (verifyData && verifyData.name === data.name && verifyData.surname === data.surname) {
           console.log('✓✓✓ IndexedDB verified - name and surname match:', verifyData.name, verifyData.surname);
         } else {
@@ -1372,7 +1402,12 @@
       // Zapisz zdjęcie w IndexedDB (with document type key)
       if (imageBase64) {
         try {
-          const imageKey = isPrawoJazdy ? 'prawoJazdy_image' : 'image';
+          let imageKey = 'image';
+          if (isPrawoJazdy) {
+            imageKey = 'prawoJazdy_image';
+          } else if (isLegitymacja) {
+            imageKey = 'legitymacja_image';
+          }
           console.log('Saving image to IndexedDB with key:', imageKey);
           await saveData(db, { data: imageKey, image: imageBase64 });
           // Also save to localStorage for quick access
@@ -1391,7 +1426,12 @@
                           window.navigator.standalone === true;
       
       // Redirect to appropriate card page based on document type
-      const cardPage = isPrawoJazdy ? 'prawo_jazdy_card.html' : 'card.html';
+      let cardPage = 'card.html';
+      if (isPrawoJazdy) {
+        cardPage = 'prawo_jazdy_card.html';
+      } else if (isLegitymacja) {
+        cardPage = 'legitymacja_card.html';
+      }
       console.log('=== ALL DATA SAVED SUCCESSFULLY ===');
       console.log('Redirecting to:', cardPage);
       console.log('=== FORM SUBMISSION COMPLETED ===');
@@ -1424,7 +1464,12 @@
       const documentTypeInput = document.getElementById('documentType');
       const documentType = documentTypeInput ? documentTypeInput.value : '';
       const isPrawoJazdy = documentType === 'mprawojazdy';
-      const cardPage = isPrawoJazdy ? 'prawo_jazdy_card.html' : 'card.html';
+      let cardPage = 'card.html';
+      if (isPrawoJazdy) {
+        cardPage = 'prawo_jazdy_card.html';
+      } else if (documentTypeInput && documentTypeInput.value === 'legitymacja') {
+        cardPage = 'legitymacja_card.html';
+      }
       window.location.href = cardPage;
     }
 
