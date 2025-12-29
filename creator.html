@@ -916,15 +916,15 @@
         year: parseInt(form.year.value)
       };
       
+      // Get document type
+      const documentType = form.documentType.value;
+      const isPrawoJazdy = documentType === 'mprawojazdy';
+      
       // Only add fathersName and mothersName for mDowód
       if (!isPrawoJazdy) {
         data.fathersName = form.fathersName.value.trim();
         data.mothersName = form.mothersName.value.trim();
       }
-
-      // Get document type
-      const documentType = form.documentType.value;
-      const isPrawoJazdy = documentType === 'mprawojazdy';
       
       // Zapisz opcjonalne pola do localStorage (with document type prefix)
       const customPesel = form.customPesel.value.trim();
