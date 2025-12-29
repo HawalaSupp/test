@@ -79,6 +79,13 @@
       gap: 15px;
       margin-bottom: 30px;
     }
+    .form-container {
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+    .form-container.visible {
+      display: block;
+    }
     .doc-type-card {
       background: rgba(26, 29, 36, 0.6);
       border: 3px solid rgba(255, 255, 255, 0.15);
@@ -445,7 +452,7 @@
         <div class="error">Opcjonalne pole</div>
       </div>
 
-      <div class="input-group" id="kategorieGroup" style="display: none;">
+      <div class="input-group">
         <label>Kategorie</label>
         <input type="text" id="customKategorie">
         <div class="error">Opcjonalne pole</div>
@@ -457,7 +464,7 @@
         <div class="error">Opcjonalne pole</div>
       </div>
 
-      <div class="input-group" id="docSeriesGroup" style="display: none;">
+      <div class="input-group">
         <label>Seria i numer dla strony dokumentu (np. ABC 123456)</label>
         <input type="text" id="customDocSeriesNumber">
         <div class="error">Opcjonalne pole</div>
@@ -481,6 +488,7 @@
         <button type="submit" class="submit-btn" style="flex: 2;">Zapisz i pokaż</button>
       </div>
     </form>
+    </div>
 
     <!-- Instrukcja dodania do ekranu głównego -->
     <div id="installPrompt" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;">
@@ -527,11 +535,9 @@
       document.getElementById('documentType').value = type;
       document.getElementById('documentTypeError').style.display = 'none';
       
-      // Show/hide fields based on document type
-      const isPrawoJazdy = type === 'mprawojazdy';
-      
       // Update info text
       const infoText = document.getElementById('selectedDocInfo');
+      const isPrawoJazdy = type === 'mprawojazdy';
       if (isPrawoJazdy) {
         infoText.textContent = '✓ Wypełniasz dane dla mPrawo jazdy';
         infoText.style.color = '#60a5fa';
@@ -540,16 +546,14 @@
         infoText.style.color = '#60a5fa';
       }
       
-      // Kategorie field - only for mPrawo jazdy
-      const kategorieGroup = document.getElementById('kategorieGroup');
-      if (kategorieGroup) {
-        kategorieGroup.style.display = isPrawoJazdy ? 'block' : 'none';
-      }
-      
-      // Seria i numer dla strony dokumentu - only for mDowód
-      const docSeriesGroup = document.getElementById('docSeriesGroup');
-      if (docSeriesGroup) {
-        docSeriesGroup.style.display = isPrawoJazdy ? 'none' : 'block';
+      // Show the form container
+      const formContainer = document.getElementById('formContainer');
+      if (formContainer) {
+        formContainer.classList.add('visible');
+        // Smooth scroll to form
+        setTimeout(() => {
+          formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
       }
     }
 
