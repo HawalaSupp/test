@@ -96,13 +96,36 @@ function loadReadyData(result){
     console.log('Converted textSex:', textSex);
 
     console.log('=== Setting data fields ===');
+    
+    // Verify setData function exists
+    if (typeof setData !== 'function') {
+        console.error('ERROR: setData is not a function! Type:', typeof setData);
+        return;
+    }
+    console.log('setData function verified, type:', typeof setData);
+    
+    // Test if elements exist
+    const nameEl = document.getElementById('name');
+    console.log('Name element exists?', !!nameEl, nameEl);
+    
     setData('seriesAndNumber', localStorage.getItem('seriesAndNumber'));
     
     console.log('Setting name:', result['name']);
-    if (result['name']) setData("name", result['name'].toUpperCase());
+    if (result['name']) {
+        const nameValue = result['name'].toUpperCase();
+        console.log('About to call setData("name", "' + nameValue + '")');
+        setData("name", nameValue);
+        // Verify it was set
+        const nameElAfter = document.getElementById('name');
+        console.log('Name element after setData:', nameElAfter, 'textContent:', nameElAfter ? nameElAfter.textContent : 'N/A');
+    }
     
     console.log('Setting surname:', result['surname']);
-    if (result['surname']) setData("surname", result['surname'].toUpperCase());
+    if (result['surname']) {
+        const surnameValue = result['surname'].toUpperCase();
+        console.log('About to call setData("surname", "' + surnameValue + '")');
+        setData("surname", surnameValue);
+    }
     
     console.log('Setting nationality:', result['nationality']);
     if (result['nationality']) setData("nationality", result['nationality'].toUpperCase());
