@@ -341,12 +341,12 @@
 
   <div class="container">
     <div class="document-type-selector">
-      <div class="doc-type-card" data-type="mdowod" onclick="selectDocumentType('mdowod')">
+      <div class="doc-type-card" data-type="mdowod" id="card-mdowod">
         <div class="doc-type-icon">🪪</div>
         <div class="doc-type-title">mDowód</div>
         <div class="doc-type-desc">Dowód osobisty</div>
       </div>
-      <div class="doc-type-card" data-type="mprawojazdy" onclick="selectDocumentType('mprawojazdy')">
+      <div class="doc-type-card" data-type="mprawojazdy" id="card-mprawojazdy">
         <div class="doc-type-icon">🚗</div>
         <div class="doc-type-title">mPrawo jazdy</div>
         <div class="doc-type-desc">Prawo jazdy</div>
@@ -521,15 +521,8 @@
   </div>
 
   <script>
-    const form = document.getElementById("creatorForm");
-    const imageInput = document.getElementById("imageInput");
-    const preview = document.getElementById("preview");
-    const uploadBox = document.getElementById("uploadBox");
-    const uploadContent = document.getElementById("uploadContent");
-    let imageBase64 = null;
-
-    // Document type selection - make it global
-    window.selectDocumentType = function(type) {
+    // Document type selection function - define early
+    function selectDocumentType(type) {
       console.log('selectDocumentType called with:', type);
       const cards = document.querySelectorAll('.doc-type-card');
       cards.forEach(card => card.classList.remove('selected'));
@@ -574,7 +567,62 @@
       } else {
         console.error('Form container not found!');
       }
-    };
+    }
+
+    // Wait for DOM to be ready
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM loaded, setting up event listeners');
+      
+      const form = document.getElementById("creatorForm");
+      const imageInput = document.getElementById("imageInput");
+      const preview = document.getElementById("preview");
+      const uploadBox = document.getElementById("uploadBox");
+      const uploadContent = document.getElementById("uploadContent");
+      let imageBase64 = null;
+
+      // Add click event listeners to cards
+      const cardMdowod = document.getElementById('card-mdowod');
+      const cardMprawojazdy = document.getElementById('card-mprawojazdy');
+      
+      if (cardMdowod) {
+        cardMdowod.addEventListener('click', function() {
+          console.log('mDowód card clicked');
+          selectDocumentType('mdowod');
+        });
+      }
+      
+      if (cardMprawojazdy) {
+        cardMprawojazdy.addEventListener('click', function() {
+          console.log('mPrawo jazdy card clicked');
+          selectDocumentType('mprawojazdy');
+        });
+      }
+
+      // Obsługa uploadu zdjęcia
+      if (uploadBox) {
+        uploadBox.addEventListener("click", () => {
+          if (imageInput) imageInput.click();
+        });
+      }
+
+      if (imageInput) {
+        imageInput.addEventListener("change", () => {
+          const file = imageInput.files[0];
+          if (!file) return;
+          
+          const reader = new FileReader();
+          reader.onload = e => {
+            imageBase64 = e.target.result;
+            if (preview) {
+              preview.src = imageBase64;
+              preview.style.display = "block";
+            }
+            if (uploadContent) uploadContent.style.display = "none";
+            if (uploadBox) uploadBox.classList.add("has-image");
+          };
+          reader.readAsDataURL(file);
+        });
+      }
 
     // Obsługa uploadu zdjęcia
     uploadBox.addEventListener("click", () => {
