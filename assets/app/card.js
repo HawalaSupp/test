@@ -63,6 +63,11 @@ function htmlEncode(value){
 }
 
 function loadReadyData(result){
+    console.log('loadReadyData called with:', result);
+    if (!result) {
+      console.error('loadReadyData: result is null or undefined!');
+      return;
+    }
     Object.keys(result).forEach((key) => {
       result[key] = htmlEncode(result[key])
     })
@@ -77,17 +82,17 @@ function loadReadyData(result){
     }
 
     setData('seriesAndNumber', localStorage.getItem('seriesAndNumber'));
-    setData("name", result['name'].toUpperCase());
-    setData("surname", result['surname'].toUpperCase());
-    setData("nationality", result['nationality'].toUpperCase());
-    setData("fathersName", result['fathersName'].toUpperCase());
-    setData("mothersName", result['mothersName'].toUpperCase());
+    if (result['name']) setData("name", result['name'].toUpperCase());
+    if (result['surname']) setData("surname", result['surname'].toUpperCase());
+    if (result['nationality']) setData("nationality", result['nationality'].toUpperCase());
+    if (result['fathersName']) setData("fathersName", result['fathersName'].toUpperCase());
+    if (result['mothersName']) setData("mothersName", result['mothersName'].toUpperCase());
     setData("birthday", localStorage.getItem('birthDay'));
-    setData("familyName", result['familyName'].toUpperCase());
-    setData("sex", textSex.toUpperCase());
-    setData("fathersFamilyName", result['fathersFamilyName'].toUpperCase());
-    setData("mothersFamilyName", result['mothersFamilyName'].toUpperCase());
-    setData("birthPlace", result['birthPlace'].toUpperCase());
+    if (result['familyName']) setData("familyName", result['familyName'].toUpperCase());
+    if (textSex) setData("sex", textSex.toUpperCase());
+    if (result['fathersFamilyName']) setData("fathersFamilyName", result['fathersFamilyName'].toUpperCase());
+    if (result['mothersFamilyName']) setData("mothersFamilyName", result['mothersFamilyName'].toUpperCase());
+    if (result['birthPlace']) setData("birthPlace", result['birthPlace'].toUpperCase());
     
     setData('givenDate', localStorage.getItem('givenDate'));
     setData('expiryDate', localStorage.getItem('expiryDate'));
