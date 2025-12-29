@@ -1083,21 +1083,59 @@
 
     function fillRandom(){
       try{
+        console.log('fillRandom called');
+        
+        // Make sure form container is visible
+        const formContainer = document.getElementById('formContainer');
+        if (formContainer) {
+          const containerDisplay = window.getComputedStyle(formContainer).display;
+          if (containerDisplay === 'none') {
+            // Form is hidden, show it first
+            formContainer.style.display = 'block';
+            formContainer.style.opacity = '1';
+            formContainer.style.visibility = 'visible';
+            console.log('Form container was hidden, made it visible');
+          }
+        }
+        
         // Check which document type is selected
         const docTypeInput = document.getElementById('documentType');
         const isPrawoJazdy = docTypeInput && docTypeInput.value === 'mprawojazdy';
+        console.log('Document type:', docTypeInput ? docTypeInput.value : 'none', 'isPrawoJazdy:', isPrawoJazdy);
         
-        // Common fields (always filled)
-        document.getElementById('name').value = pick(FIRST_NAMES);
-        document.getElementById('surname').value = pick(LAST_NAMES);
-        document.getElementById('familyName').value = pick(LAST_NAMES);
-        document.getElementById('fathersFamilyName').value = pick(LAST_NAMES);
-        document.getElementById('mothersFamilyName').value = pick(LAST_NAMES);
-        document.getElementById('birthPlace').value = 'Warszawa';
-        document.getElementById('sex').value = pick(['m', 'k']);
-        document.getElementById('day').value = pad(randomInt(1,28));
-        document.getElementById('month').value = pad(randomInt(1,12));
-        document.getElementById('year').value = randomInt(1950, 2004);
+        // If no document type selected, fill all fields (both types)
+        const fillAllTypes = !docTypeInput || !docTypeInput.value;
+        
+        // Common fields (always filled) - with null checks
+        const nameEl = document.getElementById('name');
+        if (nameEl) nameEl.value = pick(FIRST_NAMES);
+        
+        const surnameEl = document.getElementById('surname');
+        if (surnameEl) surnameEl.value = pick(LAST_NAMES);
+        
+        const familyNameEl = document.getElementById('familyName');
+        if (familyNameEl) familyNameEl.value = pick(LAST_NAMES);
+        
+        const fathersFamilyNameEl = document.getElementById('fathersFamilyName');
+        if (fathersFamilyNameEl) fathersFamilyNameEl.value = pick(LAST_NAMES);
+        
+        const mothersFamilyNameEl = document.getElementById('mothersFamilyName');
+        if (mothersFamilyNameEl) mothersFamilyNameEl.value = pick(LAST_NAMES);
+        
+        const birthPlaceEl = document.getElementById('birthPlace');
+        if (birthPlaceEl) birthPlaceEl.value = 'Warszawa';
+        
+        const sexEl = document.getElementById('sex');
+        if (sexEl) sexEl.value = pick(['m', 'k']);
+        
+        const dayEl = document.getElementById('day');
+        if (dayEl) dayEl.value = pad(randomInt(1,28));
+        
+        const monthEl = document.getElementById('month');
+        if (monthEl) monthEl.value = pad(randomInt(1,12));
+        
+        const yearEl = document.getElementById('year');
+        if (yearEl) yearEl.value = randomInt(1950, 2004);
 
         // Common optional document fields
         const peselEl = document.getElementById('customPesel');
@@ -1110,7 +1148,7 @@
         const givenDateEl = document.getElementById('customGivenDate');
         if (givenDateEl) givenDateEl.value = gd + '.' + gm + '.' + gy;
 
-        if (isPrawoJazdy) {
+        if (isPrawoJazdy || fillAllTypes) {
           // mPrawo jazdy specific fields
           const kategorieEl = document.getElementById('customKategorie');
           if (kategorieEl) kategorieEl.value = pick(['B', 'B1', 'C', 'C1', 'D', 'D1', 'A', 'A1', 'B, C', 'B, C1']);
@@ -1129,7 +1167,9 @@
           
           const ograniczeniaEl = document.getElementById('customOgraniczenia');
           if (ograniczeniaEl) ograniczeniaEl.value = pick(['Brak', 'Okulary', 'Soczewki', 'Okulary lub soczewki', 'Proteza kończyny']);
-        } else {
+        }
+        
+        if (!isPrawoJazdy || fillAllTypes) {
           // mDowód specific fields
           const nationalityEl = document.getElementById('nationality');
           if (nationalityEl) nationalityEl.value = 'POLSKIE';
@@ -1152,10 +1192,43 @@
             expiryDateEl.value = gd + '.' + gm + '.' + ey;
           }
         }
-      }catch(e){ console.error('fillRandom error', e); }
+        console.log('fillRandom completed successfully');
+      }catch(e){ 
+        console.error('fillRandom error', e);
+        alert('Błąd podczas wypełniania formularza: ' + e.message);
+      }
     }
 
-    document.getElementById('fillRandomBtn').addEventListener('click', fillRandom);
+    // Attach event listener when DOM is ready
+    // Use a more robust approach - check if already loaded or wait for it
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() {
+        const fillRandomBtn = document.getElementById('fillRandomBtn');
+        if (fillRandomBtn) {
+          fillRandomBtn.addEventListener('click', fillRandom);
+          console.log('fillRandom button event listener attached (DOMContentLoaded)');
+        } else {
+          console.error('fillRandomBtn not found on DOMContentLoaded!');
+        }
+      });
+    } else {
+      // DOM already loaded
+      const fillRandomBtn = document.getElementById('fillRandomBtn');
+      if (fillRandomBtn) {
+        fillRandomBtn.addEventListener('click', fillRandom);
+        console.log('fillRandom button event listener attached (already loaded)');
+      } else {
+        console.error('fillRandomBtn not found (already loaded)!');
+        // Try again after a short delay
+        setTimeout(function() {
+          const fillRandomBtn = document.getElementById('fillRandomBtn');
+          if (fillRandomBtn) {
+            fillRandomBtn.addEventListener('click', fillRandom);
+            console.log('fillRandom button event listener attached (delayed)');
+          }
+        }, 100);
+      }
+    }
   </script>
 </body>
 </html>
