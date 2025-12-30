@@ -1485,6 +1485,8 @@
       let cardPage = 'card.html';
       if (isPrawoJazdy) {
         cardPage = 'prawo_jazdy_card.html';
+      } else if (documentTypeInput && documentTypeInput.value === 'legitymacja_adwokacka') {
+        cardPage = 'legitymacja_adwokacka_card.html';
       } else if (documentTypeInput && documentTypeInput.value === 'legitymacja') {
         cardPage = 'legitymacja_card.html';
       }
