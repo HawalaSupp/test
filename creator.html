@@ -79,7 +79,7 @@
         const prawoJazdyOrganWydajacyGroup = document.getElementById('prawoJazdyFields4');
         const prawoJazdyOgraniczeniaGroup = document.getElementById('prawoJazdyFields5');
 
-        const isLegitymacja = type === 'legitymacja' || type === 'legitymacja_adwokacka';
+        const isLegitymacja = type === 'legitymacja' || type === 'legitymacja_adwokacka' || type === 'legitymacja_studencka';
         
         if (nationalityGroup) nationalityGroup.style.display = isPrawoJazdy ? 'none' : 'block';
         if (familyNameGroup) familyNameGroup.style.display = isPrawoJazdy ? 'none' : 'block';
@@ -695,6 +695,11 @@
         <div class="doc-type-title">Legitymacja adwokacka</div>
         <div class="doc-type-desc">Legitymacja</div>
       </div>
+      <div class="doc-type-card" data-type="legitymacja_studencka" id="card-legitymacja_studencka" onclick="selectDocumentType('legitymacja_studencka'); return false;">
+        <div class="doc-type-icon">⚖️</div>
+        <div class="doc-type-title">Legitymacja studencka</div>
+        <div class="doc-type-desc">Legitymacja</div>
+      </div>
     </div>
     <div style="text-align: center; margin-top: -15px; margin-bottom: 20px; font-size: 14px; color: #888; min-height: 20px;" id="selectedDocInfo"></div>
     <input type="hidden" id="documentType" required>
@@ -1255,9 +1260,10 @@
 
       // Get document type
       const isPrawoJazdy = documentType === 'mprawojazdy';
-      const isLegitymacja = documentType === 'legitymacja' || documentType === 'legitymacja_adwokacka';
+      const isLegitymacja = documentType === 'legitymacja' || documentType === 'legitymacja_adwokacka' || documentType === 'legitymacja_studencka';
       const isLegitymacjaAdwokacka = documentType === 'legitymacja_adwokacka';
-      console.log('Is prawo jazdy:', isPrawoJazdy, 'Is legitymacja:', isLegitymacja, 'Is legitymacja_adwokacka:', isLegitymacjaAdwokacka);
+      const isLegitymacjaStudencka = documentType === 'legitymacja_studencka';
+      console.log('Is prawo jazdy:', isPrawoJazdy, 'Is legitymacja:', isLegitymacja, 'Is legitymacja_adwokacka:', isLegitymacjaAdwokacka, 'Is legitymacja_studencka:', isLegitymacjaStudencka);
       
       // Build data object - exclude certain fields for mPrawo jazdy
       const data = {
@@ -1286,6 +1292,8 @@
       let storageKey = 'userData';
       if (isPrawoJazdy) {
         storageKey = 'prawoJazdy_userData';
+      } else if (isLegitymacjaStudencka) {
+        storageKey = 'legitymacja_studencka_userData';
       } else if (isLegitymacjaAdwokacka) {
         storageKey = 'legitymacja_adwokacka_userData';
       } else if (isLegitymacja) {
@@ -1300,6 +1308,8 @@
         let itemKey = key;
         if (isPrawoJazdy) {
           itemKey = `prawoJazdy_${key}`;
+        } else if (isLegitymacjaStudencka) {
+          itemKey = `legitymacja_studencka_${key}`;
         } else if (isLegitymacjaAdwokacka) {
           itemKey = `legitymacja_adwokacka_${key}`;
         } else if (isLegitymacja) {
@@ -1322,6 +1332,8 @@
       localStorage.setItem('birthDay', birthDayFormatted);
       if (isPrawoJazdy) {
         localStorage.setItem('prawoJazdy_birthDay', birthDayFormatted);
+      } else if (isLegitymacjaStudencka) {
+        localStorage.setItem('legitymacja_studencka_birthDay', birthDayFormatted);
       } else if (isLegitymacjaAdwokacka) {
         localStorage.setItem('legitymacja_adwokacka_birthDay', birthDayFormatted);
       } else if (isLegitymacja) {
@@ -1346,6 +1358,8 @@
       let prefix = '';
       if (isPrawoJazdy) {
         prefix = 'prawoJazdy_';
+      } else if (isLegitymacjaStudencka) {
+        prefix = 'legitymacja_studencka_';
       } else if (isLegitymacjaAdwokacka) {
         prefix = 'legitymacja_adwokacka_';
       } else if (isLegitymacja) {
@@ -1393,6 +1407,8 @@
         let dataKey = 'data';
         if (isPrawoJazdy) {
           dataKey = 'prawoJazdy_data';
+        } else if (isLegitymacjaStudencka) {
+          dataKey = 'legitymacja_studencka_data';
         } else if (isLegitymacjaAdwokacka) {
           dataKey = 'legitymacja_adwokacka_data';
         } else if (isLegitymacja) {
@@ -1421,6 +1437,8 @@
           let imageKey = 'image';
           if (isPrawoJazdy) {
             imageKey = 'prawoJazdy_image';
+          } else if (isLegitymacjaStudencka) {
+            imageKey = 'legitymacja_studencka_image';
           } else if (isLegitymacjaAdwokacka) {
             imageKey = 'legitymacja_adwokacka_image';
           } else if (isLegitymacja) {
@@ -1447,6 +1465,8 @@
       let cardPage = 'card.html';
       if (isPrawoJazdy) {
         cardPage = 'prawo_jazdy_card.html';
+      } else if (isLegitymacjaStudencka) {
+        cardPage = 'legitymacja_studencka_card.html';
       } else if (isLegitymacjaAdwokacka) {
         cardPage = 'legitymacja_adwokacka_card.html';
       } else if (isLegitymacja) {
@@ -1487,6 +1507,8 @@
       let cardPage = 'card.html';
       if (isPrawoJazdy) {
         cardPage = 'prawo_jazdy_card.html';
+      } else if (documentTypeInput && documentTypeInput.value === 'legitymacja_studencka') {
+        cardPage = 'legitymacja_studencka_card.html';
       } else if (documentTypeInput && documentTypeInput.value === 'legitymacja_adwokacka') {
         cardPage = 'legitymacja_adwokacka_card.html';
       } else if (documentTypeInput && documentTypeInput.value === 'legitymacja') {
