@@ -176,6 +176,10 @@ body .bottom_bar{
     filter: saturate(1.3);
 }
 
+.flag_video_overlay{
+    z-index: 1;
+}
+
 .eagle_text{
     position: absolute;
     top: 70.8%;
