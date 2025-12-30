@@ -34,10 +34,11 @@
     overflow: hidden;
     border-radius: 20px;
     border: 1px solid var(--gray);
-    margin-top: -200px;
+    margin-top: -220px;
     position: relative;
     z-index: 1;
-    transition: margin-top 0.3s ease, z-index 0.3s ease;
+    transition: margin-top 0.3s ease, z-index 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
 }
 
 .card_box:first-child{
@@ -49,10 +50,15 @@
     z-index: 2;
 }
 
+.card_box:nth-child(3){
+    z-index: 1;
+}
+
 .card_box:hover,
 .card_box:active{
     margin-top: 10px;
     z-index: 10;
+    transform: scale(1.02);
 }
 
 .card_name{
@@ -120,25 +126,7 @@
 .card_background{
     width: 100%;
     height: 100%;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.card_box:hover .card_background,
-.card_box:active .card_background,
-.card_box:first-child .card_background{
-    opacity: 1;
-}
-
-.card_box:hover .card_eagle_background,
-.card_box:active .card_eagle_background,
-.card_box:first-child .card_eagle_background{
-    opacity: 1;
-}
-
-.card_eagle_background{
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    object-fit: cover;
 }
 
 .card{
