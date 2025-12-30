@@ -34,31 +34,8 @@
     overflow: hidden;
     border-radius: 20px;
     border: 1px solid var(--gray);
-    margin-top: -220px;
-    position: relative;
-    z-index: 1;
-    transition: margin-top 0.3s ease, z-index 0.3s ease, transform 0.3s ease;
-    cursor: pointer;
-}
-
-.card_box:first-child{
-    margin-top: 150px;
-    z-index: 3;
-}
-
-.card_box:nth-child(2){
-    z-index: 2;
-}
-
-.card_box:nth-child(3){
-    z-index: 1;
-}
-
-.card_box:hover,
-.card_box:active{
     margin-top: 10px;
-    z-index: 10;
-    transform: scale(1.02);
+    position: relative;
 }
 
 .card_name{
@@ -71,9 +48,6 @@
     width: max-content;
     font-weight: 500;
     font-size: 23px;
-    z-index: 20;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    pointer-events: none;
 }
 
 .card_eagle_background{
