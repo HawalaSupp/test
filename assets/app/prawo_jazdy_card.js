@@ -81,16 +81,16 @@ function loadReadyData(result){
         textSex = "Kobieta"
     }
 
-    // Use prawo jazdy specific keys
-    setData("name", result['name'].toUpperCase());
-    setData("surname", result['surname'].toUpperCase());
-    setData("nationality", result['nationality'].toUpperCase());
-    setData("birthday", localStorage.getItem('birthDay'));
-    setData("familyName", result['familyName'].toUpperCase());
-    setData("sex", textSex.toUpperCase());
-    setData("fathersFamilyName", result['fathersFamilyName'].toUpperCase());
-    setData("mothersFamilyName", result['mothersFamilyName'].toUpperCase());
-    setData("birthPlace", result['birthPlace'].toUpperCase());
+    // Use prawo jazdy specific keys - with null checks
+    if (result['name']) setData("name", result['name'].toUpperCase());
+    if (result['surname']) setData("surname", result['surname'].toUpperCase());
+    if (result['nationality']) setData("nationality", result['nationality'].toUpperCase());
+    setData("birthday", localStorage.getItem('prawoJazdy_birthDay') || localStorage.getItem('birthDay'));
+    if (result['familyName']) setData("familyName", result['familyName'].toUpperCase());
+    if (textSex) setData("sex", textSex.toUpperCase());
+    if (result['fathersFamilyName']) setData("fathersFamilyName", result['fathersFamilyName'].toUpperCase());
+    if (result['mothersFamilyName']) setData("mothersFamilyName", result['mothersFamilyName'].toUpperCase());
+    if (result['birthPlace']) setData("birthPlace", result['birthPlace'].toUpperCase());
     
     setData('givenDate', localStorage.getItem('prawoJazdy_givenDate'));
     

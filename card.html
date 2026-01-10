@@ -234,63 +234,141 @@
   <script src="assets/app/cache.js"></script>
 
   <script>
-    // === Global toggle function - define immediately ===
-    window.toggleEagleDrag = function() {
-      // This will be replaced by the actual function once setup completes
-      console.log('Function not ready yet, please wait...');
-    };
-
-    // === IndexedDB Functions ===
-    function getDb(){
-      return new Promise((resolve, reject) => {
-        const r = indexedDB.open('fobywatel', 1);
-        r.onupgradeneeded = e => {
-          const db = e.target.result;
-          if (!db.objectStoreNames.contains('data')){
-            db.createObjectStore('data', { keyPath: 'data' });
+    // ============================================================
+    // SIMPLE AND DIRECT DATA LOADING FOR mDowód
+    // ============================================================
+    
+    // Helper function to set text content of an element by ID
+    function setField(id, value) {
+      const el = document.getElementById(id);
+      if (el && value) {
+        el.textContent = value;
+        console.log('✓ Set', id, 'to:', value);
+      }
+    }
+    
+    // Load all data directly from localStorage - SIMPLE APPROACH
+    function loadAllData() {
+      console.log('=== LOADING ALL DATA FROM LOCALSTORAGE ===');
+      
+      // Try to get JSON data first
+      let data = {};
+      const jsonData = localStorage.getItem('userData');
+      if (jsonData) {
+        try {
+          data = JSON.parse(jsonData);
+          console.log('Loaded userData JSON:', data);
+        } catch (e) {
+          console.error('Error parsing userData JSON:', e);
+        }
+      }
+      
+      // Get individual fields from localStorage (these override JSON if present)
+      const name = localStorage.getItem('name') || data.name || '';
+      const surname = localStorage.getItem('surname') || data.surname || '';
+      const nationality = localStorage.getItem('nationality') || data.nationality || '';
+      const pesel = localStorage.getItem('pesel') || data.pesel || '';
+      const seriesAndNumber = localStorage.getItem('seriesAndNumber') || data.seriesAndNumber || '';
+      const givenDate = localStorage.getItem('givenDate') || data.givenDate || '';
+      const expiryDate = localStorage.getItem('expiryDate') || data.expiryDate || '';
+      const fathersName = localStorage.getItem('fathersName') || data.fathersName || '';
+      const mothersName = localStorage.getItem('mothersName') || data.mothersName || '';
+      const familyName = localStorage.getItem('familyName') || data.familyName || '';
+      const fathersFamilyName = localStorage.getItem('fathersFamilyName') || data.fathersFamilyName || '';
+      const mothersFamilyName = localStorage.getItem('mothersFamilyName') || data.mothersFamilyName || '';
+      const birthPlace = localStorage.getItem('birthPlace') || data.birthPlace || '';
+      const sex = localStorage.getItem('sex') || data.sex || '';
+      const birthDay = localStorage.getItem('birthDay') || '';
+      const updateDate = localStorage.getItem('update') || localStorage.getItem('updateDate') || '';
+      
+      // Format birthday from day/month/year if birthDay is not available
+      let birthday = birthDay;
+      if (!birthday && (data.day || data.month || data.year)) {
+        const day = String(data.day || 1).padStart(2, '0');
+        const month = String(data.month || 1).padStart(2, '0');
+        const year = data.year || 2000;
+        birthday = `${day}.${month}.${year}`;
+      }
+      
+      // Format sex
+      let sexText = '';
+      if (sex === 'm') sexText = 'MĘŻCZYZNA';
+      else if (sex === 'k') sexText = 'KOBIETA';
+      
+      console.log('Data to display:');
+      console.log('  name:', name);
+      console.log('  surname:', surname);
+      console.log('  nationality:', nationality);
+      console.log('  pesel:', pesel);
+      console.log('  seriesAndNumber:', seriesAndNumber);
+      console.log('  givenDate:', givenDate);
+      console.log('  expiryDate:', expiryDate);
+      console.log('  fathersName:', fathersName);
+      console.log('  mothersName:', mothersName);
+      console.log('  familyName:', familyName);
+      console.log('  birthday:', birthday);
+      console.log('  sex:', sexText);
+      
+      // Set all fields - DIRECTLY, no complex logic
+      setField('name', name.toUpperCase());
+      setField('surname', surname.toUpperCase());
+      setField('nationality', nationality.toUpperCase());
+      setField('pesel_value', pesel);
+      setField('seriesAndNumber', seriesAndNumber);
+      setField('givenDate', givenDate);
+      setField('expiryDate', expiryDate);
+      setField('fathersName', fathersName.toUpperCase());
+      setField('mothersName', mothersName.toUpperCase());
+      setField('familyName', familyName.toUpperCase());
+      setField('fathersFamilyName', fathersFamilyName.toUpperCase());
+      setField('mothersFamilyName', mothersFamilyName.toUpperCase());
+      setField('birthPlace', birthPlace.toUpperCase());
+      setField('birthday', birthday);
+      setField('sex', sexText);
+      setField('updateDate', updateDate);
+      
+      // Load user photo
+      const userPhoto = localStorage.getItem('userPhoto');
+      if (userPhoto) {
+        const photoEl = document.getElementById('userPhoto');
+        if (photoEl) {
+          photoEl.style.backgroundImage = `url(${userPhoto})`;
+          console.log('✓ Loaded user photo');
+        }
+      }
+      
+      console.log('=== DATA LOADING COMPLETE ===');
+    }
+    
+    // Setup dropdown toggle for "Twoje dodatkowe dane"
+    function setupDropdown() {
+      const infoHolders = document.querySelectorAll('.info_holder');
+      infoHolders.forEach(holder => {
+        holder.addEventListener('click', function(e) {
+          // Don't toggle if clicking on a link or button inside
+          if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') return;
+          
+          const additionalHolder = this.querySelector('.additional_holder');
+          const arrow = this.querySelector('.action_arrow');
+          
+          if (additionalHolder) {
+            const isOpen = additionalHolder.style.display === 'block';
+            additionalHolder.style.display = isOpen ? 'none' : 'block';
+            if (arrow) {
+              arrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(90deg)';
+            }
+            console.log('Toggled dropdown:', isOpen ? 'closed' : 'open');
           }
-        };
-        r.onsuccess = e => resolve(e.target.result);
-        r.onerror = e => reject(e.target.error);
+        });
+        holder.style.cursor = 'pointer';
       });
     }
-
-    function getData(db, key){
-      return new Promise((resolve, reject) => {
-        const tx = db.transaction('data','readonly');
-        const store = tx.objectStore('data');
-        const req = store.get(key);
-        req.onsuccess = () => resolve(req.result);
-        req.onerror = e => reject(e.target.error);
-      });
-    }
-
-    // === Wczytywanie danych z localStorage lub URL ===
-    const fields = [
-      'name','surname','nationality','birthday','pesel_value','seriesAndNumber','expiryDate',
-      'givenDate','fathersName','mothersName','familyName','sex','fathersFamilyName',
-      'mothersFamilyName','birthPlace','updateDate'
-    ];
     
-    // Mapowanie ID elementów do kluczy localStorage
-    const storageKeyMap = {
-      'pesel_value': 'pesel',
-      'seriesAndNumber': 'seriesAndNumber',
-      'expiryDate': 'expiryDate',
-      'givenDate': 'givenDate'
-    };
-    
-    // Declare params in global scope
-    var params = new URLSearchParams(window.location.search);
-    // NOTE: This runs BEFORE loadUserData, so it might set empty values
-    // We'll skip this and let loadReadyData handle everything
-    console.log('Skipping initial localStorage field setting - will be handled by loadReadyData');
-    // Only set fields that are NOT handled by loadReadyData (like updateDate)
-    const updateDateEl = document.getElementById('updateDate');
-    if (updateDateEl) {
-      const updateDate = localStorage.getItem('update') || localStorage.getItem('updateDate');
-      if (updateDate) updateDateEl.textContent = updateDate;
-    }
+    // Run on DOM ready
+    document.addEventListener('DOMContentLoaded', function() {
+      loadAllData();
+      setupDropdown();
+    });
 
     // === Load data and image from IndexedDB ===
     async function loadUserData() {
@@ -350,12 +428,30 @@
               sex: localStorage.getItem('sex'),
               day: parseInt(localStorage.getItem('day')) || 1,
               month: parseInt(localStorage.getItem('month')) || 1,
-              year: parseInt(localStorage.getItem('year')) || 2000
+              year: parseInt(localStorage.getItem('year')) || 2000,
+              pesel: localStorage.getItem('pesel'),
+              seriesAndNumber: localStorage.getItem('seriesAndNumber'),
+              givenDate: localStorage.getItem('givenDate'),
+              expiryDate: localStorage.getItem('expiryDate')
             };
             dataSource = 'individual localStorage fields';
             console.log('✓ Loaded data from individual localStorage fields:', userData);
             console.log('  Name:', userData.name, 'Surname:', userData.surname);
+            console.log('  PESEL:', userData.pesel, 'SeriesAndNumber:', userData.seriesAndNumber);
+            console.log('  GivenDate:', userData.givenDate, 'ExpiryDate:', userData.expiryDate);
           }
+        }
+        
+        // IMPORTANT: Even if userData exists, make sure these fields are included from localStorage
+        // This ensures they're always available even if they weren't in the JSON/IndexedDB
+        if (userData) {
+          if (!userData.pesel) userData.pesel = localStorage.getItem('pesel');
+          if (!userData.seriesAndNumber) userData.seriesAndNumber = localStorage.getItem('seriesAndNumber');
+          if (!userData.givenDate) userData.givenDate = localStorage.getItem('givenDate');
+          if (!userData.expiryDate) userData.expiryDate = localStorage.getItem('expiryDate');
+          console.log('✓ Ensured mDowód fields are in userData:');
+          console.log('  PESEL:', userData.pesel, 'SeriesAndNumber:', userData.seriesAndNumber);
+          console.log('  GivenDate:', userData.givenDate, 'ExpiryDate:', userData.expiryDate);
         }
         
         console.log('=== Data source:', dataSource, '===');
@@ -367,6 +463,103 @@
           if (typeof loadReadyData === 'function') {
             console.log('Calling loadReadyData from card.js with:', userData);
             loadReadyData(userData);
+            
+            // CRITICAL: After loadReadyData, directly set mDowód fields from localStorage as fallback
+            // This ensures they're always displayed even if loadReadyData didn't set them
+            setTimeout(() => {
+              console.log('=== Setting mDowód fields directly from localStorage (fallback) ===');
+              
+              // Check ALL possible localStorage keys for these fields
+              const pesel = localStorage.getItem('pesel') || userData?.pesel;
+              const seriesAndNumber = localStorage.getItem('seriesAndNumber') || userData?.seriesAndNumber;
+              const givenDate = localStorage.getItem('givenDate') || userData?.givenDate;
+              const expiryDate = localStorage.getItem('expiryDate') || userData?.expiryDate;
+              
+              console.log('  Direct localStorage values:');
+              console.log('    pesel:', pesel, '(from localStorage:', localStorage.getItem('pesel'), ', from userData:', userData?.pesel, ')');
+              console.log('    seriesAndNumber:', seriesAndNumber, '(from localStorage:', localStorage.getItem('seriesAndNumber'), ', from userData:', userData?.seriesAndNumber, ')');
+              console.log('    givenDate:', givenDate, '(from localStorage:', localStorage.getItem('givenDate'), ', from userData:', userData?.givenDate, ')');
+              console.log('    expiryDate:', expiryDate, '(from localStorage:', localStorage.getItem('expiryDate'), ', from userData:', userData?.expiryDate, ')');
+              
+              // Also check what's actually in localStorage
+              console.log('  All localStorage keys:', Object.keys(localStorage).filter(k => k.includes('pesel') || k.includes('series') || k.includes('Date')));
+              
+              if (pesel) {
+                const peselEl = document.getElementById('pesel_value');
+                if (peselEl) {
+                  peselEl.textContent = pesel;
+                  console.log('  ✓ Set pesel_value directly to:', pesel);
+                  // Verify it stuck
+                  setTimeout(() => {
+                    if (peselEl.textContent !== pesel) {
+                      console.error('  ✗✗✗ pesel_value was overwritten! Re-setting...');
+                      peselEl.textContent = pesel;
+                    }
+                  }, 100);
+                } else {
+                  console.error('  ✗ pesel_value element not found!');
+                }
+              } else {
+                console.warn('  ⚠ pesel is empty - checking localStorage keys:', Object.keys(localStorage).filter(k => k.toLowerCase().includes('pesel')));
+              }
+              
+              if (seriesAndNumber) {
+                const seriesEl = document.getElementById('seriesAndNumber');
+                if (seriesEl) {
+                  seriesEl.textContent = seriesAndNumber;
+                  console.log('  ✓ Set seriesAndNumber directly to:', seriesAndNumber);
+                  // Verify it stuck
+                  setTimeout(() => {
+                    if (seriesEl.textContent !== seriesAndNumber) {
+                      console.error('  ✗✗✗ seriesAndNumber was overwritten! Re-setting...');
+                      seriesEl.textContent = seriesAndNumber;
+                    }
+                  }, 100);
+                } else {
+                  console.error('  ✗ seriesAndNumber element not found!');
+                }
+              } else {
+                console.warn('  ⚠ seriesAndNumber is empty - checking localStorage keys:', Object.keys(localStorage).filter(k => k.toLowerCase().includes('series')));
+              }
+              
+              if (givenDate) {
+                const givenEl = document.getElementById('givenDate');
+                if (givenEl) {
+                  givenEl.textContent = givenDate;
+                  console.log('  ✓ Set givenDate directly to:', givenDate);
+                  // Verify it stuck
+                  setTimeout(() => {
+                    if (givenEl.textContent !== givenDate) {
+                      console.error('  ✗✗✗ givenDate was overwritten! Re-setting...');
+                      givenEl.textContent = givenDate;
+                    }
+                  }, 100);
+                } else {
+                  console.error('  ✗ givenDate element not found!');
+                }
+              } else {
+                console.warn('  ⚠ givenDate is empty - checking localStorage keys:', Object.keys(localStorage).filter(k => k.toLowerCase().includes('given')));
+              }
+              
+              if (expiryDate) {
+                const expiryEl = document.getElementById('expiryDate');
+                if (expiryEl) {
+                  expiryEl.textContent = expiryDate;
+                  console.log('  ✓ Set expiryDate directly to:', expiryDate);
+                  // Verify it stuck
+                  setTimeout(() => {
+                    if (expiryEl.textContent !== expiryDate) {
+                      console.error('  ✗✗✗ expiryDate was overwritten! Re-setting...');
+                      expiryEl.textContent = expiryDate;
+                    }
+                  }, 100);
+                } else {
+                  console.error('  ✗ expiryDate element not found!');
+                }
+              } else {
+                console.warn('  ⚠ expiryDate is empty - checking localStorage keys:', Object.keys(localStorage).filter(k => k.toLowerCase().includes('expiry')));
+              }
+            }, 200);
           } else {
             // Fallback: Set form fields from IndexedDB data directly
             console.log('loadReadyData not available, setting data directly');

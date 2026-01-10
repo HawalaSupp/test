@@ -214,262 +214,111 @@
   <script src="assets/app/cache.js"></script>
 
   <script>
-    // === Global toggle function - define immediately ===
-    window.toggleEagleDrag = function() {
-      // This will be replaced by the actual function once setup completes
-      console.log('Function not ready yet, please wait...');
-    };
-
-    // === IndexedDB Functions ===
-    function getDb(){
-      return new Promise((resolve, reject) => {
-        const r = indexedDB.open('fobywatel', 1);
-        r.onupgradeneeded = e => {
-          const db = e.target.result;
-          if (!db.objectStoreNames.contains('data')){
-            db.createObjectStore('data', { keyPath: 'data' });
-          }
-        };
-        r.onsuccess = e => resolve(e.target.result);
-        r.onerror = e => reject(e.target.error);
-      });
-    }
-
-    function getData(db, key){
-      return new Promise((resolve, reject) => {
-        const tx = db.transaction('data','readonly');
-        const store = tx.objectStore('data');
-        const req = store.get(key);
-        req.onsuccess = () => resolve(req.result);
-        req.onerror = e => reject(e.target.error);
-      });
-    }
-
-    // === Wczytywanie danych z localStorage lub URL ===
-    const fields = [
-      'name','surname','nationality','birthday','pesel_value','kategorie',
-      'givenDate','wydany','numerDokumentu','numerBlankietu','organWydajacy','ograniczenia',
-      'familyName','sex','fathersFamilyName',
-      'mothersFamilyName','birthPlace','updateDate'
-    ];
+    // ============================================================
+    // SIMPLE AND DIRECT DATA LOADING FOR mPrawo Jazdy
+    // All data uses prawoJazdy_ prefix in localStorage
+    // ============================================================
     
-    // Mapowanie ID elementów do kluczy localStorage (prawo jazdy specific)
-    const storageKeyMap = {
-      'pesel_value': 'prawoJazdy_pesel',
-      'kategorie': 'prawoJazdy_kategorie',
-      'seriesAndNumber': 'prawoJazdy_seriesAndNumber',
-      'expiryDate': 'prawoJazdy_expiryDate',
-      'givenDate': 'prawoJazdy_givenDate'
-    };
-    
-    // Declare params in global scope
-    var params = new URLSearchParams(window.location.search);
-    fields.forEach(id => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      
-      // Użyj mappingu jeśli istnieje, inaczej użyj ID
-      const storageKey = storageKeyMap[id] || id;
-      let value = params.get(id) || localStorage.getItem(storageKey);
-      if (value) el.textContent = value;
-    });
-
-    // === Load data and image from IndexedDB ===
-    async function loadUserData() {
-      try {
-        const db = await getDb();
-        
-        // NEW APPROACH: Load from localStorage first (more reliable)
-        console.log('Loading data from localStorage for prawo jazdy...');
-        let userData = null;
-        
-        // Try to load from localStorage JSON first
-        const jsonData = localStorage.getItem('prawoJazdy_userData');
-        if (jsonData) {
-          try {
-            userData = JSON.parse(jsonData);
-            console.log('✓ Loaded data from localStorage JSON:', userData);
-          } catch (e) {
-            console.error('Error parsing localStorage JSON:', e);
-          }
-        }
-        
-        // If not in localStorage, try IndexedDB
-        if (!userData) {
-          console.log('Not in localStorage, trying IndexedDB...');
-          let indexedData = await getData(db, 'prawoJazdy_data');
-          if (!indexedData) {
-            indexedData = await getData(db, 'data');
-          }
-          if (indexedData) {
-            userData = { ...indexedData };
-            delete userData.data;
-            console.log('✓ Loaded data from IndexedDB:', userData);
-          }
-        }
-        
-        // If still no data, try loading individual fields from localStorage
-        if (!userData) {
-          console.log('Not in IndexedDB, trying individual localStorage fields...');
-          userData = {
-            name: localStorage.getItem('prawoJazdy_name') || localStorage.getItem('name'),
-            surname: localStorage.getItem('prawoJazdy_surname') || localStorage.getItem('surname'),
-            nationality: localStorage.getItem('prawoJazdy_nationality') || localStorage.getItem('nationality'),
-            familyName: localStorage.getItem('prawoJazdy_familyName') || localStorage.getItem('familyName'),
-            fathersFamilyName: localStorage.getItem('prawoJazdy_fathersFamilyName') || localStorage.getItem('fathersFamilyName'),
-            mothersFamilyName: localStorage.getItem('prawoJazdy_mothersFamilyName') || localStorage.getItem('mothersFamilyName'),
-            birthPlace: localStorage.getItem('prawoJazdy_birthPlace') || localStorage.getItem('birthPlace'),
-            sex: localStorage.getItem('prawoJazdy_sex') || localStorage.getItem('sex'),
-            day: parseInt(localStorage.getItem('prawoJazdy_day') || localStorage.getItem('day')) || 1,
-            month: parseInt(localStorage.getItem('prawoJazdy_month') || localStorage.getItem('month')) || 1,
-            year: parseInt(localStorage.getItem('prawoJazdy_year') || localStorage.getItem('year')) || 2000
-          };
-          console.log('✓ Loaded data from individual localStorage fields:', userData);
-        }
-        
-        if (userData && Object.keys(userData).length > 0) {
-          console.log('Final userData to display:', userData);
-          
-          // Use loadReadyData from prawo_jazdy_card.js if available
-          if (typeof loadReadyData === 'function') {
-            console.log('Calling loadReadyData from prawo_jazdy_card.js with:', userData);
-            loadReadyData(userData);
-          } else {
-            // Fallback: Set form fields from IndexedDB data
-            function setData(id, value) {
-              const el = document.getElementById(id);
-              if (el && value) {
-                el.textContent = value;
-              }
-            }
-            if (userData.name) setData('name', userData.name.toUpperCase());
-            if (userData.surname) setData('surname', userData.surname.toUpperCase());
-            if (userData.nationality) setData('nationality', userData.nationality.toUpperCase());
-            if (userData.familyName) setData('familyName', userData.familyName.toUpperCase());
-            if (userData.fathersFamilyName) setData('fathersFamilyName', userData.fathersFamilyName.toUpperCase());
-            if (userData.mothersFamilyName) setData('mothersFamilyName', userData.mothersFamilyName.toUpperCase());
-            if (userData.birthPlace) setData('birthPlace', userData.birthPlace.toUpperCase());
-            
-            if (userData.sex === 'm') setData('sex', 'MĘŻCZYZNA');
-            else if (userData.sex === 'k') setData('sex', 'KOBIETA');
-            
-            // Format birthday
-            if (userData.day && userData.month && userData.year) {
-              const day = String(userData.day).padStart(2, '0');
-              const month = String(userData.month).padStart(2, '0');
-              setData('birthday', `${day}.${month}.${userData.year}`);
-            }
-          }
-        }
-
-        // Load image from IndexedDB
-        const urlParams = new URLSearchParams(window.location.search);
-        const photoUrl = urlParams.get('image');
-        if (photoUrl) {
-          // Use setImage function from card.js if available, otherwise set directly
-          if (typeof setImage === 'function') {
-            setImage(photoUrl);
-          } else {
-            const photoEl = document.getElementById('userPhoto') || document.querySelector('.id_own_image');
-            if (photoEl) {
-              photoEl.style.backgroundImage = `url(${photoUrl})`;
-            }
-          }
-          console.log('Image loaded from URL:', photoUrl);
-          return;
-        }
-
-        // Try localStorage first (prawo jazdy specific)
-        const photoFromLocalStorage = localStorage.getItem('prawoJazdy_userPhoto');
-        if (photoFromLocalStorage) {
-          if (typeof setImage === 'function') {
-            setImage(photoFromLocalStorage);
-          } else {
-            const photoEl = document.getElementById('userPhoto') || document.querySelector('.id_own_image');
-            if (photoEl) {
-              photoEl.style.backgroundImage = `url(${photoFromLocalStorage})`;
-            }
-          }
-          console.log('Image loaded from localStorage');
-          return;
-        }
-
-        // Load from IndexedDB (prawo jazdy specific)
-        const imageData = await getData(db, 'prawoJazdy_image');
-        console.log('Image data from IndexedDB:', imageData);
-        if (imageData && imageData.image) {
-          if (typeof setImage === 'function') {
-            setImage(imageData.image);
-          } else {
-            const photoEl = document.getElementById('userPhoto') || document.querySelector('.id_own_image');
-            if (photoEl) {
-              photoEl.style.backgroundImage = `url(${imageData.image})`;
-              console.log('Image loaded from IndexedDB');
-            } else {
-              console.error('Photo element not found');
-            }
-          }
-        } else {
-          console.log('No image data found in IndexedDB');
-        }
-      } catch (error) {
-        console.error('Error loading data from IndexedDB:', error);
-      }
-    }
-
-    function setData(id, value) {
+    // Helper function to set text content of an element by ID
+    function setField(id, value) {
       const el = document.getElementById(id);
       if (el && value) {
         el.textContent = value;
+        console.log('✓ Set', id, 'to:', value);
       }
     }
-
-    // Load data and image when DOM is ready and after prawo_jazdy_card.js loads
-    let dataLoaded = false;
     
-    // Try to load data synchronously from localStorage first (instant, no flicker)
-    (function loadDataSync() {
-      try {
-        const jsonData = localStorage.getItem('prawoJazdy_userData');
-        if (jsonData) {
-          const userData = JSON.parse(jsonData);
-          if (typeof loadReadyData === 'function' && userData && Object.keys(userData).length > 0) {
-            // Load data immediately
-            loadReadyData(userData);
-            // Show content
-            if (document.body) {
-              document.body.classList.add('content-loaded');
-            } else {
-              document.addEventListener('DOMContentLoaded', () => {
-                document.body.classList.add('content-loaded');
-              });
-            }
-            dataLoaded = true;
-            console.log('Data loaded synchronously from localStorage for prawo jazdy');
-            return true;
-          }
+    // Load all data directly from localStorage - SIMPLE APPROACH
+    function loadAllData() {
+      console.log('=== LOADING ALL DATA FOR mPrawo Jazdy ===');
+      
+      // Try to get JSON data first (with prawoJazdy_ prefix)
+      let data = {};
+      const jsonData = localStorage.getItem('prawoJazdy_userData');
+      if (jsonData) {
+        try {
+          data = JSON.parse(jsonData);
+          console.log('Loaded prawoJazdy_userData JSON:', data);
+        } catch (e) {
+          console.error('Error parsing prawoJazdy_userData JSON:', e);
         }
-      } catch (e) {
-        console.log('Could not load data synchronously:', e);
       }
-      return false;
-    })();
+      
+      // Get individual fields from localStorage with prawoJazdy_ prefix
+      const name = localStorage.getItem('prawoJazdy_name') || data.name || '';
+      const surname = localStorage.getItem('prawoJazdy_surname') || data.surname || '';
+      const birthPlace = localStorage.getItem('prawoJazdy_birthPlace') || data.birthPlace || '';
+      const sex = localStorage.getItem('prawoJazdy_sex') || data.sex || '';
+      const birthDay = localStorage.getItem('prawoJazdy_birthDay') || '';
+      const kategorie = localStorage.getItem('prawoJazdy_kategorie') || data.kategorie || '';
+      const updateDate = localStorage.getItem('prawoJazdy_update') || localStorage.getItem('update') || '';
+      
+      // Format birthday from day/month/year if birthDay is not available
+      let birthday = birthDay;
+      if (!birthday && (data.day || data.month || data.year)) {
+        const day = String(data.day || 1).padStart(2, '0');
+        const month = String(data.month || 1).padStart(2, '0');
+        const year = data.year || 2000;
+        birthday = `${day}.${month}.${year}`;
+      }
+      
+      console.log('Data to display:');
+      console.log('  name:', name);
+      console.log('  surname:', surname);
+      console.log('  birthday:', birthday);
+      console.log('  kategorie:', kategorie);
+      
+      // Set all fields - DIRECTLY, no complex logic
+      if (name) setField('name', name.toUpperCase());
+      if (surname) setField('surname', surname.toUpperCase());
+      if (birthday) setField('birthday', birthday);
+      if (birthPlace) setField('birthPlace', birthPlace.toUpperCase());
+      if (kategorie) setField('kategorie', kategorie);
+      if (updateDate) setField('updateDate', updateDate);
+      
+      // Load user photo (prawoJazdy_ prefix)
+      const userPhoto = localStorage.getItem('prawoJazdy_userPhoto') || localStorage.getItem('userPhoto');
+      if (userPhoto) {
+        const photoEl = document.getElementById('userPhoto');
+        if (photoEl) {
+          photoEl.style.backgroundImage = `url(${userPhoto})`;
+          console.log('✓ Loaded user photo');
+        }
+      }
+      
+      // Show content
+      document.body.classList.add('content-loaded');
+      
+      console.log('=== DATA LOADING COMPLETE ===');
+    }
     
-    function initUserData() {
-      if (dataLoaded) {
-        console.log('initUserData: Data already loaded, skipping');
-        return;
-      }
-      // Load data immediately - no delay to prevent flicker
-      loadUserData();
-      dataLoaded = true;
+    // Setup dropdown toggle for "Twoje dodatkowe dane"
+    function setupDropdown() {
+      const infoHolders = document.querySelectorAll('.info_holder');
+      infoHolders.forEach(holder => {
+        holder.addEventListener('click', function(e) {
+          if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') return;
+          
+          const additionalHolder = this.querySelector('.additional_holder');
+          const arrow = this.querySelector('.action_arrow');
+          
+          if (additionalHolder) {
+            const isOpen = additionalHolder.style.display === 'block';
+            additionalHolder.style.display = isOpen ? 'none' : 'block';
+            if (arrow) {
+              arrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(90deg)';
+            }
+          }
+        });
+        holder.style.cursor = 'pointer';
+      });
     }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initUserData);
-    } else {
-      initUserData();
-    }
+    
+    // Run on DOM ready
+    document.addEventListener('DOMContentLoaded', function() {
+      loadAllData();
+      setupDropdown();
+    });
 
     // === Simple Background Draggable Functionality ===
     (function() {

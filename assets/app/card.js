@@ -1,3 +1,9 @@
+// Prevent card.js from running on legitymacja and prawo_jazdy pages - they have their own data loading
+var currentPagePath = window.location.pathname;
+if (currentPagePath.includes('legitymacja') || currentPagePath.includes('prawo_jazdy')) {
+    console.warn('card.js: Skipping execution on', currentPagePath, '- page has its own data loading');
+    // Stop execution for these pages
+} else {
 
 var confirmElement = document.querySelector(".confirm");
 
@@ -63,6 +69,15 @@ function htmlEncode(value){
 }
 
 function loadReadyData(result){
+    // CRITICAL: Skip if we're on legitymacja or prawo_jazdy pages - they handle their own data
+    const currentPath = window.location.pathname;
+    const isLegitymacjaCard = currentPath.includes('legitymacja');
+    const isPrawoJazdyCard = currentPath.includes('prawo_jazdy');
+    if (isLegitymacjaCard || isPrawoJazdyCard) {
+        console.log('loadReadyData: Skipping -', currentPath, 'handles its own data');
+        return;
+    }
+    
     console.log('=== loadReadyData START ===');
     console.log('loadReadyData called with:', result);
     console.log('Result keys:', result ? Object.keys(result) : 'null');
@@ -108,7 +123,21 @@ function loadReadyData(result){
     const nameEl = document.getElementById('name');
     console.log('Name element exists?', !!nameEl, nameEl);
     
-    setData('seriesAndNumber', localStorage.getItem('seriesAndNumber'));
+    // ALWAYS check localStorage directly for seriesAndNumber (most reliable)
+    let seriesAndNumber = result['seriesAndNumber'] || localStorage.getItem('seriesAndNumber');
+    console.log('Setting seriesAndNumber:', seriesAndNumber, '(from result:', result['seriesAndNumber'], 'or localStorage:', localStorage.getItem('seriesAndNumber'), ')');
+    if (seriesAndNumber) {
+      setData('seriesAndNumber', seriesAndNumber);
+      // Verify it was set
+      const seriesAndNumberEl = document.getElementById('seriesAndNumber');
+      if (seriesAndNumberEl) {
+        console.log('  ✓ Verified seriesAndNumber element textContent:', seriesAndNumberEl.textContent);
+      } else {
+        console.error('  ✗ ERROR: seriesAndNumber element not found!');
+      }
+    } else {
+      console.warn('  ⚠ seriesAndNumber is empty or missing');
+    }
     
     console.log('Setting name:', result['name']);
     if (result['name']) {
@@ -136,9 +165,25 @@ function loadReadyData(result){
     console.log('Setting mothersName:', result['mothersName']);
     if (result['mothersName']) setData("mothersName", result['mothersName'].toUpperCase());
     
-    const birthDay = localStorage.getItem('birthDay');
-    console.log('Setting birthday:', birthDay);
-    setData("birthday", birthDay);
+    // Check for numerWpisu first (for legitymacja radcowskiego), then birthDay
+    let birthdayValue = null;
+    if (result['numerWpisu']) {
+      birthdayValue = result['numerWpisu'];
+      console.log('Setting birthday from numerWpisu:', birthdayValue);
+    } else if (result['day'] && result['month'] && result['year']) {
+      // Format as date
+      const day = String(result['day']).padStart(2, '0');
+      const month = String(result['month']).padStart(2, '0');
+      birthdayValue = `${day}.${month}.${result['year']}`;
+      console.log('Setting birthday from date fields:', birthdayValue);
+    } else {
+      // Fallback to localStorage birthDay
+      birthdayValue = localStorage.getItem('birthDay');
+      console.log('Setting birthday from localStorage birthDay:', birthdayValue);
+    }
+    if (birthdayValue) {
+      setData("birthday", birthdayValue);
+    }
     
     console.log('Setting familyName:', result['familyName']);
     if (result['familyName']) setData("familyName", result['familyName'].toUpperCase());
@@ -155,13 +200,54 @@ function loadReadyData(result){
     console.log('Setting birthPlace:', result['birthPlace']);
     if (result['birthPlace']) setData("birthPlace", result['birthPlace'].toUpperCase());
     
-    const givenDate = localStorage.getItem('givenDate');
-    console.log('Setting givenDate:', givenDate);
-    setData('givenDate', givenDate);
+    // ALWAYS check localStorage directly for these fields (most reliable)
+    // Use givenDate from result if available, otherwise try localStorage
+    let givenDate = result['givenDate'] || localStorage.getItem('givenDate') || localStorage.getItem('legitymacja_givenDate');
+    console.log('Setting givenDate:', givenDate, '(from result:', result['givenDate'], 'or localStorage:', localStorage.getItem('givenDate'), ')');
+    if (givenDate) {
+      setData('givenDate', givenDate);
+      // Verify it was set
+      const givenDateEl = document.getElementById('givenDate');
+      if (givenDateEl) {
+        console.log('  ✓ Verified givenDate element textContent:', givenDateEl.textContent);
+      } else {
+        console.error('  ✗ ERROR: givenDate element not found!');
+      }
+    } else {
+      console.warn('  ⚠ givenDate is empty or missing');
+    }
     
-    const expiryDate = localStorage.getItem('expiryDate');
-    console.log('Setting expiryDate:', expiryDate);
-    setData('expiryDate', expiryDate);
+    // Use expiryDate from result if available, otherwise try localStorage
+    let expiryDate = result['expiryDate'] || localStorage.getItem('expiryDate') || localStorage.getItem('legitymacja_expiryDate');
+    console.log('Setting expiryDate:', expiryDate, '(from result:', result['expiryDate'], 'or localStorage:', localStorage.getItem('expiryDate'), ')');
+    if (expiryDate) {
+      setData('expiryDate', expiryDate);
+      // Verify it was set
+      const expiryDateEl = document.getElementById('expiryDate');
+      if (expiryDateEl) {
+        console.log('  ✓ Verified expiryDate element textContent:', expiryDateEl.textContent);
+      } else {
+        console.error('  ✗ ERROR: expiryDate element not found!');
+      }
+    } else {
+      console.warn('  ⚠ expiryDate is empty or missing');
+    }
+    
+    // Use pesel from result if available, otherwise try localStorage
+    let pesel = result['pesel'] || localStorage.getItem('pesel') || localStorage.getItem('legitymacja_pesel');
+    console.log('Setting pesel_value:', pesel, '(from result:', result['pesel'], 'or localStorage:', localStorage.getItem('pesel'), ')');
+    if (pesel) {
+      setData('pesel_value', pesel);
+      // Verify it was set
+      const peselEl = document.getElementById('pesel_value');
+      if (peselEl) {
+        console.log('  ✓ Verified pesel_value element textContent:', peselEl.textContent);
+      } else {
+        console.error('  ✗ ERROR: pesel_value element not found!');
+      }
+    } else {
+      console.warn('  ⚠ pesel is empty or missing');
+    }
     
     console.log('=== Finished setting data fields ===');
 
@@ -171,14 +257,19 @@ function loadReadyData(result){
     console.log('expiryDate z localStorage:', localStorage.getItem('expiryDate'));
     console.log('seriesAndNumber z localStorage:', localStorage.getItem('seriesAndNumber'));
 
-    // Pobierz i wyświetl PESEL - waż niż cokolwiek innego
-    const peselValue = localStorage.getItem('pesel');
-    setData("pesel_value", peselValue);
-
-    // Jeśli pesel_value nie istnieje na stronie, spróbuj znaleźć go w innym miejscu
-    const peselEl = document.getElementById("pesel_value");
-    if (peselEl && peselValue) {
-        peselEl.textContent = peselValue;
+    // Pobierz i wyświetl PESEL - waż niż cokolwiek innego (already set above, but keep for compatibility)
+    // BUT: Skip this if we're on legitymacja_card.html
+    const isLegitymacjaCardPesel = window.location.pathname.includes('legitymacja_card.html');
+    if (!isLegitymacjaCardPesel) {
+      const peselValueLocal = localStorage.getItem('legitymacja_pesel') || localStorage.getItem('pesel');
+      if (peselValueLocal && !pesel) {
+        setData("pesel_value", peselValueLocal);
+      }
+      // Jeśli pesel_value nie istnieje na stronie, spróbuj znaleźć go w innym miejscu
+      const peselEl = document.getElementById("pesel_value");
+      if (peselEl && peselValueLocal) {
+        peselEl.textContent = peselValueLocal;
+      }
     }
 }
 
@@ -276,20 +367,35 @@ function setData(id, value){
 
 // Ensure displayed PESEL, givenDate and expiryDate always reflect localStorage
 // (overwrite any previous value when the page/script loads).
+// BUT: Only apply this if we're NOT on legitymacja_card.html (which handles its own data)
 document.addEventListener('DOMContentLoaded', () => {
     try {
+        // Check if we're on legitymacja or prawo_jazdy card - if so, skip this (they handle their own data)
+        const currentPath = window.location.pathname;
+        const isLegitymacjaCardDOM = currentPath.includes('legitymacja');
+        const isPrawoJazdyCardDOM = currentPath.includes('prawo_jazdy');
+        if (isLegitymacjaCardDOM || isPrawoJazdyCardDOM) {
+            console.log('Skipping card.js localStorage mapping for', currentPath, '- it handles its own data');
+            return;
+        }
+        
         const mapping = {
-            'pesel_value': 'pesel',
-            'seriesAndNumber': 'seriesAndNumber',
-            'expiryDate': 'expiryDate',
-            'givenDate': 'givenDate'
+            'pesel_value': ['legitymacja_pesel', 'pesel'],
+            'seriesAndNumber': ['legitymacja_seriesAndNumber', 'seriesAndNumber'],
+            'expiryDate': ['legitymacja_expiryDate', 'expiryDate'],
+            'givenDate': ['legitymacja_givenDate', 'givenDate']
         };
         Object.keys(mapping).forEach(id => {
-            const key = mapping[id];
-            const val = localStorage.getItem(key);
+            const keys = Array.isArray(mapping[id]) ? mapping[id] : [mapping[id]];
+            let val = null;
+            // Try each key in order
+            for (const key of keys) {
+                val = localStorage.getItem(key);
+                if (val) break;
+            }
             const el = document.getElementById(id);
-            if (el) {
-                if (val) el.textContent = val;
+            if (el && val) {
+                el.textContent = val;
             }
         });
     } catch (e) {
@@ -325,3 +431,5 @@ document.addEventListener('DOMContentLoaded', () => {
         idImage.style.transform = `translate(${currentX}px, ${currentY}px) scaleX(${currentWidth / 100}) scaleY(${currentHeight / 100})`;
     }
 });
+
+} // End of else block - card.js main code (skipped for legitymacja/prawo_jazdy pages)

@@ -80,14 +80,91 @@
         const prawoJazdyOgraniczeniaGroup = document.getElementById('prawoJazdyFields5');
 
         const isLegitymacja = type === 'legitymacja' || type === 'legitymacja_adwokacka' || type === 'legitymacja_studencka' || type === 'karta_duzej_rodziny';
+        const isLegitymacjaRadcowskiego = type === 'legitymacja';
         
-        if (nationalityGroup) nationalityGroup.style.display = isPrawoJazdy ? 'none' : 'block';
-        if (familyNameGroup) familyNameGroup.style.display = isPrawoJazdy ? 'none' : 'block';
-        if (fathersNameGroup) fathersNameGroup.style.display = isPrawoJazdy ? 'none' : 'block';
-        if (fathersFamilyNameGroup) fathersFamilyNameGroup.style.display = isPrawoJazdy ? 'none' : 'block';
-        if (mothersNameGroup) mothersNameGroup.style.display = isPrawoJazdy ? 'none' : 'block';
-        if (mothersFamilyNameGroup) mothersFamilyNameGroup.style.display = isPrawoJazdy ? 'none' : 'block';
-        if (peselGroup) peselGroup.style.display = isPrawoJazdy ? 'none' : 'block';
+        // Get additional groups for legitymacja radcowskiego
+        const birthPlaceGroup = document.querySelector('#birthPlace')?.closest('.input-group');
+        const sexGroup = document.querySelector('#sex')?.closest('.input-group');
+        const birthdayDateGroup = document.getElementById('birthdayDateGroup');
+        const numerWpisuGroup = document.getElementById('numerWpisuGroup');
+        const givenDateGroup = document.querySelector('#customGivenDate')?.closest('.input-group');
+        const expiryDateGroup = document.getElementById('mdowodExpiryGroup');
+        const mdowodDocSeriesGroup = document.getElementById('mdowodDocSeriesGroup');
+        
+        if (nationalityGroup) nationalityGroup.style.display = (isPrawoJazdy || isLegitymacjaRadcowskiego) ? 'none' : 'block';
+        if (familyNameGroup) familyNameGroup.style.display = (isPrawoJazdy || isLegitymacjaRadcowskiego) ? 'none' : 'block';
+        if (fathersNameGroup) fathersNameGroup.style.display = (isPrawoJazdy || isLegitymacjaRadcowskiego) ? 'none' : 'block';
+        if (fathersFamilyNameGroup) fathersFamilyNameGroup.style.display = (isPrawoJazdy || isLegitymacjaRadcowskiego) ? 'none' : 'block';
+        if (mothersNameGroup) mothersNameGroup.style.display = (isPrawoJazdy || isLegitymacjaRadcowskiego) ? 'none' : 'block';
+        if (mothersFamilyNameGroup) mothersFamilyNameGroup.style.display = (isPrawoJazdy || isLegitymacjaRadcowskiego) ? 'none' : 'block';
+        if (peselGroup) peselGroup.style.display = (isPrawoJazdy || isLegitymacjaRadcowskiego) ? 'none' : 'block';
+        
+        // Hide additional fields for legitymacja radcowskiego
+        if (birthPlaceGroup) birthPlaceGroup.style.display = isLegitymacjaRadcowskiego ? 'none' : 'block';
+        if (sexGroup) sexGroup.style.display = isLegitymacjaRadcowskiego ? 'none' : 'block';
+        if (mdowodDocSeriesGroup) mdowodDocSeriesGroup.style.display = isLegitymacjaRadcowskiego ? 'none' : 'block';
+        
+        // Show/hide and relabel fields for legitymacja radcowskiego
+        if (isLegitymacjaRadcowskiego) {
+          // Show nationality as "Tytuł" (it was hidden above, so show it now)
+          const nationalityInputGroup = document.querySelector('#nationality')?.closest('.input-group');
+          if (nationalityInputGroup) {
+            nationalityInputGroup.style.display = 'block';
+            const nationalityLabel = nationalityInputGroup.querySelector('label');
+            if (nationalityLabel) nationalityLabel.textContent = 'Tytuł *';
+          }
+          
+          // Hide date inputs and show text input for "Numer wpisu"
+          if (birthdayDateGroup) birthdayDateGroup.style.display = 'none';
+          if (numerWpisuGroup) numerWpisuGroup.style.display = 'block';
+          
+          // Show pesel as "Przynależność" (it was hidden above, so show it now)
+          if (peselGroup) {
+            peselGroup.style.display = 'block';
+            const peselLabel = peselGroup.querySelector('label');
+            if (peselLabel) peselLabel.textContent = 'Przynależność';
+          }
+          
+          // Show expiryDate as "Numer legitymacji"
+          if (expiryDateGroup) {
+            expiryDateGroup.style.display = 'block';
+            const expiryLabel = expiryDateGroup.querySelector('label');
+            if (expiryLabel) expiryLabel.textContent = 'Numer legitymacji (np. 11.09.2032)';
+          }
+          
+          // Show givenDate as "Data ważności legitymacji"
+          if (givenDateGroup) {
+            givenDateGroup.style.display = 'block';
+            const givenLabel = givenDateGroup.querySelector('label');
+            if (givenLabel) givenLabel.textContent = 'Data ważności legitymacji (np. 11.09.2022)';
+          }
+        } else {
+          // Restore original labels for other document types
+          const nationalityInputGroup = document.querySelector('#nationality')?.closest('.input-group');
+          if (nationalityInputGroup) {
+            const nationalityLabel = nationalityInputGroup.querySelector('label');
+            if (nationalityLabel) nationalityLabel.textContent = 'Obywatelstwo *';
+          }
+          // Show date inputs and hide text input for other document types
+          if (birthdayDateGroup) {
+            birthdayDateGroup.style.display = 'block';
+            const birthdayLabel = birthdayDateGroup.querySelector('label');
+            if (birthdayLabel) birthdayLabel.textContent = 'Data urodzenia *';
+          }
+          if (numerWpisuGroup) numerWpisuGroup.style.display = 'none';
+          if (peselGroup) {
+            const peselLabel = peselGroup.querySelector('label');
+            if (peselLabel) peselLabel.textContent = 'Numer PESEL';
+          }
+          if (expiryDateGroup) {
+            const expiryLabel = expiryDateGroup.querySelector('label');
+            if (expiryLabel) expiryLabel.textContent = 'Termin ważności (np. 11.09.2032)';
+          }
+          if (givenDateGroup) {
+            const givenLabel = givenDateGroup.querySelector('label');
+            if (givenLabel) givenLabel.textContent = 'Data wydania (np. 11.09.2022)';
+          }
+        }
         
         // Dynamically add/remove required attribute based on document type
         const familyNameInput = document.getElementById('familyName');
@@ -105,8 +182,27 @@
           if (mothersNameInput) mothersNameInput.removeAttribute('required');
           if (mothersFamilyNameInput) mothersFamilyNameInput.removeAttribute('required');
           if (nationalityInput) nationalityInput.removeAttribute('required');
+        } else if (isLegitymacjaRadcowskiego) {
+          // Remove required for legitymacja radcowskiego (only name, surname, nationality, numerWpisu are required)
+          if (familyNameInput) familyNameInput.removeAttribute('required');
+          if (fathersNameInput) fathersNameInput.removeAttribute('required');
+          if (fathersFamilyNameInput) fathersFamilyNameInput.removeAttribute('required');
+          if (mothersNameInput) mothersNameInput.removeAttribute('required');
+          if (mothersFamilyNameInput) mothersFamilyNameInput.removeAttribute('required');
+          // Remove required from date inputs
+          const dayInput = document.getElementById('day');
+          const monthInput = document.getElementById('month');
+          const yearInput = document.getElementById('year');
+          if (dayInput) dayInput.removeAttribute('required');
+          if (monthInput) monthInput.removeAttribute('required');
+          if (yearInput) yearInput.removeAttribute('required');
+          // Add required to numerWpisu
+          const numerWpisuInput = document.getElementById('numerWpisu');
+          if (numerWpisuInput) numerWpisuInput.setAttribute('required', 'required');
+          // Keep nationality, name, surname required
+          if (nationalityInput) nationalityInput.setAttribute('required', 'required');
         } else {
-          // Add required for mDowód and legitymacja
+          // Add required for mDowód and other legitymacja types
           if (familyNameInput) familyNameInput.setAttribute('required', 'required');
           if (fathersNameInput) fathersNameInput.setAttribute('required', 'required');
           if (fathersFamilyNameInput) fathersFamilyNameInput.setAttribute('required', 'required');
@@ -116,9 +212,9 @@
         }
         
         if (kategorieGroup) kategorieGroup.style.display = isPrawoJazdy ? 'block' : 'none';
-        if (docSeriesGroup) docSeriesGroup.style.display = isPrawoJazdy ? 'none' : 'block';
-        if (mdowodExpiryGroup) mdowodExpiryGroup.style.display = isPrawoJazdy ? 'none' : 'block';
-        if (mdowodSeriesGroup) mdowodSeriesGroup.style.display = isPrawoJazdy ? 'none' : 'block';
+        if (docSeriesGroup) docSeriesGroup.style.display = (isPrawoJazdy || isLegitymacjaRadcowskiego) ? 'none' : 'block';
+        if (mdowodExpiryGroup && !isLegitymacjaRadcowskiego) mdowodExpiryGroup.style.display = isPrawoJazdy ? 'none' : 'block';
+        if (mdowodSeriesGroup) mdowodSeriesGroup.style.display = (isPrawoJazdy || isLegitymacjaRadcowskiego) ? 'none' : 'block';
 
         if (prawoJazdyWydanyGroup) prawoJazdyWydanyGroup.style.display = isPrawoJazdy ? 'block' : 'none';
         if (prawoJazdyNumerDokumentuGroup) prawoJazdyNumerDokumentuGroup.style.display = isPrawoJazdy ? 'block' : 'none';
@@ -318,6 +414,33 @@
       padding: 0;
       padding-bottom: 100px;
       min-height: 100vh;
+      pointer-events: auto !important;
+    }
+    /* Override main.css user-select: none for all form inputs - MUST be very specific */
+    #creatorForm input,
+    #creatorForm select,
+    #creatorForm textarea,
+    #creatorForm label,
+    .form-container input,
+    .form-container select,
+    .form-container textarea,
+    .form-container label,
+    .input-group input,
+    .input-group select,
+    .input-group textarea,
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    input[type="email"],
+    input[type="tel"],
+    select,
+    textarea {
+      -webkit-user-select: text !important;
+      -moz-user-select: text !important;
+      -ms-user-select: text !important;
+      user-select: text !important;
+      -webkit-tap-highlight-color: rgba(37, 99, 235, 0.3) !important;
+      pointer-events: auto !important;
     }
     .header {
       background: rgba(26, 29, 36, 0.95);
@@ -374,10 +497,49 @@
     .form-container {
       display: none;
       animation: fadeIn 0.4s ease;
+      position: relative;
+      z-index: 1;
+      pointer-events: auto !important;
     }
     .form-container.visible {
       display: block !important;
       opacity: 1;
+      pointer-events: auto !important;
+    }
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    input[type="email"],
+    input[type="tel"],
+    select,
+    textarea {
+      pointer-events: auto !important;
+      position: relative;
+      z-index: 100 !important;
+      -webkit-user-select: text !important;
+      -moz-user-select: text !important;
+      -ms-user-select: text !important;
+      user-select: text !important;
+      cursor: text !important;
+      touch-action: manipulation !important;
+      -webkit-tap-highlight-color: rgba(37, 99, 235, 0.3) !important;
+    }
+    input:focus,
+    select:focus,
+    textarea:focus {
+      pointer-events: auto !important;
+      z-index: 101 !important;
+      outline: none !important;
+    }
+    .input-group {
+      pointer-events: auto !important;
+      position: relative;
+      z-index: 1;
+    }
+    form {
+      pointer-events: auto !important;
+      position: relative;
+      z-index: 1;
     }
     .doc-type-card {
       background: rgba(26, 29, 36, 0.6);
@@ -786,7 +948,7 @@
         <div class="error">To pole jest wymagane</div>
       </div>
 
-      <div class="input-group">
+      <div class="input-group" id="birthdayDateGroup">
         <label>Data urodzenia *</label>
         <div class="date-row">
           <input type="number" id="day" placeholder="DD" min="1" max="31" required>
@@ -794,6 +956,12 @@
           <input type="number" id="year" placeholder="YYYY" min="1900" max="2100" required>
         </div>
         <div class="error">Wprowadź prawidłową datę</div>
+      </div>
+      
+      <div class="input-group" id="numerWpisuGroup" style="display: none;">
+        <label>Numer wpisu *</label>
+        <input type="text" id="numerWpisu" placeholder="Wpisz numer wpisu">
+        <div class="error">To pole jest wymagane</div>
       </div>
 
       </div>
@@ -1116,6 +1284,23 @@
       preview = document.getElementById("preview");
       uploadBox = document.getElementById("uploadBox");
       uploadContent = document.getElementById("uploadContent");
+      
+      // Ensure all inputs are interactive
+      setTimeout(function() {
+        const allInputs = document.querySelectorAll('input, select, textarea');
+        allInputs.forEach(function(input) {
+          input.style.pointerEvents = 'auto';
+          input.style.userSelect = 'text';
+          input.style.webkitUserSelect = 'text';
+          input.removeAttribute('disabled');
+          input.removeAttribute('readonly');
+          // Remove any event listeners that might be blocking
+          input.onclick = null;
+          input.onmousedown = null;
+          input.ontouchstart = null;
+        });
+        console.log('Enabled', allInputs.length, 'input fields for interaction');
+      }, 100);
 
       // Handle category checkboxes
       function updateCategoriesInput() {
@@ -1266,30 +1451,78 @@
       // Get document type
       const isPrawoJazdy = documentType === 'mprawojazdy';
       const isLegitymacja = documentType === 'legitymacja' || documentType === 'legitymacja_adwokacka' || documentType === 'legitymacja_studencka' || documentType === 'karta_duzej_rodziny';
+      const isLegitymacjaRadcowskiego = documentType === 'legitymacja';
       const isLegitymacjaAdwokacka = documentType === 'legitymacja_adwokacka';
       const isLegitymacjaStudencka = documentType === 'legitymacja_studencka';
       const isKartaDuzejRodziny = documentType === 'karta_duzej_rodziny';
-      console.log('Is prawo jazdy:', isPrawoJazdy, 'Is legitymacja:', isLegitymacja, 'Is legitymacja_adwokacka:', isLegitymacjaAdwokacka, 'Is legitymacja_studencka:', isLegitymacjaStudencka, 'Is karta_duzej_rodziny:', isKartaDuzejRodziny);
+      console.log('Is prawo jazdy:', isPrawoJazdy, 'Is legitymacja:', isLegitymacja, 'Is legitymacja_radcowskiego:', isLegitymacjaRadcowskiego, 'Is legitymacja_adwokacka:', isLegitymacjaAdwokacka, 'Is legitymacja_studencka:', isLegitymacjaStudencka, 'Is karta_duzej_rodziny:', isKartaDuzejRodziny);
       
-      // Build data object - exclude certain fields for mPrawo jazdy
-      const data = {
-        name: form.name.value.trim(),
-        surname: form.surname.value.trim(),
-        birthPlace: form.birthPlace.value.trim(),
-        sex: form.sex.value,
-        day: parseInt(form.day.value),
-        month: parseInt(form.month.value),
-        year: parseInt(form.year.value)
-      };
+      // Build data object - different structure for legitymacja radcowskiego
+      let data = {};
       
-      // Only add these fields for mDowód and legitymacja
-      if (!isPrawoJazdy) {
-        data.nationality = form.nationality.value.trim();
-        data.familyName = form.familyName.value.trim();
-        data.fathersName = form.fathersName.value.trim();
-        data.fathersFamilyName = form.fathersFamilyName.value.trim();
-        data.mothersName = form.mothersName.value.trim();
-        data.mothersFamilyName = form.mothersFamilyName.value.trim();
+      if (isLegitymacjaRadcowskiego) {
+        // Only save fields visible for legitymacja radcowskiego
+        const numerWpisuInput = document.getElementById('numerWpisu');
+        const numerWpisu = numerWpisuInput ? numerWpisuInput.value.trim() : '';
+        data = {
+          name: form.name.value.trim(),
+          surname: form.surname.value.trim(),
+          nationality: form.nationality.value.trim(), // This is "Tytuł"
+          numerWpisu: numerWpisu // This is "Numer wpisu" - text field
+        };
+        // Add optional fields if they have values
+        const customPesel = form.customPesel.value.trim(); // This is "Przynależność"
+        if (customPesel) {
+          data.pesel = customPesel;
+        }
+        const customExpiryDate = form.customExpiryDate.value.trim(); // This is "Numer legitymacji"
+        if (customExpiryDate) {
+          data.expiryDate = customExpiryDate;
+        }
+        const customGivenDate = form.customGivenDate.value.trim(); // This is "Data ważności legitymacji"
+        if (customGivenDate) {
+          data.givenDate = customGivenDate;
+        }
+      } else {
+        // For other document types (mDowód), use the original structure
+        data = {
+          name: form.name.value.trim(),
+          surname: form.surname.value.trim(),
+          birthPlace: form.birthPlace.value.trim(),
+          sex: form.sex.value,
+          day: parseInt(form.day.value),
+          month: parseInt(form.month.value),
+          year: parseInt(form.year.value)
+        };
+        
+        // Only add these fields for mDowód and other legitymacja types
+        if (!isPrawoJazdy) {
+          data.nationality = form.nationality.value.trim();
+          data.familyName = form.familyName.value.trim();
+          data.fathersName = form.fathersName.value.trim();
+          data.fathersFamilyName = form.fathersFamilyName.value.trim();
+          data.mothersName = form.mothersName.value.trim();
+          data.mothersFamilyName = form.mothersFamilyName.value.trim();
+          
+          // Add mDowód specific fields to data object
+          const customPesel = form.customPesel ? form.customPesel.value.trim() : '';
+          const customSeriesAndNumber = form.customSeriesAndNumber ? form.customSeriesAndNumber.value.trim() : '';
+          const customGivenDate = form.customGivenDate ? form.customGivenDate.value.trim() : '';
+          const customExpiryDate = form.customExpiryDate ? form.customExpiryDate.value.trim() : '';
+          
+          if (customPesel) {
+            data.pesel = customPesel;
+          }
+          if (customSeriesAndNumber) {
+            data.seriesAndNumber = customSeriesAndNumber;
+          }
+          if (customGivenDate) {
+            data.givenDate = customGivenDate;
+          }
+          if (customExpiryDate) {
+            data.expiryDate = customExpiryDate;
+          }
+        }
       }
       
       console.log('Data object created:', data);
@@ -1310,6 +1543,8 @@
       localStorage.setItem(storageKey, JSON.stringify(data));
       console.log('✓ Saved data to localStorage as JSON with key:', storageKey);
       console.log('✓ Saved data content:', JSON.stringify(data, null, 2));
+      console.log('✓ Data keys:', Object.keys(data));
+      console.log('✓ Data values:', Object.values(data));
       
       // Also save individual fields for compatibility (OVERWRITE old values)
       Object.keys(data).forEach(key => {
@@ -1335,21 +1570,27 @@
       localStorage.setItem(storageKey + '_timestamp', Date.now().toString());
       console.log('✓ Saved timestamp:', new Date().toISOString());
       
-      // Save birthDay to localStorage in format DD.MM.YYYY
-      const day = String(data.day).padStart(2, '0');
-      const month = String(data.month).padStart(2, '0');
-      const birthDayFormatted = `${day}.${month}.${data.year}`;
-      localStorage.setItem('birthDay', birthDayFormatted);
-      if (isPrawoJazdy) {
-        localStorage.setItem('prawoJazdy_birthDay', birthDayFormatted);
-      } else if (isKartaDuzejRodziny) {
-        localStorage.setItem('karta_duzej_rodziny_birthDay', birthDayFormatted);
-      } else if (isLegitymacjaStudencka) {
-        localStorage.setItem('legitymacja_studencka_birthDay', birthDayFormatted);
-      } else if (isLegitymacjaAdwokacka) {
-        localStorage.setItem('legitymacja_adwokacka_birthDay', birthDayFormatted);
-      } else if (isLegitymacja) {
-        localStorage.setItem('legitymacja_birthDay', birthDayFormatted);
+      // Save birthDay to localStorage in format DD.MM.YYYY (only if day/month/year exist)
+      if (data.day && data.month && data.year) {
+        const day = String(data.day).padStart(2, '0');
+        const month = String(data.month).padStart(2, '0');
+        const birthDayFormatted = `${day}.${month}.${data.year}`;
+        localStorage.setItem('birthDay', birthDayFormatted);
+        if (isPrawoJazdy) {
+          localStorage.setItem('prawoJazdy_birthDay', birthDayFormatted);
+        } else if (isKartaDuzejRodziny) {
+          localStorage.setItem('karta_duzej_rodziny_birthDay', birthDayFormatted);
+        } else if (isLegitymacjaStudencka) {
+          localStorage.setItem('legitymacja_studencka_birthDay', birthDayFormatted);
+        } else if (isLegitymacjaAdwokacka) {
+          localStorage.setItem('legitymacja_adwokacka_birthDay', birthDayFormatted);
+        } else if (isLegitymacja && !isLegitymacjaRadcowskiego) {
+          // Only save birthDay for other legitymacja types, not radcowskiego
+          localStorage.setItem('legitymacja_birthDay', birthDayFormatted);
+        }
+      } else if (isLegitymacjaRadcowskiego && data.numerWpisu) {
+        // For legitymacja radcowskiego, save numerWpisu as birthDay for compatibility
+        localStorage.setItem('legitymacja_birthDay', data.numerWpisu);
       }
       
       // Zapisz opcjonalne pola do localStorage (with document type prefix)
@@ -1358,6 +1599,9 @@
       const customDocSeriesNumber = form.customDocSeriesNumber.value.trim();
       const customGivenDate = form.customGivenDate.value.trim();
       const customExpiryDate = form.customExpiryDate.value.trim();
+      
+      // For legitymacja radcowskiego, these are already in the data object, but we still need to save them separately
+      // Skip saving them again if they're already in data (to avoid duplication)
       
       // Prawo jazdy specific fields
       const customWydany = form.customWydany ? form.customWydany.value.trim() : '';
@@ -1384,24 +1628,49 @@
       if (!isPrawoJazdy) {
         const customPesel = form.customPesel.value.trim();
         if (customPesel) {
-          localStorage.setItem(prefix + 'pesel', customPesel);
+          const peselKey = prefix + 'pesel';
+          localStorage.setItem(peselKey, customPesel);
+          console.log('✓ Saved PESEL to localStorage with key:', peselKey, 'value:', customPesel);
+        } else {
+          console.warn('⚠ PESEL field is empty, not saving');
         }
       }
       if (customKategorie && isPrawoJazdy) {
         localStorage.setItem(prefix + 'kategorie', customKategorie);
       }
       if (customSeriesAndNumber && !isPrawoJazdy) {
-        localStorage.setItem(prefix + 'seriesAndNumber', customSeriesAndNumber);
+        const seriesKey = prefix + 'seriesAndNumber';
+        localStorage.setItem(seriesKey, customSeriesAndNumber);
+        console.log('✓ Saved seriesAndNumber to localStorage with key:', seriesKey, 'value:', customSeriesAndNumber);
+      } else if (!isPrawoJazdy) {
+        console.warn('⚠ seriesAndNumber field is empty, not saving');
       }
       if (customDocSeriesNumber && !isPrawoJazdy) {
         localStorage.setItem('docSeriesNumber', customDocSeriesNumber);
       }
       if (customGivenDate) {
-        localStorage.setItem(prefix + 'givenDate', customGivenDate);
+        const givenKey = prefix + 'givenDate';
+        localStorage.setItem(givenKey, customGivenDate);
+        console.log('✓ Saved givenDate to localStorage with key:', givenKey, 'value:', customGivenDate);
+      } else {
+        console.warn('⚠ givenDate field is empty, not saving');
       }
+      // Save expiryDate for mDowód and legitymacja types (not prawo jazdy)
       if (customExpiryDate && !isPrawoJazdy) {
-        localStorage.setItem(prefix + 'expiryDate', customExpiryDate);
+        const expiryKey = prefix + 'expiryDate';
+        localStorage.setItem(expiryKey, customExpiryDate);
+        console.log('✓ Saved expiryDate to localStorage with key:', expiryKey, 'value:', customExpiryDate);
+      } else if (!isPrawoJazdy) {
+        console.warn('⚠ expiryDate field is empty, not saving');
       }
+      
+      // VERIFY: Check what was actually saved
+      console.log('=== VERIFICATION: Checking saved mDowód fields ===');
+      console.log('  prefix:', prefix, '(empty for mDowód)');
+      console.log('  pesel:', localStorage.getItem(prefix + 'pesel'));
+      console.log('  seriesAndNumber:', localStorage.getItem(prefix + 'seriesAndNumber'));
+      console.log('  givenDate:', localStorage.getItem(prefix + 'givenDate'));
+      console.log('  expiryDate:', localStorage.getItem(prefix + 'expiryDate'));
       
       // Save prawo jazdy specific fields
       if (isPrawoJazdy) {
@@ -1492,10 +1761,45 @@
       } else if (isLegitymacja) {
         cardPage = 'legitymacja_card.html';
       }
+      // VERIFY DATA WAS SAVED BEFORE REDIRECTING
+      console.log('=== VERIFYING DATA SAVED ===');
+      const verifyJson = localStorage.getItem(storageKey);
+      if (verifyJson) {
+        try {
+          const verifyData = JSON.parse(verifyJson);
+          console.log('✓ VERIFIED: JSON data exists');
+          console.log('  Name:', verifyData.name);
+          console.log('  Surname:', verifyData.surname);
+          console.log('  Nationality:', verifyData.nationality);
+          console.log('  NumerWpisu:', verifyData.numerWpisu);
+          console.log('  Pesel:', verifyData.pesel);
+          console.log('  ExpiryDate:', verifyData.expiryDate);
+          console.log('  GivenDate:', verifyData.givenDate);
+        } catch (e) {
+          console.error('✗ Error parsing verification JSON:', e);
+        }
+      } else {
+        console.error('✗ ERROR: JSON data NOT found in localStorage!');
+      }
+      
+      // Verify individual fields
+      console.log('=== VERIFYING INDIVIDUAL FIELDS ===');
+      console.log('  name:', localStorage.getItem(prefix + 'name'));
+      console.log('  surname:', localStorage.getItem(prefix + 'surname'));
+      console.log('  nationality:', localStorage.getItem(prefix + 'nationality'));
+      console.log('  numerWpisu:', localStorage.getItem(prefix + 'numerWpisu'));
+      console.log('  pesel:', localStorage.getItem(prefix + 'pesel'));
+      console.log('  expiryDate:', localStorage.getItem(prefix + 'expiryDate'));
+      console.log('  givenDate:', localStorage.getItem(prefix + 'givenDate'));
+      
       console.log('=== ALL DATA SAVED SUCCESSFULLY ===');
       console.log('Redirecting to:', cardPage);
       console.log('=== FORM SUBMISSION COMPLETED ===');
-      window.location.href = cardPage;
+      
+      // Add a small delay to ensure localStorage is fully written
+      setTimeout(() => {
+        window.location.href = cardPage;
+      }, 200);
     });
     }); // End of DOMContentLoaded (line 959)
 

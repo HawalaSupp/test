@@ -44,7 +44,7 @@
   <link rel="shortcut icon" href="assets/app/images/ikonka.png">
 </head>
 <body>
-  <button class="refresh_button" onclick="window.location.href = window.location.href.split("?")[0] + "?t=" + Date.now()" title="Force Refresh">↻</button>
+  <button class="refresh_button" onclick="window.location.href = window.location.href.split('?')[0] + '?t=' + Date.now()" title="Force Refresh">↻</button>
 
   <div class="top_grid_fixed">
     <div class="action_grid_fixed">
@@ -194,288 +194,86 @@
   <script src="assets/app/cache.js"></script>
 
   <script>
-    // === Global toggle function - define immediately ===
-    window.toggleEagleDrag = function() {
-      // This will be replaced by the actual function once setup completes
-      console.log('Function not ready yet, please wait...');
-    };
-
-    // === IndexedDB Functions ===
-    function getDb(){
-      return new Promise((resolve, reject) => {
-        const r = indexedDB.open('fobywatel', 1);
-        r.onupgradeneeded = e => {
-          const db = e.target.result;
-          if (!db.objectStoreNames.contains('data')){
-            db.createObjectStore('data', { keyPath: 'data' });
-          }
-        };
-        r.onsuccess = e => resolve(e.target.result);
-        r.onerror = e => reject(e.target.error);
-      });
-    }
-
-    function getData(db, key){
-      return new Promise((resolve, reject) => {
-        const tx = db.transaction('data','readonly');
-        const store = tx.objectStore('data');
-        const req = store.get(key);
-        req.onsuccess = () => resolve(req.result);
-        req.onerror = e => reject(e.target.error);
-      });
-    }
-
-    // === Wczytywanie danych z localStorage lub URL ===
-    const fields = [
-      'name','surname','nationality','birthday','pesel_value','seriesAndNumber','expiryDate',
-      'givenDate','fathersName','mothersName','familyName','sex','fathersFamilyName',
-      'mothersFamilyName','birthPlace','updateDate'
-    ];
+    // ============================================================
+    // SIMPLE AND DIRECT DATA LOADING FOR Legitymacja Aplikanta Radcowskiego
+    // All data uses legitymacja_ prefix in localStorage
+    // ============================================================
     
-    // Mapowanie ID elementów do kluczy localStorage
-    const storageKeyMap = {
-      'pesel_value': 'pesel',
-      'seriesAndNumber': 'seriesAndNumber',
-      'expiryDate': 'expiryDate',
-      'givenDate': 'givenDate'
-    };
+    // Helper function to set text content of an element by ID
+    function setField(id, value) {
+      const el = document.getElementById(id);
+      if (el && value) {
+        el.textContent = value;
+        console.log('✓ Set', id, 'to:', value);
+      }
+    }
     
-    // Declare params in global scope
-    var params = new URLSearchParams(window.location.search);
-    // NOTE: This runs BEFORE loadUserData, so it might set empty values
-    // We'll skip this and let loadReadyData handle everything
-    console.log('Skipping initial localStorage field setting - will be handled by loadReadyData');
-    // Only set fields that are NOT handled by loadReadyData (like updateDate)
-    const updateDateEl = document.getElementById('updateDate');
-    if (updateDateEl) {
-      const updateDate = localStorage.getItem('update') || localStorage.getItem('updateDate');
-      if (updateDate) updateDateEl.textContent = updateDate;
-    }
-
-    // === Load data and image from IndexedDB ===
-    async function loadUserData() {
-      try {
-        const db = await getDb();
-        
-        // NEW APPROACH: Load from localStorage first (more reliable)
-        console.log('=== Loading data from localStorage ===');
-        let userData = null;
-        let dataSource = 'none';
-        
-        // Try to load from localStorage JSON first (MOST RECENT) - use legitymacja_ prefix
-        const jsonData = localStorage.getItem('legitymacja_userData');
-        const jsonTimestamp = localStorage.getItem('legitymacja_userData_timestamp');
-        if (jsonData) {
-          try {
-            userData = JSON.parse(jsonData);
-            dataSource = 'localStorage JSON (legitymacja_userData)';
-            console.log('✓ Loaded data from localStorage JSON');
-            console.log('  Timestamp:', jsonTimestamp ? new Date(parseInt(jsonTimestamp)).toISOString() : 'unknown');
-            console.log('  Data:', userData);
-            console.log('  Name:', userData.name, 'Surname:', userData.surname);
-          } catch (e) {
-            console.error('Error parsing localStorage JSON:', e);
-          }
+    // Load all data directly from localStorage - SIMPLE APPROACH
+    function loadAllData() {
+      console.log('=== LOADING ALL DATA FOR Legitymacja Aplikanta Radcowskiego ===');
+      
+      // Try to get JSON data first (with legitymacja_ prefix)
+      let data = {};
+      const jsonData = localStorage.getItem('legitymacja_userData');
+      if (jsonData) {
+        try {
+          data = JSON.parse(jsonData);
+          console.log('Loaded legitymacja_userData JSON:', data);
+        } catch (e) {
+          console.error('Error parsing legitymacja_userData JSON:', e);
         }
-        
-        // If not in localStorage JSON, try IndexedDB with legitymacja_ prefix
-        if (!userData) {
-          console.log('Not in localStorage JSON, trying IndexedDB with legitymacja_ prefix...');
-          const indexedData = await getData(db, 'legitymacja_data');
-          if (indexedData) {
-            userData = { ...indexedData };
-            delete userData.data;
-            dataSource = 'IndexedDB';
-            console.log('✓ Loaded data from IndexedDB:', userData);
-            console.log('  Name:', userData.name, 'Surname:', userData.surname);
-          }
-        }
-        
-        // If still no data, try loading individual fields from localStorage with legitymacja_ prefix
-        if (!userData) {
-          console.log('Not in IndexedDB, trying individual localStorage fields with legitymacja_ prefix...');
-          const name = localStorage.getItem('legitymacja_name');
-          const surname = localStorage.getItem('legitymacja_surname');
-          if (name || surname) {
-            userData = {
-              name: name,
-              surname: surname,
-              nationality: localStorage.getItem('legitymacja_nationality'),
-              familyName: localStorage.getItem('legitymacja_familyName'),
-              fathersName: localStorage.getItem('legitymacja_fathersName'),
-              mothersName: localStorage.getItem('legitymacja_mothersName'),
-              fathersFamilyName: localStorage.getItem('legitymacja_fathersFamilyName'),
-              mothersFamilyName: localStorage.getItem('legitymacja_mothersFamilyName'),
-              birthPlace: localStorage.getItem('legitymacja_birthPlace'),
-              sex: localStorage.getItem('legitymacja_sex'),
-              day: parseInt(localStorage.getItem('legitymacja_day')) || 1,
-              month: parseInt(localStorage.getItem('legitymacja_month')) || 1,
-              year: parseInt(localStorage.getItem('legitymacja_year')) || 2000
-            };
-            dataSource = 'individual localStorage fields (legitymacja_)';
-            console.log('✓ Loaded data from individual localStorage fields:', userData);
-            console.log('  Name:', userData.name, 'Surname:', userData.surname);
-          }
-        }
-        
-        console.log('=== Data source:', dataSource, '===');
-        
-        if (userData && Object.keys(userData).length > 0) {
-          console.log('Final userData to display:', userData);
-          
-          // Use loadReadyData from card.js if available (it handles all the formatting)
-          if (typeof loadReadyData === 'function') {
-            console.log('Calling loadReadyData from card.js with:', userData);
-            loadReadyData(userData);
-          } else {
-            // Fallback: Set form fields from IndexedDB data directly
-            console.log('loadReadyData not available, setting data directly');
-            if (userData.name) setData('name', userData.name.toUpperCase());
-            if (userData.surname) setData('surname', userData.surname.toUpperCase());
-            if (userData.nationality) setData('nationality', userData.nationality.toUpperCase());
-            if (userData.familyName) setData('familyName', userData.familyName.toUpperCase());
-            if (userData.fathersName) setData('fathersName', userData.fathersName.toUpperCase());
-            if (userData.fathersFamilyName) setData('fathersFamilyName', userData.fathersFamilyName.toUpperCase());
-            if (userData.mothersName) setData('mothersName', userData.mothersName.toUpperCase());
-            if (userData.mothersFamilyName) setData('mothersFamilyName', userData.mothersFamilyName.toUpperCase());
-            if (userData.birthPlace) setData('birthPlace', userData.birthPlace.toUpperCase());
-            
-            if (userData.sex === 'm') setData('sex', 'MĘŻCZYZNA');
-            else if (userData.sex === 'k') setData('sex', 'KOBIETA');
-            
-            // Format birthday
-            if (userData.day && userData.month && userData.year) {
-              const day = String(userData.day).padStart(2, '0');
-              const month = String(userData.month).padStart(2, '0');
-              setData('birthday', `${day}.${month}.${userData.year}`);
-            }
-          }
-          
-          // Show content once data is loaded
-          document.body.classList.add('content-loaded');
-        } else {
-          console.log('No userData found');
-          // Show content even if no data
-          document.body.classList.add('content-loaded');
-        }
-
-        // Load image from IndexedDB
-        const urlParams = new URLSearchParams(window.location.search);
-        const photoUrl = urlParams.get('image');
-        if (photoUrl) {
-          // Use setImage function from card.js if available, otherwise set directly
-          if (typeof setImage === 'function') {
-            setImage(photoUrl);
-          } else {
-            const photoEl = document.getElementById('userPhoto') || document.querySelector('.id_own_image');
-            if (photoEl) {
-              photoEl.style.backgroundImage = `url(${photoUrl})`;
-            }
-          }
-          console.log('Image loaded from URL:', photoUrl);
-          return;
-        }
-
-        // Try localStorage first (for legitymacja)
-        const photoFromLocalStorage = localStorage.getItem('legitymacja_userPhoto');
-        if (photoFromLocalStorage) {
-          if (typeof setImage === 'function') {
-            setImage(photoFromLocalStorage);
-          } else {
-            const photoEl = document.getElementById('userPhoto') || document.querySelector('.id_own_image');
-            if (photoEl) {
-              photoEl.style.backgroundImage = `url(${photoFromLocalStorage})`;
-            }
-          }
-          console.log('Image loaded from localStorage (legitymacja_userPhoto)');
-          return;
-        }
-
-        // Load from IndexedDB with legitymacja_ prefix
-        const imageData = await getData(db, 'legitymacja_image');
-        console.log('Image data from IndexedDB:', imageData);
-        if (imageData && imageData.image) {
-          if (typeof setImage === 'function') {
-            setImage(imageData.image);
-          } else {
-            const photoEl = document.getElementById('userPhoto') || document.querySelector('.id_own_image');
-            if (photoEl) {
-              photoEl.style.backgroundImage = `url(${imageData.image})`;
-              console.log('Image loaded from IndexedDB');
-            } else {
-              console.error('Photo element not found');
-            }
-          }
-        } else {
-          console.log('No image data found in IndexedDB');
-        }
-      } catch (error) {
-        console.error('Error loading data from IndexedDB:', error);
       }
-    }
-
-    // Don't define setData here - use the one from card.js
-    // If card.js setData doesn't exist, we'll use a fallback
-    if (typeof window.setData !== 'function' && typeof setData !== 'function') {
-      window.setData = function(id, value) {
-        const el = document.getElementById(id);
-        if (el && value) {
-          el.textContent = value;
+      
+      // Get individual fields from localStorage with legitymacja_ prefix ONLY
+      // NEVER fall back to global keys (without prefix)
+      const name = localStorage.getItem('legitymacja_name') || data.name || '';
+      const surname = localStorage.getItem('legitymacja_surname') || data.surname || '';
+      const nationality = localStorage.getItem('legitymacja_nationality') || data.nationality || ''; // Tytuł
+      const numerWpisu = localStorage.getItem('legitymacja_numerWpisu') || data.numerWpisu || ''; // Numer wpisu
+      const pesel = localStorage.getItem('legitymacja_pesel') || data.pesel || ''; // Przynależność
+      const expiryDate = localStorage.getItem('legitymacja_expiryDate') || data.expiryDate || ''; // Numer legitymacji
+      const givenDate = localStorage.getItem('legitymacja_givenDate') || data.givenDate || ''; // Data ważności
+      const updateDate = localStorage.getItem('legitymacja_update') || localStorage.getItem('update') || '';
+      
+      console.log('Data to display:');
+      console.log('  name:', name);
+      console.log('  surname:', surname);
+      console.log('  nationality (Tytuł):', nationality);
+      console.log('  numerWpisu (Numer wpisu):', numerWpisu);
+      console.log('  pesel (Przynależność):', pesel);
+      console.log('  expiryDate (Numer legitymacji):', expiryDate);
+      console.log('  givenDate (Data ważności):', givenDate);
+      
+      // Set all fields - DIRECTLY, no complex logic
+      if (name) setField('name', name.toUpperCase());
+      if (surname) setField('surname', surname.toUpperCase());
+      if (nationality) setField('nationality', nationality.toUpperCase()); // Tytuł
+      if (numerWpisu) setField('birthday', numerWpisu); // Numer wpisu goes in birthday field
+      if (pesel) setField('pesel_value', pesel); // Przynależność
+      if (expiryDate) setField('expiryDate', expiryDate); // Numer legitymacji
+      if (givenDate) setField('givenDate', givenDate); // Data ważności legitymacji
+      if (updateDate) setField('updateDate', updateDate);
+      
+      // Load user photo (legitymacja_ prefix)
+      const userPhoto = localStorage.getItem('legitymacja_userPhoto');
+      if (userPhoto) {
+        const photoEl = document.getElementById('userPhoto');
+        if (photoEl) {
+          photoEl.style.backgroundImage = `url(${userPhoto})`;
+          console.log('✓ Loaded user photo');
         }
-      };
-      console.log('Created fallback setData function');
-    } else {
-      console.log('Using setData from card.js');
-    }
-
-    // Load data and image when DOM is ready and after card.js loads
-    let dataLoaded = false; // Prevent duplicate loads
-    // Try to load data synchronously from localStorage first (instant, no flicker)
-    (function loadDataSync() {
-      try {
-        const jsonData = localStorage.getItem('legitymacja_userData');
-        if (jsonData) {
-          const userData = JSON.parse(jsonData);
-          if (typeof loadReadyData === 'function' && userData && Object.keys(userData).length > 0) {
-            // Load data immediately
-            loadReadyData(userData);
-            // Show content
-            if (document.body) {
-              document.body.classList.add('content-loaded');
-            } else {
-              document.addEventListener('DOMContentLoaded', () => {
-                document.body.classList.add('content-loaded');
-              });
-            }
-            dataLoaded = true;
-            console.log('Data loaded synchronously from localStorage for legitymacja');
-            return true;
-          }
-        }
-      } catch (e) {
-        console.log('Could not load data synchronously:', e);
       }
-      return false;
-    })();
+      
+      // Show content
+      document.body.classList.add('content-loaded');
+      
+      console.log('=== DATA LOADING COMPLETE ===');
+    }
     
-    function initUserData() {
-      if (dataLoaded) {
-        console.log('initUserData: Data already loaded, skipping');
-        return;
-      }
-      // Load data immediately - no delay to prevent flicker
-      console.log('initUserData: Checking if loadReadyData is available:', typeof loadReadyData);
-      if (!dataLoaded) {
-        dataLoaded = true;
-        loadUserData();
-      }
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initUserData);
-    } else {
-      initUserData();
-    }
+    // Run on DOM ready
+    document.addEventListener('DOMContentLoaded', function() {
+      loadAllData();
+    });
 
     // === Simple Background Draggable Functionality ===
     (function() {
