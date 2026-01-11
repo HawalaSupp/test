@@ -253,10 +253,17 @@ body .bottom_bar{
     letter-spacing: -0.5px;
 }
 
+.id_wrapper{
+    animation: none !important;
+    opacity: 1 !important;
+}
+
 .id_image_data{
     position: relative;
     overflow: hidden;
     border-radius: 15px 15px 0px 0px;
+    animation: none !important;
+    opacity: 1 !important;
 }
 
 .id_image{
@@ -268,6 +275,8 @@ body .bottom_bar{
     display: block;
     pointer-events: none;
     border-radius: 15px 15px 0px 0px;
+    animation: none !important;
+    opacity: 1 !important;
 }
 
 .id_image_effect{
@@ -279,6 +288,8 @@ body .bottom_bar{
     z-index: -1;
     pointer-events: none;
     border-radius: 15px 15px 0px 0px;
+    animation: none !important;
+    opacity: 1 !important;
 }
 
 .other_grid{
@@ -390,6 +401,8 @@ body .bottom_bar{
     display: flex;
     align-items: center;
     margin-top: -10px;
+    animation: none !important;
+    opacity: 1 !important;
 }
 
 .back_text{

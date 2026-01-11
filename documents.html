@@ -47,18 +47,19 @@
             </div>
             <p class="main_title">Dokumenty</p>
             <div class="button_grid">
-                <p class="main_button">Dostosuj</p>
+                <p class="main_button" onclick="openCardSettings()">Dostosuj</p>
                 <p class="main_button" onclick="sendTo('creator.html')">Dodaj</p>
             </div>
-            <div class="card_box" onclick="sendTo('card.html')">
+            <div class="cards-container stacked" id="cardsContainer">
+            <div class="card_box" data-card-id="mdowod" onclick="expandAndNavigate(this, 'card.html')">
                 <img class="card_background" src="assets/app/images/card_background.webp">
                 <p class="card_name">mDowód</p>
                 <div class="card_eagle_background">
                     <div class="card_filler"></div>
-                    <img class="card_eagle" src="assets/app/images/card_eagle.png">
+                    <img class="card_eagle" src="assets/app/images/IA001_Card_logo_default@3x.png">
                 </div>
             </div>
-            <div class="card_box prawo_jazdy_card" onclick="sendTo('prawo_jazdy_card.html')">
+            <div class="card_box prawo_jazdy_card" data-card-id="mprawojazdy" onclick="expandAndNavigate(this, 'prawo_jazdy_card.html')">
                 <img class="card_background" src="assets/app/images/Prawo_jazdy_BG_BIG.png">
                 <p class="card_name">mPrawo jazdy</p>
                 <div class="card_eagle_background">
@@ -66,7 +67,7 @@
                     <img class="card_eagle" src="assets/app/images/IA015_Card_mPrawo_jazdy@3x.png">
                 </div>
             </div>
-            <div class="card_box" onclick="sendTo('legitymacja_card.html')">
+            <div class="card_box" data-card-id="legitymacja" onclick="expandAndNavigate(this, 'legitymacja_card.html')">
                 <img class="card_background" src="assets/app/images/Radca_prawny_BG_BIG.png">
                 <p class="card_name">Legitymacja aplikanta<br>radcowskiego</p>
                 <div class="card_eagle_background">
@@ -74,7 +75,7 @@
                     <img class="card_eagle" src="assets/app/images/IA008_Card_logo_advisor@3x.png">
                 </div>
             </div>
-            <div class="card_box" onclick="sendTo('legitymacja_adwokacka_card.html')">
+            <div class="card_box" data-card-id="legitymacja_adwokacka" onclick="expandAndNavigate(this, 'legitymacja_adwokacka_card.html')">
                 <img class="card_background" src="assets/app/images/Adwokacka_BG_BIG.png">
                 <p class="card_name">Legitymacja adwokacka</p>
                 <div class="card_eagle_background">
@@ -82,24 +83,487 @@
                     <img class="card_eagle" src="assets/app/images/IA004_Card_logo_lawyer@3x.png">
                 </div>
             </div>
-            <div class="card_box" onclick="sendTo('legitymacja_studencka_card.html')">
+            <div class="card_box" data-card-id="legitymacja_studencka" onclick="expandAndNavigate(this, 'legitymacja_studencka_card.html')">
                 <img class="card_background" src="assets/app/images/Studencka_BG_BIG.png">
                 <p class="card_name">Legitymacja studencka</p>
                 <div class="card_eagle_background">
                     <div class="card_filler"></div>
-                    <img class="card_eagle" src="assets/app/images/IA008_Card_logo_advisor@3x.png">
+                    <img class="card_eagle" src="assets/app/images/IA001_Card_logo_default@3x.png">
                 </div>
             </div>
-            <div class="card_box" onclick="sendTo('karta_duzej_rodziny_card.html')">
+            <div class="card_box" data-card-id="karta_duzej_rodziny" onclick="expandAndNavigate(this, 'karta_duzej_rodziny_card.html')">
                 <img class="card_background" src="assets/app/images/KDR_BG_BIG.png">
                 <p class="card_name">Karta Dużej Rodziny</p>
+                <div class="card_eagle_background">
+                    <div class="card_filler"></div>
+                    <img class="card_eagle" src="assets/app/images/IA003_Card_logo_KDR@3x.png">
+                </div>
+            </div>
+            <div class="card_box" data-card-id="diia" onclick="expandAndNavigate(this, 'diia_card.html')">
+                <img class="card_background" src="assets/app/images/Diia_BG_BIG.png">
+                <p class="card_name">Diia.pl card</p>
+                <div class="card_eagle_background">
+                    <div class="card_filler"></div>
+                    <img class="card_eagle" src="assets/app/images/IA001_Card_logo_default@3x.png">
+                </div>
+            </div>
+            <div class="card_box" data-card-id="bieglego_rewidenta" onclick="expandAndNavigate(this, 'legitymacja_bieglego_rewidenta_card.html')">
+                <img class="card_background" src="assets/app/images/Biegly_rewident_BG_BIG.png">
+                <p class="card_name">Legitymacja biegłego<br>rewidenta</p>
                 <div class="card_eagle_background">
                     <div class="card_filler"></div>
                     <img class="card_eagle" src="assets/app/images/IA008_Card_logo_advisor@3x.png">
                 </div>
             </div>
+            <div class="card_box" data-card-id="doradcy_podatkowego" onclick="expandAndNavigate(this, 'legitymacja_doradcy_podatkowego_card.html')">
+                <img class="card_background" src="assets/app/images/Doradca_podatkowy_BG_BIG.png">
+                <p class="card_name">Legitymacja doradcy<br>podatkowego</p>
+                <div class="card_eagle_background">
+                    <div class="card_filler"></div>
+                    <img class="card_eagle" src="assets/app/images/IA001_Card_logo_default@3x.png">
+                </div>
+            </div>
+            <div class="card_box" data-card-id="inzyniera_budownictwa" onclick="expandAndNavigate(this, 'legitymacja_inzyniera_budownictwa_card.html')">
+                <img class="card_background" src="assets/app/images/Generyczny_BG_BIG.png">
+                <p class="card_name">Legitymacja inżyniera<br>budownictwa</p>
+                <div class="card_eagle_background">
+                    <div class="card_filler"></div>
+                    <img class="card_eagle" src="assets/app/images/IA001_Card_logo_default@3x.png">
+                </div>
+            </div>
+            <div class="card_box" data-card-id="radcy_prawnego" onclick="expandAndNavigate(this, 'legitymacja_radcy_prawnego_card.html')">
+                <img class="card_background" src="assets/app/images/Radca_prawny_BG_BIG.png">
+                <p class="card_name">Legitymacja radcy<br>prawnego</p>
+                <div class="card_eagle_background">
+                    <div class="card_filler"></div>
+                    <img class="card_eagle" src="assets/app/images/IA008_Card_logo_advisor@3x.png">
+                </div>
+            </div>
+            <div class="card_box" data-card-id="pwz_lekarza" onclick="expandAndNavigate(this, 'pwz_lekarza_card.html')">
+                <img class="card_background" src="assets/app/images/Lekarz_BG_BIG.png">
+                <p class="card_name">PWZ lekarza</p>
+                <div class="card_eagle_background">
+                    <div class="card_filler"></div>
+                    <img class="card_eagle" src="assets/app/images/IA011_PWZ_lekarza_asset@3x.png">
+                </div>
+            </div>
+            <div class="card_box" data-card-id="poselka" onclick="expandAndNavigate(this, 'legitymacja_poselka_card.html')">
+                <img class="card_background" src="assets/app/images/Poselska_BG_BIG.png">
+                <p class="card_name">Legitymacja poselka</p>
+                <div class="card_eagle_background">
+                    <div class="card_filler"></div>
+                    <img class="card_eagle" src="assets/app/images/IA001_Card_logo_default@3x.png">
+                </div>
+            </div>
+            </div><!-- End cards-container -->
         </div>
     
+        <!-- Card Settings Modal -->
+        <div id="cardSettingsModal" class="settings-modal" style="display: none;">
+            <div class="settings-content">
+                <div class="settings-header">
+                    <h2>⚙️ Dostosuj dokumenty</h2>
+                    <button class="settings-close" onclick="closeCardSettings()">×</button>
+                </div>
+                <p class="settings-desc">Wybierz, które dokumenty mają być widoczne:</p>
+                <div class="settings-list" id="cardSettingsList">
+                    <!-- Cards will be populated by JavaScript -->
+                </div>
+                <div class="settings-actions">
+                    <button class="settings-btn settings-btn-secondary" onclick="selectAllCards(true)">Zaznacz wszystkie</button>
+                    <button class="settings-btn settings-btn-secondary" onclick="selectAllCards(false)">Odznacz wszystkie</button>
+                </div>
+                <button class="settings-btn settings-btn-primary" onclick="saveCardSettings()">Zapisz ustawienia</button>
+            </div>
+        </div>
+
+        <style>
+            .settings-modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.85);
+                z-index: 1000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+            }
+            .settings-content {
+                background: #1a1d24;
+                border-radius: 16px;
+                padding: 24px;
+                max-width: 400px;
+                width: 100%;
+                max-height: 80vh;
+                overflow-y: auto;
+                border: 1px solid #2a2d34;
+            }
+            .settings-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 16px;
+            }
+            .settings-header h2 {
+                color: #fff;
+                font-size: 18px;
+                margin: 0;
+            }
+            .settings-close {
+                background: none;
+                border: none;
+                color: #888;
+                font-size: 24px;
+                cursor: pointer;
+                padding: 0;
+                width: 32px;
+                height: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 8px;
+                transition: all 0.2s;
+            }
+            .settings-close:hover {
+                background: #2a2d34;
+                color: #fff;
+            }
+            .settings-desc {
+                color: #888;
+                font-size: 14px;
+                margin-bottom: 20px;
+            }
+            .settings-list {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                margin-bottom: 20px;
+            }
+            .settings-item {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 12px;
+                background: #22252c;
+                border-radius: 10px;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+            .settings-item:hover {
+                background: #2a2d34;
+            }
+            .settings-item input[type="checkbox"] {
+                width: 20px;
+                height: 20px;
+                accent-color: #60a5fa;
+                cursor: pointer;
+            }
+            .settings-item label {
+                color: #fff;
+                font-size: 14px;
+                cursor: pointer;
+                flex: 1;
+            }
+            .settings-actions {
+                display: flex;
+                gap: 10px;
+                margin-bottom: 16px;
+            }
+            .settings-btn {
+                padding: 12px 20px;
+                border-radius: 10px;
+                border: none;
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+            .settings-btn-primary {
+                background: #60a5fa;
+                color: #fff;
+                width: 100%;
+            }
+            .settings-btn-primary:hover {
+                background: #3b82f6;
+            }
+            .settings-btn-secondary {
+                background: #2a2d34;
+                color: #888;
+                flex: 1;
+            }
+            .settings-btn-secondary:hover {
+                background: #3a3d44;
+                color: #fff;
+            }
+            .card_box.hidden-card {
+                display: none !important;
+            }
+            
+            /* === STACKED CARDS ANIMATION === */
+            .cards-container {
+                display: flex;
+                flex-direction: column;
+                gap: 0;
+                margin-top: 10px;
+                position: relative;
+            }
+            
+            /* Bottom bar should be above all cards */
+            .bottom_bar {
+                z-index: 1000 !important;
+            }
+            
+            /* Base card styles with smooth transitions */
+            .cards-container .card_box {
+                transition: margin-top 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+                            transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+                            box-shadow 0.3s ease,
+                            opacity 0.3s ease;
+                cursor: pointer;
+                position: relative;
+            }
+            
+            /* Hidden cards should not affect layout */
+            .cards-container .card_box.hidden-card {
+                display: none !important;
+            }
+            
+            /* Collapsed/stacked state - cards overlap, only title visible */
+            .cards-container.stacked .card_box:not(.hidden-card) {
+                margin-top: -210px; /* Overlap so only ~60px (title area) is visible */
+            }
+            .cards-container.stacked .card_box.first-visible {
+                margin-top: 0 !important;
+            }
+            
+            /* Dynamic z-index for visible cards only - handled by JavaScript */
+            .cards-container.stacked .card_box {
+                z-index: var(--card-z-index, 1);
+            }
+            
+            /* Expanded state - cards pulled down, fully visible */
+            .cards-container.expanded .card_box:not(.hidden-card) {
+                margin-top: 10px;
+                z-index: 1;
+            }
+            .cards-container.expanded .card_box.first-visible {
+                margin-top: 0 !important;
+            }
+            
+            /* Hover effect in expanded state */
+            .cards-container.expanded .card_box:not(.hidden-card):hover {
+                transform: scale(1.02);
+            }
+            
+            /* Stagger animation for expand effect */
+            .cards-container.expanding .card_box:nth-child(1) { transition-delay: 0ms; }
+            .cards-container.expanding .card_box:nth-child(2) { transition-delay: 30ms; }
+            .cards-container.expanding .card_box:nth-child(3) { transition-delay: 60ms; }
+            .cards-container.expanding .card_box:nth-child(4) { transition-delay: 90ms; }
+            .cards-container.expanding .card_box:nth-child(5) { transition-delay: 120ms; }
+            .cards-container.expanding .card_box:nth-child(6) { transition-delay: 150ms; }
+            .cards-container.expanding .card_box:nth-child(7) { transition-delay: 180ms; }
+            .cards-container.expanding .card_box:nth-child(8) { transition-delay: 210ms; }
+            .cards-container.expanding .card_box:nth-child(9) { transition-delay: 240ms; }
+            .cards-container.expanding .card_box:nth-child(10) { transition-delay: 270ms; }
+            .cards-container.expanding .card_box:nth-child(11) { transition-delay: 300ms; }
+            .cards-container.expanding .card_box:nth-child(12) { transition-delay: 330ms; }
+            .cards-container.expanding .card_box:nth-child(13) { transition-delay: 360ms; }
+            
+            /* Stagger animation for collapse effect (reverse order) */
+            .cards-container.collapsing .card_box:nth-child(13) { transition-delay: 0ms; }
+            .cards-container.collapsing .card_box:nth-child(12) { transition-delay: 30ms; }
+            .cards-container.collapsing .card_box:nth-child(11) { transition-delay: 60ms; }
+            .cards-container.collapsing .card_box:nth-child(10) { transition-delay: 90ms; }
+            .cards-container.collapsing .card_box:nth-child(9) { transition-delay: 120ms; }
+            .cards-container.collapsing .card_box:nth-child(8) { transition-delay: 150ms; }
+            .cards-container.collapsing .card_box:nth-child(7) { transition-delay: 180ms; }
+            .cards-container.collapsing .card_box:nth-child(6) { transition-delay: 210ms; }
+            .cards-container.collapsing .card_box:nth-child(5) { transition-delay: 240ms; }
+            .cards-container.collapsing .card_box:nth-child(4) { transition-delay: 270ms; }
+            .cards-container.collapsing .card_box:nth-child(3) { transition-delay: 300ms; }
+            .cards-container.collapsing .card_box:nth-child(2) { transition-delay: 330ms; }
+            .cards-container.collapsing .card_box:nth-child(1) { transition-delay: 360ms; }
+        </style>
+
+        <script>
+            // Update z-index for visible cards only
+            function updateCardZIndex() {
+                const container = document.getElementById('cardsContainer');
+                if (!container) return;
+                
+                const visibleCards = container.querySelectorAll('.card_box:not(.hidden-card)');
+                visibleCards.forEach((card, index) => {
+                    card.style.setProperty('--card-z-index', index + 1);
+                    // Mark first visible card
+                    if (index === 0) {
+                        card.classList.add('first-visible');
+                    } else {
+                        card.classList.remove('first-visible');
+                    }
+                });
+            }
+            
+            // Handle card click - expand stack first, then navigate
+            function expandAndNavigate(cardElement, url) {
+                const container = document.getElementById('cardsContainer');
+                
+                // If cards are stacked (collapsed), expand them with animation
+                if (container.classList.contains('stacked')) {
+                    // Add expanding class for staggered animation
+                    container.classList.add('expanding');
+                    container.classList.remove('stacked');
+                    container.classList.add('expanded');
+                    
+                    // Remove expanding class after animation completes
+                    setTimeout(() => {
+                        container.classList.remove('expanding');
+                    }, 500);
+                    
+                    // Don't navigate yet - user needs to click again
+                    return;
+                }
+                
+                // If cards are already expanded, navigate to the page
+                if (container.classList.contains('expanded')) {
+                    // Add a visual feedback before navigating
+                    cardElement.style.transform = 'scale(1.05)';
+                    cardElement.style.boxShadow = '0 15px 50px rgba(37, 99, 235, 0.5)';
+                    
+                    setTimeout(() => {
+                        window.location.href = url;
+                    }, 250);
+                }
+            }
+            
+            // Collapse cards back to stacked state when clicking outside
+            document.addEventListener('click', function(e) {
+                const container = document.getElementById('cardsContainer');
+                if (!container) return;
+                
+                // If clicking outside the cards container, collapse back with animation
+                if (container.classList.contains('expanded') && !container.contains(e.target)) {
+                    // Add collapsing class for staggered animation
+                    container.classList.add('collapsing');
+                    container.classList.remove('expanded');
+                    container.classList.add('stacked');
+                    
+                    // Remove collapsing class after animation completes
+                    setTimeout(() => {
+                        container.classList.remove('collapsing');
+                    }, 500);
+                }
+            });
+            
+            // Card configuration with display names
+            const cardConfig = {
+                'mdowod': 'mDowód',
+                'mprawojazdy': 'mPrawo jazdy',
+                'legitymacja': 'Legitymacja aplikanta radcowskiego',
+                'legitymacja_adwokacka': 'Legitymacja adwokacka',
+                'legitymacja_studencka': 'Legitymacja studencka',
+                'karta_duzej_rodziny': 'Karta Dużej Rodziny',
+                'diia': 'Diia.pl card',
+                'bieglego_rewidenta': 'Legitymacja biegłego rewidenta',
+                'doradcy_podatkowego': 'Legitymacja doradcy podatkowego',
+                'inzyniera_budownictwa': 'Legitymacja inżyniera budownictwa',
+                'radcy_prawnego': 'Legitymacja radcy prawnego',
+                'pwz_lekarza': 'PWZ lekarza',
+                'poselka': 'Legitymacja poselska'
+            };
+
+            // Load and apply card visibility settings
+            function loadCardSettings() {
+                const settings = JSON.parse(localStorage.getItem('cardVisibilitySettings') || '{}');
+                
+                document.querySelectorAll('.card_box[data-card-id]').forEach(card => {
+                    const cardId = card.dataset.cardId;
+                    // Default to visible if no setting exists
+                    const isVisible = settings[cardId] !== false;
+                    if (!isVisible) {
+                        card.classList.add('hidden-card');
+                    } else {
+                        card.classList.remove('hidden-card');
+                    }
+                });
+                
+                // Update z-index for visible cards
+                updateCardZIndex();
+            }
+
+            // Open card settings modal
+            function openCardSettings() {
+                const modal = document.getElementById('cardSettingsModal');
+                const list = document.getElementById('cardSettingsList');
+                const settings = JSON.parse(localStorage.getItem('cardVisibilitySettings') || '{}');
+                
+                // Populate the list
+                list.innerHTML = '';
+                for (const [cardId, cardName] of Object.entries(cardConfig)) {
+                    const isChecked = settings[cardId] !== false;
+                    const item = document.createElement('div');
+                    item.className = 'settings-item';
+                    item.innerHTML = `
+                        <input type="checkbox" id="setting-${cardId}" ${isChecked ? 'checked' : ''}>
+                        <label for="setting-${cardId}">${cardName}</label>
+                    `;
+                    item.onclick = (e) => {
+                        if (e.target.tagName !== 'INPUT') {
+                            const checkbox = item.querySelector('input');
+                            checkbox.checked = !checkbox.checked;
+                        }
+                    };
+                    list.appendChild(item);
+                }
+                
+                modal.style.display = 'flex';
+            }
+
+            // Close card settings modal
+            function closeCardSettings() {
+                document.getElementById('cardSettingsModal').style.display = 'none';
+            }
+
+            // Select/deselect all cards
+            function selectAllCards(select) {
+                document.querySelectorAll('#cardSettingsList input[type="checkbox"]').forEach(cb => {
+                    cb.checked = select;
+                });
+            }
+
+            // Save card settings
+            function saveCardSettings() {
+                const settings = {};
+                document.querySelectorAll('#cardSettingsList input[type="checkbox"]').forEach(cb => {
+                    const cardId = cb.id.replace('setting-', '');
+                    settings[cardId] = cb.checked;
+                });
+                
+                localStorage.setItem('cardVisibilitySettings', JSON.stringify(settings));
+                loadCardSettings();
+                closeCardSettings();
+                
+                // Update z-index after a short delay to let DOM update
+                setTimeout(updateCardZIndex, 100);
+            }
+
+            // Close modal when clicking outside
+            document.getElementById('cardSettingsModal')?.addEventListener('click', (e) => {
+                if (e.target.id === 'cardSettingsModal') {
+                    closeCardSettings();
+                }
+            });
+
+            // Apply settings on page load
+            document.addEventListener('DOMContentLoaded', function() {
+                loadCardSettings();
+                updateCardZIndex();
+            });
+        </script>
+
         <script src="assets/app/bar.js"></script>
         <script src="assets/app/manifest.js"></script>
         <script src="assets/app/cache.js"></script>

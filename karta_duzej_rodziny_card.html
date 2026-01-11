@@ -124,16 +124,16 @@
             <p class="data_value">Nazwisko</p>
           </div>
           <div class="data_holder">
-            <p class="data_title" id="nationality"></p>
-            <p class="data_value">Tytuł</p>
-          </div>
-          <div class="data_holder">
-            <p class="data_title" id="birthday"></p>
-            <p class="data_value">Numer wpisu</p>
-          </div>
-          <div class="data_holder">
             <p class="data_title" id="pesel_value"></p>
-            <p class="data_value">Przynależność</p>
+            <p class="data_value">Numer PESEL</p>
+          </div>
+          <div class="data_holder">
+            <p class="data_title" id="cardNumber"></p>
+            <p class="data_value">Numer karty</p>
+          </div>
+          <div class="data_holder">
+            <p class="data_title" id="expiryDate"></p>
+            <p class="data_value">Termin ważności</p>
           </div>
         </div>
       </div>
@@ -164,13 +164,8 @@
     </div>
 
     <div class="confirm_info">
-      <div class="confirm_box">
-        <p class="box_top">Numer legitymacji</p>
-        <p class="box_value" id="expiryDate"></p>
-      </div>
-      <div class="confirm_box">
-        <p class="box_top">Data ważności legitymacji</p>
-        <p class="box_value" id="givenDate"></p>
+      <div class="confirm_box" style="display: flex; justify-content: center; align-items: center; padding: 30px;">
+        <div id="qrCodeContainer" style="width: 200px; height: 200px;"></div>
       </div>
     </div>
 
@@ -192,290 +187,113 @@
   <script src="assets/app/card.js"></script>
   <script src="assets/app/manifest.js"></script>
   <script src="assets/app/cache.js"></script>
+  <script src="assets/app/qrcode.min.js"></script>
 
   <script>
-    // === Global toggle function - define immediately ===
-    window.toggleEagleDrag = function() {
-      // This will be replaced by the actual function once setup completes
-      console.log('Function not ready yet, please wait...');
-    };
-
-    // === IndexedDB Functions ===
-    function getDb(){
-      return new Promise((resolve, reject) => {
-        const r = indexedDB.open('fobywatel', 1);
-        r.onupgradeneeded = e => {
-          const db = e.target.result;
-          if (!db.objectStoreNames.contains('data')){
-            db.createObjectStore('data', { keyPath: 'data' });
-          }
-        };
-        r.onsuccess = e => resolve(e.target.result);
-        r.onerror = e => reject(e.target.error);
-      });
-    }
-
-    function getData(db, key){
-      return new Promise((resolve, reject) => {
-        const tx = db.transaction('data','readonly');
-        const store = tx.objectStore('data');
-        const req = store.get(key);
-        req.onsuccess = () => resolve(req.result);
-        req.onerror = e => reject(e.target.error);
-      });
-    }
-
-    // === Wczytywanie danych z localStorage lub URL ===
-    const fields = [
-      'name','surname','nationality','birthday','pesel_value','seriesAndNumber','expiryDate',
-      'givenDate','fathersName','mothersName','familyName','sex','fathersFamilyName',
-      'mothersFamilyName','birthPlace','updateDate'
-    ];
+    // ============================================================
+    // SIMPLE AND DIRECT DATA LOADING FOR Karta Dużej Rodziny
+    // All data uses karta_duzej_rodziny_ prefix in localStorage
+    // ============================================================
     
-    // Mapowanie ID elementów do kluczy localStorage
-    const storageKeyMap = {
-      'pesel_value': 'pesel',
-      'seriesAndNumber': 'seriesAndNumber',
-      'expiryDate': 'expiryDate',
-      'givenDate': 'givenDate'
-    };
-    
-    // Declare params in global scope
-    var params = new URLSearchParams(window.location.search);
-    // NOTE: This runs BEFORE loadUserData, so it might set empty values
-    // We'll skip this and let loadReadyData handle everything
-    console.log('Skipping initial localStorage field setting - will be handled by loadReadyData');
-    // Only set fields that are NOT handled by loadReadyData (like updateDate)
-    const updateDateEl = document.getElementById('updateDate');
-    if (updateDateEl) {
-      const updateDate = localStorage.getItem('update') || localStorage.getItem('updateDate');
-      if (updateDate) updateDateEl.textContent = updateDate;
-    }
-
-    // === Load data and image from IndexedDB ===
-    async function loadUserData() {
-      try {
-        const db = await getDb();
-        
-        // NEW APPROACH: Load from localStorage first (more reliable)
-        console.log('=== Loading data from localStorage ===');
-        let userData = null;
-        let dataSource = 'none';
-        
-        // Try to load from localStorage JSON first (MOST RECENT) - use karta_duzej_rodziny_ prefix
-        const jsonData = localStorage.getItem('karta_duzej_rodziny_userData');
-        const jsonTimestamp = localStorage.getItem('karta_duzej_rodziny_userData_timestamp');
-        if (jsonData) {
-          try {
-            userData = JSON.parse(jsonData);
-            dataSource = 'localStorage JSON (karta_duzej_rodziny_userData)';
-            console.log('✓ Loaded data from localStorage JSON');
-            console.log('  Timestamp:', jsonTimestamp ? new Date(parseInt(jsonTimestamp)).toISOString() : 'unknown');
-            console.log('  Data:', userData);
-            console.log('  Name:', userData.name, 'Surname:', userData.surname);
-          } catch (e) {
-            console.error('Error parsing localStorage JSON:', e);
-          }
-        }
-        
-        // If not in localStorage JSON, try IndexedDB with karta_duzej_rodziny_ prefix
-        if (!userData) {
-          console.log('Not in localStorage JSON, trying IndexedDB with karta_duzej_rodziny_ prefix...');
-          const indexedData = await getData(db, 'karta_duzej_rodziny_data');
-          if (indexedData) {
-            userData = { ...indexedData };
-            delete userData.data;
-            dataSource = 'IndexedDB';
-            console.log('✓ Loaded data from IndexedDB:', userData);
-            console.log('  Name:', userData.name, 'Surname:', userData.surname);
-          }
-        }
-        
-        // If still no data, try loading individual fields from localStorage with karta_duzej_rodziny_ prefix
-        if (!userData) {
-          console.log('Not in IndexedDB, trying individual localStorage fields with karta_duzej_rodziny_ prefix...');
-          const name = localStorage.getItem('karta_duzej_rodziny_name');
-          const surname = localStorage.getItem('karta_duzej_rodziny_surname');
-          if (name || surname) {
-            userData = {
-              name: name,
-              surname: surname,
-              nationality: localStorage.getItem('karta_duzej_rodziny_nationality'),
-              familyName: localStorage.getItem('karta_duzej_rodziny_familyName'),
-              fathersName: localStorage.getItem('karta_duzej_rodziny_fathersName'),
-              mothersName: localStorage.getItem('karta_duzej_rodziny_mothersName'),
-              fathersFamilyName: localStorage.getItem('karta_duzej_rodziny_fathersFamilyName'),
-              mothersFamilyName: localStorage.getItem('karta_duzej_rodziny_mothersFamilyName'),
-              birthPlace: localStorage.getItem('karta_duzej_rodziny_birthPlace'),
-              sex: localStorage.getItem('karta_duzej_rodziny_sex'),
-              day: parseInt(localStorage.getItem('karta_duzej_rodziny_day')) || 1,
-              month: parseInt(localStorage.getItem('karta_duzej_rodziny_month')) || 1,
-              year: parseInt(localStorage.getItem('karta_duzej_rodziny_year')) || 2000
-            };
-            dataSource = 'individual localStorage fields (karta_duzej_rodziny_)';
-            console.log('✓ Loaded data from individual localStorage fields:', userData);
-            console.log('  Name:', userData.name, 'Surname:', userData.surname);
-          }
-        }
-        
-        console.log('=== Data source:', dataSource, '===');
-        
-        if (userData && Object.keys(userData).length > 0) {
-          console.log('Final userData to display:', userData);
-          
-          // Use loadReadyData from card.js if available (it handles all the formatting)
-          if (typeof loadReadyData === 'function') {
-            console.log('Calling loadReadyData from card.js with:', userData);
-            loadReadyData(userData);
-          } else {
-            // Fallback: Set form fields from IndexedDB data directly
-            console.log('loadReadyData not available, setting data directly');
-            if (userData.name) setData('name', userData.name.toUpperCase());
-            if (userData.surname) setData('surname', userData.surname.toUpperCase());
-            if (userData.nationality) setData('nationality', userData.nationality.toUpperCase());
-            if (userData.familyName) setData('familyName', userData.familyName.toUpperCase());
-            if (userData.fathersName) setData('fathersName', userData.fathersName.toUpperCase());
-            if (userData.fathersFamilyName) setData('fathersFamilyName', userData.fathersFamilyName.toUpperCase());
-            if (userData.mothersName) setData('mothersName', userData.mothersName.toUpperCase());
-            if (userData.mothersFamilyName) setData('mothersFamilyName', userData.mothersFamilyName.toUpperCase());
-            if (userData.birthPlace) setData('birthPlace', userData.birthPlace.toUpperCase());
-            
-            if (userData.sex === 'm') setData('sex', 'MĘŻCZYZNA');
-            else if (userData.sex === 'k') setData('sex', 'KOBIETA');
-            
-            // Format birthday
-            if (userData.day && userData.month && userData.year) {
-              const day = String(userData.day).padStart(2, '0');
-              const month = String(userData.month).padStart(2, '0');
-              setData('birthday', `${day}.${month}.${userData.year}`);
-            }
-          }
-          
-          // Show content once data is loaded
-          document.body.classList.add('content-loaded');
-        } else {
-          console.log('No userData found');
-          // Show content even if no data
-          document.body.classList.add('content-loaded');
-        }
-
-        // Load image from IndexedDB
-        const urlParams = new URLSearchParams(window.location.search);
-        const photoUrl = urlParams.get('image');
-        if (photoUrl) {
-          // Use setImage function from card.js if available, otherwise set directly
-          if (typeof setImage === 'function') {
-            setImage(photoUrl);
-          } else {
-            const photoEl = document.getElementById('userPhoto') || document.querySelector('.id_own_image');
-            if (photoEl) {
-              photoEl.style.backgroundImage = `url(${photoUrl})`;
-            }
-          }
-          console.log('Image loaded from URL:', photoUrl);
-          return;
-        }
-
-        // Try localStorage first (for legitymacja)
-        const photoFromLocalStorage = localStorage.getItem('karta_duzej_rodziny_userPhoto');
-        if (photoFromLocalStorage) {
-          if (typeof setImage === 'function') {
-            setImage(photoFromLocalStorage);
-          } else {
-            const photoEl = document.getElementById('userPhoto') || document.querySelector('.id_own_image');
-            if (photoEl) {
-              photoEl.style.backgroundImage = `url(${photoFromLocalStorage})`;
-            }
-          }
-          console.log('Image loaded from localStorage (karta_duzej_rodziny_userPhoto)');
-          return;
-        }
-
-        // Load from IndexedDB with karta_duzej_rodziny_ prefix
-        const imageData = await getData(db, 'karta_duzej_rodziny_image');
-        console.log('Image data from IndexedDB:', imageData);
-        if (imageData && imageData.image) {
-          if (typeof setImage === 'function') {
-            setImage(imageData.image);
-          } else {
-            const photoEl = document.getElementById('userPhoto') || document.querySelector('.id_own_image');
-            if (photoEl) {
-              photoEl.style.backgroundImage = `url(${imageData.image})`;
-              console.log('Image loaded from IndexedDB');
-            } else {
-              console.error('Photo element not found');
-            }
-          }
-        } else {
-          console.log('No image data found in IndexedDB');
-        }
-      } catch (error) {
-        console.error('Error loading data from IndexedDB:', error);
+    // Helper function to set text content of an element by ID
+    function setField(id, value) {
+      const el = document.getElementById(id);
+      if (el && value) {
+        el.textContent = value;
+        console.log('✓ Set', id, 'to:', value);
       }
     }
-
-    // Don't define setData here - use the one from card.js
-    // If card.js setData doesn't exist, we'll use a fallback
-    if (typeof window.setData !== 'function' && typeof setData !== 'function') {
-      window.setData = function(id, value) {
-        const el = document.getElementById(id);
-        if (el && value) {
-          el.textContent = value;
-        }
-      };
-      console.log('Created fallback setData function');
-    } else {
-      console.log('Using setData from card.js');
-    }
-
-    // Load data and image when DOM is ready and after card.js loads
-    let dataLoaded = false; // Prevent duplicate loads
-    // Try to load data synchronously from localStorage first (instant, no flicker)
-    (function loadDataSync() {
-      try {
-        const jsonData = localStorage.getItem('karta_duzej_rodziny_userData');
-        if (jsonData) {
-          const userData = JSON.parse(jsonData);
-          if (typeof loadReadyData === 'function' && userData && Object.keys(userData).length > 0) {
-            // Load data immediately
-            loadReadyData(userData);
-            // Show content
-            if (document.body) {
-              document.body.classList.add('content-loaded');
-            } else {
-              document.addEventListener('DOMContentLoaded', () => {
-                document.body.classList.add('content-loaded');
-              });
-            }
-            dataLoaded = true;
-            console.log('Data loaded synchronously from localStorage for legitymacja');
-            return true;
-          }
-        }
-      } catch (e) {
-        console.log('Could not load data synchronously:', e);
-      }
-      return false;
-    })();
     
-    function initUserData() {
-      if (dataLoaded) {
-        console.log('initUserData: Data already loaded, skipping');
+    // Function to generate QR code
+    function generateQRCode(cardNumber) {
+      const qrContainer = document.getElementById('qrCodeContainer');
+      if (!qrContainer || !cardNumber) {
+        console.log('QR container or card number not available');
         return;
       }
-      // Load data immediately - no delay to prevent flicker
-      console.log('initUserData: Checking if loadReadyData is available:', typeof loadReadyData);
-      if (!dataLoaded) {
-        dataLoaded = true;
-        loadUserData();
+      
+      // Clear previous QR code
+      qrContainer.innerHTML = '';
+      
+      try {
+        // Generate QR code using the QRCode library
+        new QRCode(qrContainer, {
+          text: cardNumber,
+          width: 200,
+          height: 200,
+          correctLevel: QRCode.CorrectLevel.M
+        });
+        console.log('✓ QR code generated for card number:', cardNumber);
+      } catch (e) {
+        console.error('Error generating QR code:', e);
       }
     }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initUserData);
-    } else {
-      initUserData();
+    
+    // Load all data directly from localStorage - SIMPLE APPROACH
+    function loadAllData() {
+      console.log('=== LOADING ALL DATA FOR Karta Dużej Rodziny ===');
+      
+      // Try to get JSON data first (with karta_duzej_rodziny_ prefix)
+      let data = {};
+      const jsonData = localStorage.getItem('karta_duzej_rodziny_userData');
+      if (jsonData) {
+        try {
+          data = JSON.parse(jsonData);
+          console.log('Loaded karta_duzej_rodziny_userData JSON:', data);
+        } catch (e) {
+          console.error('Error parsing karta_duzej_rodziny_userData JSON:', e);
+        }
+      }
+      
+      // Get individual fields from localStorage with karta_duzej_rodziny_ prefix ONLY
+      // NEVER fall back to global keys (without prefix)
+      const name = localStorage.getItem('karta_duzej_rodziny_name') || data.name || '';
+      const surname = localStorage.getItem('karta_duzej_rodziny_surname') || data.surname || '';
+      const pesel = localStorage.getItem('karta_duzej_rodziny_pesel') || data.pesel || '';
+      const cardNumber = localStorage.getItem('karta_duzej_rodziny_cardNumber') || data.cardNumber || ''; // Numer karty
+      const expiryDate = localStorage.getItem('karta_duzej_rodziny_expiryDate') || data.expiryDate || ''; // Termin ważności
+      const updateDate = localStorage.getItem('karta_duzej_rodziny_update') || localStorage.getItem('update') || '';
+      
+      console.log('Data to display:');
+      console.log('  name:', name);
+      console.log('  surname:', surname);
+      console.log('  pesel (Numer PESEL):', pesel);
+      console.log('  cardNumber (Numer karty):', cardNumber);
+      console.log('  expiryDate (Termin ważności):', expiryDate);
+      
+      // Set all fields - DIRECTLY, no complex logic
+      if (name) setField('name', name.toUpperCase());
+      if (surname) setField('surname', surname.toUpperCase());
+      if (pesel) setField('pesel_value', pesel);
+      if (cardNumber) setField('cardNumber', cardNumber);
+      if (expiryDate) setField('expiryDate', expiryDate);
+      if (updateDate) setField('updateDate', updateDate);
+      
+      // Generate QR code from card number
+      if (cardNumber) {
+        generateQRCode(cardNumber);
+      }
+      
+      // Load user photo (karta_duzej_rodziny_ prefix)
+      const userPhoto = localStorage.getItem('karta_duzej_rodziny_userPhoto');
+      if (userPhoto) {
+        const photoEl = document.getElementById('userPhoto');
+        if (photoEl) {
+          photoEl.style.backgroundImage = `url(${userPhoto})`;
+          console.log('✓ Loaded user photo');
+        }
+      }
+      
+      // Show content
+      document.body.classList.add('content-loaded');
+      
+      console.log('=== DATA LOADING COMPLETE ===');
     }
+    
+    // Run on DOM ready
+    document.addEventListener('DOMContentLoaded', function() {
+      loadAllData();
+    });
 
     // === Simple Background Draggable Functionality ===
     (function() {

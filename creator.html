@@ -50,177 +50,307 @@
         // Update info text
         const infoText = document.getElementById('selectedDocInfo');
         const isPrawoJazdy = type === 'mprawojazdy';
+        const docTypeNames = {
+          'mdowod': 'mDowód',
+          'mprawojazdy': 'mPrawo jazdy',
+          'legitymacja': 'Legitymacja aplikanta radcowskiego',
+          'legitymacja_adwokacka': 'Legitymacja adwokacka',
+          'legitymacja_studencka': 'Legitymacja studencka',
+          'karta_duzej_rodziny': 'Karta Dużej Rodziny',
+          'diia': 'Diia.pl card',
+          'bieglego_rewidenta': 'Legitymacja biegłego rewidenta',
+          'doradcy_podatkowego': 'Legitymacja doradcy podatkowego',
+          'inzyniera_budownictwa': 'Legitymacja inżyniera budownictwa',
+          'radcy_prawnego': 'Legitymacja radcy prawnego',
+          'pwz_lekarza': 'PWZ lekarza',
+          'poselka': 'Legitymacja poselska'
+        };
         if (infoText) {
-          if (isPrawoJazdy) {
-            infoText.textContent = '✓ Wypełniasz dane dla mPrawo jazdy';
-            infoText.style.color = '#60a5fa';
-          } else {
-            infoText.textContent = '✓ Wypełniasz dane dla mDowód';
-            infoText.style.color = '#60a5fa';
-          }
+          const docName = docTypeNames[type] || type;
+          infoText.textContent = '✓ Wypełniasz dane dla ' + docName;
+          infoText.style.color = '#60a5fa';
         }
         
-        // Show/hide fields based on document type
-        const nationalityGroup = document.getElementById('nationalityGroup');
-        const familyNameGroup = document.getElementById('familyNameGroup');
-        const fathersNameGroup = document.getElementById('fathersNameGroup');
-        const fathersFamilyNameGroup = document.getElementById('fathersFamilyNameGroup');
-        const mothersNameGroup = document.getElementById('mothersNameGroup');
-        const mothersFamilyNameGroup = document.getElementById('mothersFamilyNameGroup');
-        const peselGroup = document.getElementById('peselGroup');
-        const kategorieGroup = document.getElementById('kategorieGroup');
-        const docSeriesGroup = document.getElementById('docSeriesGroup');
-        const mdowodExpiryGroup = document.getElementById('mdowodExpiryGroup');
-        const mdowodSeriesGroup = document.getElementById('mdowodSeriesGroup');
+        // === HIDE ALL OPTIONAL/SPECIFIC FIELDS FIRST ===
+        const allOptionalGroups = [
+          'nationalityGroup', 'familyNameGroup', 'fathersNameGroup', 'fathersFamilyNameGroup',
+          'mothersNameGroup', 'mothersFamilyNameGroup', 'peselGroup', 'kategorieGroup',
+          'mdowodSeriesGroup', 'mdowodExpiryGroup', 'mdowodDocSeriesGroup',
+          'prawoJazdyFields', 'prawoJazdyFields2', 'prawoJazdyFields3', 'prawoJazdyFields4', 'prawoJazdyFields5',
+          'numerWpisuGroup', 'birthCountryGroup', 'professionalTitleGroup', 'auditorNumberGroup',
+          'registrationNumberGroup', 'issuingAuthorityGroup', 'policyExpiryDateGroup',
+          'pwzNumberGroup', 'pwzIssueDateGroup', 'documentNumberGroup',
+          'authorizationTypeGroup', 'legitimationNumberGroup', 'cadenceNumberGroup', 'cardNumberGroup',
+          'universityNameGroup', 'albumNumberGroup'
+        ];
+        allOptionalGroups.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.style.display = 'none';
+        });
         
-        const prawoJazdyWydanyGroup = document.getElementById('prawoJazdyFields');
-        const prawoJazdyNumerDokumentuGroup = document.getElementById('prawoJazdyFields2');
-        const prawoJazdyNumerBlankietuGroup = document.getElementById('prawoJazdyFields3');
-        const prawoJazdyOrganWydajacyGroup = document.getElementById('prawoJazdyFields4');
-        const prawoJazdyOgraniczeniaGroup = document.getElementById('prawoJazdyFields5');
-
-        const isLegitymacja = type === 'legitymacja' || type === 'legitymacja_adwokacka' || type === 'legitymacja_studencka' || type === 'karta_duzej_rodziny';
-        const isLegitymacjaRadcowskiego = type === 'legitymacja';
-        
-        // Get additional groups for legitymacja radcowskiego
+        // Also hide birthPlace and sex for specific card types
         const birthPlaceGroup = document.querySelector('#birthPlace')?.closest('.input-group');
         const sexGroup = document.querySelector('#sex')?.closest('.input-group');
         const birthdayDateGroup = document.getElementById('birthdayDateGroup');
-        const numerWpisuGroup = document.getElementById('numerWpisuGroup');
         const givenDateGroup = document.querySelector('#customGivenDate')?.closest('.input-group');
         const expiryDateGroup = document.getElementById('mdowodExpiryGroup');
-        const mdowodDocSeriesGroup = document.getElementById('mdowodDocSeriesGroup');
+        const nationalityInputGroup = document.querySelector('#nationality')?.closest('.input-group');
+        const peselGroup = document.getElementById('peselGroup');
         
-        if (nationalityGroup) nationalityGroup.style.display = (isPrawoJazdy || isLegitymacjaRadcowskiego) ? 'none' : 'block';
-        if (familyNameGroup) familyNameGroup.style.display = (isPrawoJazdy || isLegitymacjaRadcowskiego) ? 'none' : 'block';
-        if (fathersNameGroup) fathersNameGroup.style.display = (isPrawoJazdy || isLegitymacjaRadcowskiego) ? 'none' : 'block';
-        if (fathersFamilyNameGroup) fathersFamilyNameGroup.style.display = (isPrawoJazdy || isLegitymacjaRadcowskiego) ? 'none' : 'block';
-        if (mothersNameGroup) mothersNameGroup.style.display = (isPrawoJazdy || isLegitymacjaRadcowskiego) ? 'none' : 'block';
-        if (mothersFamilyNameGroup) mothersFamilyNameGroup.style.display = (isPrawoJazdy || isLegitymacjaRadcowskiego) ? 'none' : 'block';
-        if (peselGroup) peselGroup.style.display = (isPrawoJazdy || isLegitymacjaRadcowskiego) ? 'none' : 'block';
+        // Reset all labels to defaults
+        if (nationalityInputGroup) {
+          const label = nationalityInputGroup.querySelector('label');
+          if (label) label.textContent = 'Obywatelstwo *';
+        }
+        if (peselGroup) {
+          const label = peselGroup.querySelector('label');
+          if (label) label.textContent = 'Numer PESEL';
+        }
+        if (expiryDateGroup) {
+          const label = expiryDateGroup.querySelector('label');
+          if (label) label.textContent = 'Termin ważności (np. 11.09.2032)';
+        }
+        if (givenDateGroup) {
+          const label = givenDateGroup.querySelector('label');
+          if (label) label.textContent = 'Data wydania (np. 11.09.2022)';
+        }
+        if (birthdayDateGroup) {
+          const label = birthdayDateGroup.querySelector('label');
+          if (label) label.textContent = 'Data urodzenia *';
+        }
         
-        // Hide additional fields for legitymacja radcowskiego
-        if (birthPlaceGroup) birthPlaceGroup.style.display = isLegitymacjaRadcowskiego ? 'none' : 'block';
-        if (sexGroup) sexGroup.style.display = isLegitymacjaRadcowskiego ? 'none' : 'block';
-        if (mdowodDocSeriesGroup) mdowodDocSeriesGroup.style.display = isLegitymacjaRadcowskiego ? 'none' : 'block';
+        // Remove all required attributes from optional fields
+        const optionalInputIds = ['familyName', 'fathersName', 'fathersFamilyName', 'mothersName', 'mothersFamilyName',
+          'numerWpisu', 'birthCountry', 'professionalTitle', 'auditorNumber', 'registrationNumber',
+          'issuingAuthority', 'pwzNumber', 'pwzIssueDate', 'documentNumber',
+          'authorizationType', 'legitimationNumber', 'cadenceNumber', 'cardNumber',
+          'universityName', 'albumNumber'];
+        optionalInputIds.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.removeAttribute('required');
+        });
         
-        // Show/hide and relabel fields for legitymacja radcowskiego
-        if (isLegitymacjaRadcowskiego) {
-          // Show nationality as "Tytuł" (it was hidden above, so show it now)
-          const nationalityInputGroup = document.querySelector('#nationality')?.closest('.input-group');
+        // === NOW SHOW FIELDS BASED ON DOCUMENT TYPE ===
+        
+        if (type === 'mdowod') {
+          // mDowód - show all standard fields
+          if (nationalityInputGroup) nationalityInputGroup.style.display = 'block';
+          document.getElementById('familyNameGroup').style.display = 'block';
+          document.getElementById('fathersNameGroup').style.display = 'block';
+          document.getElementById('fathersFamilyNameGroup').style.display = 'block';
+          document.getElementById('mothersNameGroup').style.display = 'block';
+          document.getElementById('mothersFamilyNameGroup').style.display = 'block';
+          if (birthPlaceGroup) birthPlaceGroup.style.display = 'block';
+          if (sexGroup) sexGroup.style.display = 'block';
+          if (birthdayDateGroup) birthdayDateGroup.style.display = 'block';
+          if (peselGroup) peselGroup.style.display = 'block';
+          document.getElementById('mdowodSeriesGroup').style.display = 'block';
+          document.getElementById('mdowodDocSeriesGroup').style.display = 'block';
+          if (givenDateGroup) givenDateGroup.style.display = 'block';
+          if (expiryDateGroup) expiryDateGroup.style.display = 'block';
+          // Set required
+          ['familyName', 'fathersName', 'fathersFamilyName', 'mothersName', 'mothersFamilyName', 'nationality'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.setAttribute('required', 'required');
+          });
+          
+        } else if (type === 'mprawojazdy') {
+          // mPrawo jazdy
+          if (birthPlaceGroup) birthPlaceGroup.style.display = 'block';
+          if (sexGroup) sexGroup.style.display = 'block';
+          if (birthdayDateGroup) birthdayDateGroup.style.display = 'block';
+          if (givenDateGroup) givenDateGroup.style.display = 'block';
+          document.getElementById('kategorieGroup').style.display = 'block';
+          document.getElementById('prawoJazdyFields').style.display = 'block';
+          document.getElementById('prawoJazdyFields2').style.display = 'block';
+          document.getElementById('prawoJazdyFields3').style.display = 'block';
+          document.getElementById('prawoJazdyFields4').style.display = 'block';
+          document.getElementById('prawoJazdyFields5').style.display = 'block';
+          
+        } else if (type === 'legitymacja') {
+          // Legitymacja aplikanta radcowskiego: Imię, Nazwisko, Tytuł, Numer wpisu, Przynależność
           if (nationalityInputGroup) {
             nationalityInputGroup.style.display = 'block';
-            const nationalityLabel = nationalityInputGroup.querySelector('label');
-            if (nationalityLabel) nationalityLabel.textContent = 'Tytuł *';
+            const label = nationalityInputGroup.querySelector('label');
+            if (label) label.textContent = 'Tytuł *';
           }
-          
-          // Hide date inputs and show text input for "Numer wpisu"
-          if (birthdayDateGroup) birthdayDateGroup.style.display = 'none';
-          if (numerWpisuGroup) numerWpisuGroup.style.display = 'block';
-          
-          // Show pesel as "Przynależność" (it was hidden above, so show it now)
+          document.getElementById('numerWpisuGroup').style.display = 'block';
           if (peselGroup) {
             peselGroup.style.display = 'block';
-            const peselLabel = peselGroup.querySelector('label');
-            if (peselLabel) peselLabel.textContent = 'Przynależność';
+            const label = peselGroup.querySelector('label');
+            if (label) label.textContent = 'Przynależność';
           }
-          
-          // Show expiryDate as "Numer legitymacji"
           if (expiryDateGroup) {
             expiryDateGroup.style.display = 'block';
-            const expiryLabel = expiryDateGroup.querySelector('label');
-            if (expiryLabel) expiryLabel.textContent = 'Numer legitymacji (np. 11.09.2032)';
+            const label = expiryDateGroup.querySelector('label');
+            if (label) label.textContent = 'Numer legitymacji';
           }
-          
-          // Show givenDate as "Data ważności legitymacji"
           if (givenDateGroup) {
             givenDateGroup.style.display = 'block';
-            const givenLabel = givenDateGroup.querySelector('label');
-            if (givenLabel) givenLabel.textContent = 'Data ważności legitymacji (np. 11.09.2022)';
+            const label = givenDateGroup.querySelector('label');
+            if (label) label.textContent = 'Data ważności legitymacji';
           }
-        } else {
-          // Restore original labels for other document types
-          const nationalityInputGroup = document.querySelector('#nationality')?.closest('.input-group');
+          document.getElementById('numerWpisu').setAttribute('required', 'required');
+          document.getElementById('nationality').setAttribute('required', 'required');
+          
+        } else if (type === 'legitymacja_adwokacka') {
+          // Same as legitymacja radcowskiego
           if (nationalityInputGroup) {
-            const nationalityLabel = nationalityInputGroup.querySelector('label');
-            if (nationalityLabel) nationalityLabel.textContent = 'Obywatelstwo *';
+            nationalityInputGroup.style.display = 'block';
+            const label = nationalityInputGroup.querySelector('label');
+            if (label) label.textContent = 'Tytuł *';
           }
-          // Show date inputs and hide text input for other document types
-          if (birthdayDateGroup) {
-            birthdayDateGroup.style.display = 'block';
-            const birthdayLabel = birthdayDateGroup.querySelector('label');
-            if (birthdayLabel) birthdayLabel.textContent = 'Data urodzenia *';
-          }
-          if (numerWpisuGroup) numerWpisuGroup.style.display = 'none';
+          document.getElementById('numerWpisuGroup').style.display = 'block';
           if (peselGroup) {
-            const peselLabel = peselGroup.querySelector('label');
-            if (peselLabel) peselLabel.textContent = 'Numer PESEL';
+            peselGroup.style.display = 'block';
+            const label = peselGroup.querySelector('label');
+            if (label) label.textContent = 'Przynależność';
           }
           if (expiryDateGroup) {
-            const expiryLabel = expiryDateGroup.querySelector('label');
-            if (expiryLabel) expiryLabel.textContent = 'Termin ważności (np. 11.09.2032)';
+            expiryDateGroup.style.display = 'block';
+            const label = expiryDateGroup.querySelector('label');
+            if (label) label.textContent = 'Numer legitymacji';
           }
           if (givenDateGroup) {
-            const givenLabel = givenDateGroup.querySelector('label');
-            if (givenLabel) givenLabel.textContent = 'Data wydania (np. 11.09.2022)';
+            givenDateGroup.style.display = 'block';
+            const label = givenDateGroup.querySelector('label');
+            if (label) label.textContent = 'Data ważności legitymacji';
           }
+          document.getElementById('numerWpisu').setAttribute('required', 'required');
+          document.getElementById('nationality').setAttribute('required', 'required');
+          
+        } else if (type === 'legitymacja_studencka') {
+          // Legitymacja studencka: Imię, Nazwisko, Data urodzenia, Numer PESEL, Data wydania, Nazwa uczelni, Numer albumu
+          if (birthdayDateGroup) birthdayDateGroup.style.display = 'block';
+          if (peselGroup) peselGroup.style.display = 'block';
+          if (givenDateGroup) {
+            givenDateGroup.style.display = 'block';
+            const label = givenDateGroup.querySelector('label');
+            if (label) label.textContent = 'Data wydania';
+          }
+          document.getElementById('universityNameGroup').style.display = 'block';
+          document.getElementById('albumNumberGroup').style.display = 'block';
+          document.getElementById('universityName').setAttribute('required', 'required');
+          document.getElementById('albumNumber').setAttribute('required', 'required');
+          
+        } else if (type === 'karta_duzej_rodziny') {
+          // Karta Dużej Rodziny: Imię, Nazwisko, Numer PESEL, Numer karty, Termin ważności
+          if (peselGroup) peselGroup.style.display = 'block';
+          document.getElementById('cardNumberGroup').style.display = 'block';
+          if (expiryDateGroup) {
+            expiryDateGroup.style.display = 'block';
+            const label = expiryDateGroup.querySelector('label');
+            if (label) label.textContent = 'Termin ważności';
+          }
+          document.getElementById('cardNumber').setAttribute('required', 'required');
+          
+        } else if (type === 'diia') {
+          // Diia.pl: Imię, Nazwisko, Data urodzenia, Numer PESEL. Boxes: Kraj pochodzenia, Miejsce urodzenia, Obywatelstwo
+          if (birthdayDateGroup) birthdayDateGroup.style.display = 'block';
+          if (peselGroup) peselGroup.style.display = 'block';
+          document.getElementById('birthCountryGroup').style.display = 'block';
+          if (birthPlaceGroup) birthPlaceGroup.style.display = 'block';
+          if (nationalityInputGroup) nationalityInputGroup.style.display = 'block';
+          document.getElementById('birthCountry').setAttribute('required', 'required');
+          document.getElementById('nationality').setAttribute('required', 'required');
+          
+        } else if (type === 'bieglego_rewidenta') {
+          // Legitymacja biegłego rewidenta: Imię, Nazwisko, Tytuł zawodowy, Numer biegłego rewidenta, Przynależność
+          document.getElementById('professionalTitleGroup').style.display = 'block';
+          document.getElementById('auditorNumberGroup').style.display = 'block';
+          if (peselGroup) {
+            peselGroup.style.display = 'block';
+            const label = peselGroup.querySelector('label');
+            if (label) label.textContent = 'Przynależność';
+          }
+          document.getElementById('professionalTitle').setAttribute('required', 'required');
+          document.getElementById('auditorNumber').setAttribute('required', 'required');
+          
+        } else if (type === 'doradcy_podatkowego') {
+          // Legitymacja doradcy podatkowego: Imię, Nazwisko, Tytuł zawodowy, Numer wpisu, Organ wydający. Box: Numer legitymacji
+          document.getElementById('professionalTitleGroup').style.display = 'block';
+          document.getElementById('numerWpisuGroup').style.display = 'block';
+          document.getElementById('issuingAuthorityGroup').style.display = 'block';
+          if (expiryDateGroup) {
+            expiryDateGroup.style.display = 'block';
+            const label = expiryDateGroup.querySelector('label');
+            if (label) label.textContent = 'Numer legitymacji';
+          }
+          document.getElementById('professionalTitle').setAttribute('required', 'required');
+          document.getElementById('numerWpisu').setAttribute('required', 'required');
+          document.getElementById('issuingAuthority').setAttribute('required', 'required');
+          
+        } else if (type === 'inzyniera_budownictwa') {
+          // Legitymacja inżyniera budownictwa: Imię, Nazwisko, Numer PESEL, Numer ewidencyjny, Termin ważności. Boxes: Organ wydający, Termin ważności polisy OC
+          if (peselGroup) peselGroup.style.display = 'block';
+          document.getElementById('registrationNumberGroup').style.display = 'block';
+          if (expiryDateGroup) expiryDateGroup.style.display = 'block';
+          document.getElementById('issuingAuthorityGroup').style.display = 'block';
+          document.getElementById('policyExpiryDateGroup').style.display = 'block';
+          document.getElementById('registrationNumber').setAttribute('required', 'required');
+          document.getElementById('issuingAuthority').setAttribute('required', 'required');
+          
+        } else if (type === 'radcy_prawnego') {
+          // Legitymacja radcy prawnego: Imię, Nazwisko, Tytuł, Numer wpisu, Przynależność. Boxes: Numer legitymacji, Data ważności legitymacji, Data urodzenia
+          if (nationalityInputGroup) {
+            nationalityInputGroup.style.display = 'block';
+            const label = nationalityInputGroup.querySelector('label');
+            if (label) label.textContent = 'Tytuł *';
+          }
+          document.getElementById('numerWpisuGroup').style.display = 'block';
+          if (peselGroup) {
+            peselGroup.style.display = 'block';
+            const label = peselGroup.querySelector('label');
+            if (label) label.textContent = 'Przynależność';
+          }
+          if (expiryDateGroup) {
+            expiryDateGroup.style.display = 'block';
+            const label = expiryDateGroup.querySelector('label');
+            if (label) label.textContent = 'Numer legitymacji';
+          }
+          if (givenDateGroup) {
+            givenDateGroup.style.display = 'block';
+            const label = givenDateGroup.querySelector('label');
+            if (label) label.textContent = 'Data ważności legitymacji';
+          }
+          if (birthdayDateGroup) {
+            birthdayDateGroup.style.display = 'block';
+            const label = birthdayDateGroup.querySelector('label');
+            if (label) label.textContent = 'Data urodzenia';
+          }
+          document.getElementById('numerWpisu').setAttribute('required', 'required');
+          document.getElementById('nationality').setAttribute('required', 'required');
+          
+        } else if (type === 'pwz_lekarza') {
+          // PWZ lekarza: Imię, Nazwisko, Tytuł zawodowy, Numer PWZ, Data uzyskania PWZ, Termin ważności. Boxes: Numer dokumentu, Organ przyznający PWZ
+          document.getElementById('professionalTitleGroup').style.display = 'block';
+          document.getElementById('pwzNumberGroup').style.display = 'block';
+          document.getElementById('pwzIssueDateGroup').style.display = 'block';
+          if (expiryDateGroup) expiryDateGroup.style.display = 'block';
+          document.getElementById('documentNumberGroup').style.display = 'block';
+          document.getElementById('issuingAuthorityGroup').style.display = 'block';
+          const issuingLabel = document.querySelector('#issuingAuthorityGroup label');
+          if (issuingLabel) issuingLabel.textContent = 'Organ przyznający PWZ';
+          document.getElementById('professionalTitle').setAttribute('required', 'required');
+          document.getElementById('pwzNumber').setAttribute('required', 'required');
+          document.getElementById('pwzIssueDate').setAttribute('required', 'required');
+          document.getElementById('documentNumber').setAttribute('required', 'required');
+          document.getElementById('issuingAuthority').setAttribute('required', 'required');
+          
+        } else if (type === 'poselka') {
+          // Legitymacja poselska: Imię, Nazwisko, Rodzaj uprawnienia, Data wydania, Numer legitymacji, Numer kadencji
+          document.getElementById('authorizationTypeGroup').style.display = 'block';
+          if (givenDateGroup) {
+            givenDateGroup.style.display = 'block';
+            const label = givenDateGroup.querySelector('label');
+            if (label) label.textContent = 'Data wydania';
+          }
+          document.getElementById('legitimationNumberGroup').style.display = 'block';
+          document.getElementById('cadenceNumberGroup').style.display = 'block';
+          document.getElementById('authorizationType').setAttribute('required', 'required');
+          document.getElementById('legitimationNumber').setAttribute('required', 'required');
+          document.getElementById('cadenceNumber').setAttribute('required', 'required');
         }
-        
-        // Dynamically add/remove required attribute based on document type
-        const familyNameInput = document.getElementById('familyName');
-        const fathersNameInput = document.getElementById('fathersName');
-        const fathersFamilyNameInput = document.getElementById('fathersFamilyName');
-        const mothersNameInput = document.getElementById('mothersName');
-        const mothersFamilyNameInput = document.getElementById('mothersFamilyName');
-        const nationalityInput = document.getElementById('nationality');
-        
-        if (isPrawoJazdy) {
-          // Remove required for mPrawo jazdy
-          if (familyNameInput) familyNameInput.removeAttribute('required');
-          if (fathersNameInput) fathersNameInput.removeAttribute('required');
-          if (fathersFamilyNameInput) fathersFamilyNameInput.removeAttribute('required');
-          if (mothersNameInput) mothersNameInput.removeAttribute('required');
-          if (mothersFamilyNameInput) mothersFamilyNameInput.removeAttribute('required');
-          if (nationalityInput) nationalityInput.removeAttribute('required');
-        } else if (isLegitymacjaRadcowskiego) {
-          // Remove required for legitymacja radcowskiego (only name, surname, nationality, numerWpisu are required)
-          if (familyNameInput) familyNameInput.removeAttribute('required');
-          if (fathersNameInput) fathersNameInput.removeAttribute('required');
-          if (fathersFamilyNameInput) fathersFamilyNameInput.removeAttribute('required');
-          if (mothersNameInput) mothersNameInput.removeAttribute('required');
-          if (mothersFamilyNameInput) mothersFamilyNameInput.removeAttribute('required');
-          // Remove required from date inputs
-          const dayInput = document.getElementById('day');
-          const monthInput = document.getElementById('month');
-          const yearInput = document.getElementById('year');
-          if (dayInput) dayInput.removeAttribute('required');
-          if (monthInput) monthInput.removeAttribute('required');
-          if (yearInput) yearInput.removeAttribute('required');
-          // Add required to numerWpisu
-          const numerWpisuInput = document.getElementById('numerWpisu');
-          if (numerWpisuInput) numerWpisuInput.setAttribute('required', 'required');
-          // Keep nationality, name, surname required
-          if (nationalityInput) nationalityInput.setAttribute('required', 'required');
-        } else {
-          // Add required for mDowód and other legitymacja types
-          if (familyNameInput) familyNameInput.setAttribute('required', 'required');
-          if (fathersNameInput) fathersNameInput.setAttribute('required', 'required');
-          if (fathersFamilyNameInput) fathersFamilyNameInput.setAttribute('required', 'required');
-          if (mothersNameInput) mothersNameInput.setAttribute('required', 'required');
-          if (mothersFamilyNameInput) mothersFamilyNameInput.setAttribute('required', 'required');
-          if (nationalityInput) nationalityInput.setAttribute('required', 'required');
-        }
-        
-        if (kategorieGroup) kategorieGroup.style.display = isPrawoJazdy ? 'block' : 'none';
-        if (docSeriesGroup) docSeriesGroup.style.display = (isPrawoJazdy || isLegitymacjaRadcowskiego) ? 'none' : 'block';
-        if (mdowodExpiryGroup && !isLegitymacjaRadcowskiego) mdowodExpiryGroup.style.display = isPrawoJazdy ? 'none' : 'block';
-        if (mdowodSeriesGroup) mdowodSeriesGroup.style.display = (isPrawoJazdy || isLegitymacjaRadcowskiego) ? 'none' : 'block';
-
-        if (prawoJazdyWydanyGroup) prawoJazdyWydanyGroup.style.display = isPrawoJazdy ? 'block' : 'none';
-        if (prawoJazdyNumerDokumentuGroup) prawoJazdyNumerDokumentuGroup.style.display = isPrawoJazdy ? 'block' : 'none';
-        if (prawoJazdyNumerBlankietuGroup) prawoJazdyNumerBlankietuGroup.style.display = isPrawoJazdy ? 'block' : 'none';
-        if (prawoJazdyOrganWydajacyGroup) prawoJazdyOrganWydajacyGroup.style.display = isPrawoJazdy ? 'block' : 'none';
-        if (prawoJazdyOgraniczeniaGroup) prawoJazdyOgraniczeniaGroup.style.display = isPrawoJazdy ? 'block' : 'none';
         
         // Show the form container - THIS IS THE KEY PART
         const formContainer = document.getElementById('formContainer');
@@ -491,8 +621,24 @@
     .document-type-selector {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 15px;
+      gap: 12px;
       margin-bottom: 30px;
+    }
+    .doc-type-card .doc-type-title {
+      font-size: 13px;
+      line-height: 1.2;
+      min-height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .doc-type-card .doc-type-icon {
+      font-size: 28px;
+      margin-bottom: 6px;
+    }
+    .doc-type-card {
+      padding: 16px 12px;
     }
     .form-container {
       display: none;
@@ -863,9 +1009,44 @@
         <div class="doc-type-desc">Legitymacja</div>
       </div>
       <div class="doc-type-card" data-type="karta_duzej_rodziny" id="card-karta_duzej_rodziny" onclick="selectDocumentType('karta_duzej_rodziny'); return false;">
-        <div class="doc-type-icon">⚖️</div>
+        <div class="doc-type-icon">👨‍👩‍👧‍👦</div>
         <div class="doc-type-title">Karta Dużej Rodziny</div>
         <div class="doc-type-desc">Karta</div>
+      </div>
+      <div class="doc-type-card" data-type="diia" id="card-diia" onclick="selectDocumentType('diia'); return false;">
+        <div class="doc-type-icon">🇺🇦</div>
+        <div class="doc-type-title">Diia.pl card</div>
+        <div class="doc-type-desc">Karta Diia</div>
+      </div>
+      <div class="doc-type-card" data-type="bieglego_rewidenta" id="card-bieglego_rewidenta" onclick="selectDocumentType('bieglego_rewidenta'); return false;">
+        <div class="doc-type-icon">📊</div>
+        <div class="doc-type-title">Legitymacja biegłego rewidenta</div>
+        <div class="doc-type-desc">Legitymacja</div>
+      </div>
+      <div class="doc-type-card" data-type="doradcy_podatkowego" id="card-doradcy_podatkowego" onclick="selectDocumentType('doradcy_podatkowego'); return false;">
+        <div class="doc-type-icon">💼</div>
+        <div class="doc-type-title">Legitymacja doradcy podatkowego</div>
+        <div class="doc-type-desc">Legitymacja</div>
+      </div>
+      <div class="doc-type-card" data-type="inzyniera_budownictwa" id="card-inzyniera_budownictwa" onclick="selectDocumentType('inzyniera_budownictwa'); return false;">
+        <div class="doc-type-icon">🏗️</div>
+        <div class="doc-type-title">Legitymacja inżyniera budownictwa</div>
+        <div class="doc-type-desc">Legitymacja</div>
+      </div>
+      <div class="doc-type-card" data-type="radcy_prawnego" id="card-radcy_prawnego" onclick="selectDocumentType('radcy_prawnego'); return false;">
+        <div class="doc-type-icon">⚖️</div>
+        <div class="doc-type-title">Legitymacja radcy prawnego</div>
+        <div class="doc-type-desc">Legitymacja</div>
+      </div>
+      <div class="doc-type-card" data-type="pwz_lekarza" id="card-pwz_lekarza" onclick="selectDocumentType('pwz_lekarza'); return false;">
+        <div class="doc-type-icon">🩺</div>
+        <div class="doc-type-title">PWZ lekarza</div>
+        <div class="doc-type-desc">Legitymacja</div>
+      </div>
+      <div class="doc-type-card" data-type="poselka" id="card-poselka" onclick="selectDocumentType('poselka'); return false;">
+        <div class="doc-type-icon">🏛️</div>
+        <div class="doc-type-title">Legitymacja poselska</div>
+        <div class="doc-type-desc">Legitymacja</div>
       </div>
     </div>
     <div style="text-align: center; margin-top: -15px; margin-bottom: 20px; font-size: 14px; color: #888; min-height: 20px;" id="selectedDocInfo"></div>
@@ -961,6 +1142,102 @@
       <div class="input-group" id="numerWpisuGroup" style="display: none;">
         <label>Numer wpisu *</label>
         <input type="text" id="numerWpisu" placeholder="Wpisz numer wpisu">
+        <div class="error">To pole jest wymagane</div>
+      </div>
+
+      <!-- Diia.pl specific fields -->
+      <div class="input-group" id="birthCountryGroup" style="display: none;">
+        <label>Kraj pochodzenia *</label>
+        <input type="text" id="birthCountry" placeholder="Wpisz kraj pochodzenia">
+        <div class="error">To pole jest wymagane</div>
+      </div>
+
+      <!-- Professional cards specific fields -->
+      <div class="input-group" id="professionalTitleGroup" style="display: none;">
+        <label>Tytuł zawodowy *</label>
+        <input type="text" id="professionalTitle" placeholder="Wpisz tytuł zawodowy">
+        <div class="error">To pole jest wymagane</div>
+      </div>
+
+      <div class="input-group" id="auditorNumberGroup" style="display: none;">
+        <label>Numer biegłego rewidenta *</label>
+        <input type="text" id="auditorNumber" placeholder="Wpisz numer biegłego rewidenta">
+        <div class="error">To pole jest wymagane</div>
+      </div>
+
+      <div class="input-group" id="registrationNumberGroup" style="display: none;">
+        <label>Numer ewidencyjny *</label>
+        <input type="text" id="registrationNumber" placeholder="Wpisz numer ewidencyjny">
+        <div class="error">To pole jest wymagane</div>
+      </div>
+
+      <div class="input-group" id="issuingAuthorityGroup" style="display: none;">
+        <label>Organ wydający *</label>
+        <input type="text" id="issuingAuthority" placeholder="Wpisz organ wydający">
+        <div class="error">To pole jest wymagane</div>
+      </div>
+
+      <div class="input-group" id="policyExpiryDateGroup" style="display: none;">
+        <label>Termin ważności polisy OC</label>
+        <input type="text" id="policyExpiryDate" placeholder="np. 11.09.2025">
+        <div class="error">Opcjonalne pole</div>
+      </div>
+
+      <!-- PWZ lekarza specific fields -->
+      <div class="input-group" id="pwzNumberGroup" style="display: none;">
+        <label>Numer PWZ *</label>
+        <input type="text" id="pwzNumber" placeholder="Wpisz numer PWZ">
+        <div class="error">To pole jest wymagane</div>
+      </div>
+
+      <div class="input-group" id="pwzIssueDateGroup" style="display: none;">
+        <label>Data uzyskania PWZ *</label>
+        <input type="text" id="pwzIssueDate" placeholder="np. 11.09.2020">
+        <div class="error">To pole jest wymagane</div>
+      </div>
+
+      <div class="input-group" id="documentNumberGroup" style="display: none;">
+        <label>Numer dokumentu *</label>
+        <input type="text" id="documentNumber" placeholder="Wpisz numer dokumentu">
+        <div class="error">To pole jest wymagane</div>
+      </div>
+
+      <!-- Legitymacja poselska specific fields -->
+      <div class="input-group" id="authorizationTypeGroup" style="display: none;">
+        <label>Rodzaj uprawnienia *</label>
+        <input type="text" id="authorizationType" placeholder="Wpisz rodzaj uprawnienia">
+        <div class="error">To pole jest wymagane</div>
+      </div>
+
+      <div class="input-group" id="legitimationNumberGroup" style="display: none;">
+        <label>Numer legitymacji *</label>
+        <input type="text" id="legitimationNumber" placeholder="Wpisz numer legitymacji">
+        <div class="error">To pole jest wymagane</div>
+      </div>
+
+      <div class="input-group" id="cadenceNumberGroup" style="display: none;">
+        <label>Numer kadencji *</label>
+        <input type="text" id="cadenceNumber" placeholder="Wpisz numer kadencji">
+        <div class="error">To pole jest wymagane</div>
+      </div>
+
+      <!-- Karta Dużej Rodziny specific fields -->
+      <div class="input-group" id="cardNumberGroup" style="display: none;">
+        <label>Numer karty *</label>
+        <input type="text" id="cardNumber" placeholder="Wpisz numer karty">
+        <div class="error">To pole jest wymagane</div>
+      </div>
+
+      <!-- Legitymacja studencka specific fields -->
+      <div class="input-group" id="universityNameGroup" style="display: none;">
+        <label>Nazwa uczelni *</label>
+        <input type="text" id="universityName" placeholder="Wpisz nazwę uczelni">
+        <div class="error">To pole jest wymagane</div>
+      </div>
+
+      <div class="input-group" id="albumNumberGroup" style="display: none;">
+        <label>Numer albumu *</label>
+        <input type="text" id="albumNumber" placeholder="Wpisz numer albumu">
         <div class="error">To pole jest wymagane</div>
       </div>
 
@@ -1210,6 +1487,44 @@
     document.addEventListener('DOMContentLoaded', function() {
       console.log('DOM loaded, setting up event listeners');
       
+      // === HIDE ALL OPTIONAL FIELDS ON PAGE LOAD (before any document type is selected) ===
+      const allOptionalGroups = [
+        'nationalityGroup', 'familyNameGroup', 'fathersNameGroup', 'fathersFamilyNameGroup',
+        'mothersNameGroup', 'mothersFamilyNameGroup', 'peselGroup', 'kategorieGroup',
+        'mdowodSeriesGroup', 'mdowodExpiryGroup', 'mdowodDocSeriesGroup',
+        'prawoJazdyFields', 'prawoJazdyFields2', 'prawoJazdyFields3', 'prawoJazdyFields4', 'prawoJazdyFields5',
+        'numerWpisuGroup', 'birthCountryGroup', 'professionalTitleGroup', 'auditorNumberGroup',
+        'registrationNumberGroup', 'issuingAuthorityGroup', 'policyExpiryDateGroup',
+        'pwzNumberGroup', 'pwzIssueDateGroup', 'documentNumberGroup',
+        'authorizationTypeGroup', 'legitimationNumberGroup', 'cadenceNumberGroup', 'cardNumberGroup',
+        'universityNameGroup', 'albumNumberGroup', 'birthdayDateGroup', 'birthPlaceGroup', 'sexGroup'
+      ];
+      allOptionalGroups.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+      });
+      
+      // Also hide the nationality, birthPlace, and sex fields that don't have explicit group IDs
+      const nationalityInputGroup = document.querySelector('#nationality')?.closest('.input-group');
+      if (nationalityInputGroup) nationalityInputGroup.style.display = 'none';
+      const birthPlaceGroup = document.querySelector('#birthPlace')?.closest('.input-group');
+      if (birthPlaceGroup) birthPlaceGroup.style.display = 'none';
+      const sexGroup = document.querySelector('#sex')?.closest('.input-group');
+      if (sexGroup) sexGroup.style.display = 'none';
+      const birthdayDateGroup = document.getElementById('birthdayDateGroup');
+      if (birthdayDateGroup) birthdayDateGroup.style.display = 'none';
+      const givenDateGroup = document.querySelector('#customGivenDate')?.closest('.input-group');
+      if (givenDateGroup) givenDateGroup.style.display = 'none';
+      const expiryDateGroup = document.getElementById('mdowodExpiryGroup');
+      if (expiryDateGroup) expiryDateGroup.style.display = 'none';
+      
+      console.log('All optional fields hidden on page load');
+      // === END HIDE OPTIONAL FIELDS ===
+      
+      // Note: Card visibility settings are NOT applied here - all cards should always be visible in Kreator danych
+      // The visibility settings only apply to documents.html (the main documents list)
+      console.log('All document type cards are visible in Kreator danych');
+      
       const form = document.getElementById("creatorForm");
       const imageInput = document.getElementById("imageInput");
       const preview = document.getElementById("preview");
@@ -1448,292 +1763,225 @@
       }
       console.log('Form validation passed');
 
-      // Get document type
-      const isPrawoJazdy = documentType === 'mprawojazdy';
-      const isLegitymacja = documentType === 'legitymacja' || documentType === 'legitymacja_adwokacka' || documentType === 'legitymacja_studencka' || documentType === 'karta_duzej_rodziny';
-      const isLegitymacjaRadcowskiego = documentType === 'legitymacja';
-      const isLegitymacjaAdwokacka = documentType === 'legitymacja_adwokacka';
-      const isLegitymacjaStudencka = documentType === 'legitymacja_studencka';
-      const isKartaDuzejRodziny = documentType === 'karta_duzej_rodziny';
-      console.log('Is prawo jazdy:', isPrawoJazdy, 'Is legitymacja:', isLegitymacja, 'Is legitymacja_radcowskiego:', isLegitymacjaRadcowskiego, 'Is legitymacja_adwokacka:', isLegitymacjaAdwokacka, 'Is legitymacja_studencka:', isLegitymacjaStudencka, 'Is karta_duzej_rodziny:', isKartaDuzejRodziny);
+      // Get document type and build appropriate data object
+      let data = { name: form.name.value.trim(), surname: form.surname.value.trim() };
+      let prefix = '';
+      let cardPage = 'card.html';
       
-      // Build data object - different structure for legitymacja radcowskiego
-      let data = {};
+      // Helper function to get field value safely
+      const getFieldValue = (id) => {
+        const el = document.getElementById(id);
+        return el ? el.value.trim() : '';
+      };
       
-      if (isLegitymacjaRadcowskiego) {
-        // Only save fields visible for legitymacja radcowskiego
-        const numerWpisuInput = document.getElementById('numerWpisu');
-        const numerWpisu = numerWpisuInput ? numerWpisuInput.value.trim() : '';
-        data = {
-          name: form.name.value.trim(),
-          surname: form.surname.value.trim(),
-          nationality: form.nationality.value.trim(), // This is "Tytuł"
-          numerWpisu: numerWpisu // This is "Numer wpisu" - text field
-        };
-        // Add optional fields if they have values
-        const customPesel = form.customPesel.value.trim(); // This is "Przynależność"
-        if (customPesel) {
-          data.pesel = customPesel;
-        }
-        const customExpiryDate = form.customExpiryDate.value.trim(); // This is "Numer legitymacji"
-        if (customExpiryDate) {
-          data.expiryDate = customExpiryDate;
-        }
-        const customGivenDate = form.customGivenDate.value.trim(); // This is "Data ważności legitymacji"
-        if (customGivenDate) {
-          data.givenDate = customGivenDate;
-        }
-      } else {
-        // For other document types (mDowód), use the original structure
-        data = {
-          name: form.name.value.trim(),
-          surname: form.surname.value.trim(),
-          birthPlace: form.birthPlace.value.trim(),
-          sex: form.sex.value,
-          day: parseInt(form.day.value),
-          month: parseInt(form.month.value),
-          year: parseInt(form.year.value)
-        };
-        
-        // Only add these fields for mDowód and other legitymacja types
-        if (!isPrawoJazdy) {
-          data.nationality = form.nationality.value.trim();
-          data.familyName = form.familyName.value.trim();
-          data.fathersName = form.fathersName.value.trim();
-          data.fathersFamilyName = form.fathersFamilyName.value.trim();
-          data.mothersName = form.mothersName.value.trim();
-          data.mothersFamilyName = form.mothersFamilyName.value.trim();
+      switch (documentType) {
+        case 'mdowod':
+          prefix = '';
+          cardPage = 'card.html';
+          data.nationality = getFieldValue('nationality');
+          data.familyName = getFieldValue('familyName');
+          data.fathersName = getFieldValue('fathersName');
+          data.fathersFamilyName = getFieldValue('fathersFamilyName');
+          data.mothersName = getFieldValue('mothersName');
+          data.mothersFamilyName = getFieldValue('mothersFamilyName');
+          data.birthPlace = getFieldValue('birthPlace');
+          data.sex = getFieldValue('sex');
+          data.day = parseInt(getFieldValue('day')) || 0;
+          data.month = parseInt(getFieldValue('month')) || 0;
+          data.year = parseInt(getFieldValue('year')) || 0;
+          data.pesel = getFieldValue('customPesel');
+          data.seriesAndNumber = getFieldValue('customSeriesAndNumber');
+          data.docSeriesNumber = getFieldValue('customDocSeriesNumber');
+          data.givenDate = getFieldValue('customGivenDate');
+          data.expiryDate = getFieldValue('customExpiryDate');
+          break;
           
-          // Add mDowód specific fields to data object
-          const customPesel = form.customPesel ? form.customPesel.value.trim() : '';
-          const customSeriesAndNumber = form.customSeriesAndNumber ? form.customSeriesAndNumber.value.trim() : '';
-          const customGivenDate = form.customGivenDate ? form.customGivenDate.value.trim() : '';
-          const customExpiryDate = form.customExpiryDate ? form.customExpiryDate.value.trim() : '';
+        case 'mprawojazdy':
+          prefix = 'prawoJazdy_';
+          cardPage = 'prawo_jazdy_card.html';
+          data.birthPlace = getFieldValue('birthPlace');
+          data.sex = getFieldValue('sex');
+          data.day = parseInt(getFieldValue('day')) || 0;
+          data.month = parseInt(getFieldValue('month')) || 0;
+          data.year = parseInt(getFieldValue('year')) || 0;
+          data.kategorie = getFieldValue('customKategorie');
+          data.givenDate = getFieldValue('customGivenDate');
+          data.wydany = getFieldValue('customWydany');
+          data.numerDokumentu = getFieldValue('customNumerDokumentu');
+          data.numerBlankietu = getFieldValue('customNumerBlankietu');
+          data.organWydajacy = getFieldValue('customOrganWydajacy');
+          data.ograniczenia = getFieldValue('customOgraniczenia');
+          break;
           
-          if (customPesel) {
-            data.pesel = customPesel;
-          }
-          if (customSeriesAndNumber) {
-            data.seriesAndNumber = customSeriesAndNumber;
-          }
-          if (customGivenDate) {
-            data.givenDate = customGivenDate;
-          }
-          if (customExpiryDate) {
-            data.expiryDate = customExpiryDate;
-          }
-        }
+        case 'legitymacja':
+          prefix = 'legitymacja_';
+          cardPage = 'legitymacja_card.html';
+          data.nationality = getFieldValue('nationality'); // Tytuł
+          data.numerWpisu = getFieldValue('numerWpisu');
+          data.pesel = getFieldValue('customPesel'); // Przynależność
+          data.expiryDate = getFieldValue('customExpiryDate'); // Numer legitymacji
+          data.givenDate = getFieldValue('customGivenDate'); // Data ważności legitymacji
+          break;
+          
+        case 'legitymacja_adwokacka':
+          prefix = 'legitymacja_adwokacka_';
+          cardPage = 'legitymacja_adwokacka_card.html';
+          data.nationality = getFieldValue('nationality'); // Tytuł
+          data.numerWpisu = getFieldValue('numerWpisu');
+          data.pesel = getFieldValue('customPesel'); // Przynależność
+          data.expiryDate = getFieldValue('customExpiryDate'); // Numer legitymacji
+          data.givenDate = getFieldValue('customGivenDate'); // Data ważności legitymacji
+          break;
+          
+        case 'legitymacja_studencka':
+          prefix = 'legitymacja_studencka_';
+          cardPage = 'legitymacja_studencka_card.html';
+          data.day = parseInt(getFieldValue('day')) || 0;
+          data.month = parseInt(getFieldValue('month')) || 0;
+          data.year = parseInt(getFieldValue('year')) || 0;
+          data.pesel = getFieldValue('customPesel');
+          data.givenDate = getFieldValue('customGivenDate');
+          data.universityName = getFieldValue('universityName');
+          data.albumNumber = getFieldValue('albumNumber');
+          break;
+          
+        case 'karta_duzej_rodziny':
+          prefix = 'karta_duzej_rodziny_';
+          cardPage = 'karta_duzej_rodziny_card.html';
+          data.pesel = getFieldValue('customPesel');
+          data.cardNumber = getFieldValue('cardNumber');
+          data.expiryDate = getFieldValue('customExpiryDate');
+          break;
+          
+        case 'diia':
+          prefix = 'diia_';
+          cardPage = 'diia_card.html';
+          data.day = parseInt(getFieldValue('day')) || 0;
+          data.month = parseInt(getFieldValue('month')) || 0;
+          data.year = parseInt(getFieldValue('year')) || 0;
+          data.pesel = getFieldValue('customPesel');
+          data.birthCountry = getFieldValue('birthCountry');
+          data.birthPlace = getFieldValue('birthPlace');
+          data.nationality = getFieldValue('nationality');
+          break;
+          
+        case 'bieglego_rewidenta':
+          prefix = 'bieglego_rewidenta_';
+          cardPage = 'legitymacja_bieglego_rewidenta_card.html';
+          data.professionalTitle = getFieldValue('professionalTitle');
+          data.auditorNumber = getFieldValue('auditorNumber');
+          data.pesel = getFieldValue('customPesel'); // Przynależność
+          break;
+          
+        case 'doradcy_podatkowego':
+          prefix = 'doradcy_podatkowego_';
+          cardPage = 'legitymacja_doradcy_podatkowego_card.html';
+          data.professionalTitle = getFieldValue('professionalTitle');
+          data.entryNumber = getFieldValue('numerWpisu');
+          data.issuingAuthority = getFieldValue('issuingAuthority');
+          data.expiryDate = getFieldValue('customExpiryDate'); // Numer legitymacji
+          break;
+          
+        case 'inzyniera_budownictwa':
+          prefix = 'inzyniera_budownictwa_';
+          cardPage = 'legitymacja_inzyniera_budownictwa_card.html';
+          data.pesel = getFieldValue('customPesel');
+          data.registrationNumber = getFieldValue('registrationNumber');
+          data.expiryDate = getFieldValue('customExpiryDate');
+          data.issuingAuthority = getFieldValue('issuingAuthority');
+          data.policyExpiryDate = getFieldValue('policyExpiryDate');
+          break;
+          
+        case 'radcy_prawnego':
+          prefix = 'radcy_prawnego_';
+          cardPage = 'legitymacja_radcy_prawnego_card.html';
+          data.nationality = getFieldValue('nationality'); // Tytuł
+          data.entryNumber = getFieldValue('numerWpisu');
+          data.pesel = getFieldValue('customPesel'); // Przynależność
+          data.expiryDate = getFieldValue('customExpiryDate'); // Numer legitymacji
+          data.givenDate = getFieldValue('customGivenDate'); // Data ważności legitymacji
+          data.day = parseInt(getFieldValue('day')) || 0;
+          data.month = parseInt(getFieldValue('month')) || 0;
+          data.year = parseInt(getFieldValue('year')) || 0;
+          break;
+          
+        case 'pwz_lekarza':
+          prefix = 'pwz_lekarza_';
+          cardPage = 'pwz_lekarza_card.html';
+          data.professionalTitle = getFieldValue('professionalTitle');
+          data.pwzNumber = getFieldValue('pwzNumber');
+          data.pwzIssueDate = getFieldValue('pwzIssueDate');
+          data.expiryDate = getFieldValue('customExpiryDate');
+          data.documentNumber = getFieldValue('documentNumber');
+          data.issuingAuthority = getFieldValue('issuingAuthority');
+          break;
+          
+        case 'poselka':
+          prefix = 'poselka_';
+          cardPage = 'legitymacja_poselka_card.html';
+          data.authorizationType = getFieldValue('authorizationType');
+          data.issueDate = getFieldValue('customGivenDate');
+          data.legitimationNumber = getFieldValue('legitimationNumber');
+          data.cadenceNumber = getFieldValue('cadenceNumber');
+          break;
+          
+        default:
+          console.error('Unknown document type:', documentType);
+          alert('Nieznany typ dokumentu');
+          return;
       }
       
       console.log('Data object created:', data);
+      console.log('Using prefix:', prefix);
+      console.log('Will redirect to:', cardPage);
       
       // Save ALL data as JSON to localStorage (PRIMARY METHOD)
-      let storageKey = 'userData';
-      if (isPrawoJazdy) {
-        storageKey = 'prawoJazdy_userData';
-      } else if (isKartaDuzejRodziny) {
-        storageKey = 'karta_duzej_rodziny_userData';
-      } else if (isLegitymacjaStudencka) {
-        storageKey = 'legitymacja_studencka_userData';
-      } else if (isLegitymacjaAdwokacka) {
-        storageKey = 'legitymacja_adwokacka_userData';
-      } else if (isLegitymacja) {
-        storageKey = 'legitymacja_userData';
-      }
+      const storageKey = prefix + 'userData';
       localStorage.setItem(storageKey, JSON.stringify(data));
       console.log('✓ Saved data to localStorage as JSON with key:', storageKey);
       console.log('✓ Saved data content:', JSON.stringify(data, null, 2));
-      console.log('✓ Data keys:', Object.keys(data));
-      console.log('✓ Data values:', Object.values(data));
       
-      // Also save individual fields for compatibility (OVERWRITE old values)
+      // Also save individual fields for compatibility
       Object.keys(data).forEach(key => {
-        let itemKey = key;
-        if (isPrawoJazdy) {
-          itemKey = `prawoJazdy_${key}`;
-        } else if (isKartaDuzejRodziny) {
-          itemKey = `karta_duzej_rodziny_${key}`;
-        } else if (isLegitymacjaStudencka) {
-          itemKey = `legitymacja_studencka_${key}`;
-        } else if (isLegitymacjaAdwokacka) {
-          itemKey = `legitymacja_adwokacka_${key}`;
-        } else if (isLegitymacja) {
-          itemKey = `legitymacja_${key}`;
+        const itemKey = prefix + key;
+        const value = data[key] !== null && data[key] !== undefined ? String(data[key]) : '';
+        if (value) {
+          localStorage.setItem(itemKey, value);
+          console.log('  - Saved', itemKey, '=', value);
         }
-        const value = String(data[key]);
-        localStorage.setItem(itemKey, value);
-        console.log('  - Saved', itemKey, '=', value);
       });
       console.log('✓ Saved individual fields to localStorage');
       
       // Add timestamp to track when data was saved
       localStorage.setItem(storageKey + '_timestamp', Date.now().toString());
-      console.log('✓ Saved timestamp:', new Date().toISOString());
       
       // Save birthDay to localStorage in format DD.MM.YYYY (only if day/month/year exist)
       if (data.day && data.month && data.year) {
         const day = String(data.day).padStart(2, '0');
         const month = String(data.month).padStart(2, '0');
         const birthDayFormatted = `${day}.${month}.${data.year}`;
-        localStorage.setItem('birthDay', birthDayFormatted);
-        if (isPrawoJazdy) {
-          localStorage.setItem('prawoJazdy_birthDay', birthDayFormatted);
-        } else if (isKartaDuzejRodziny) {
-          localStorage.setItem('karta_duzej_rodziny_birthDay', birthDayFormatted);
-        } else if (isLegitymacjaStudencka) {
-          localStorage.setItem('legitymacja_studencka_birthDay', birthDayFormatted);
-        } else if (isLegitymacjaAdwokacka) {
-          localStorage.setItem('legitymacja_adwokacka_birthDay', birthDayFormatted);
-        } else if (isLegitymacja && !isLegitymacjaRadcowskiego) {
-          // Only save birthDay for other legitymacja types, not radcowskiego
-          localStorage.setItem('legitymacja_birthDay', birthDayFormatted);
-        }
-      } else if (isLegitymacjaRadcowskiego && data.numerWpisu) {
-        // For legitymacja radcowskiego, save numerWpisu as birthDay for compatibility
-        localStorage.setItem('legitymacja_birthDay', data.numerWpisu);
-      }
-      
-      // Zapisz opcjonalne pola do localStorage (with document type prefix)
-      const customKategorie = form.customKategorie.value.trim();
-      const customSeriesAndNumber = form.customSeriesAndNumber.value.trim();
-      const customDocSeriesNumber = form.customDocSeriesNumber.value.trim();
-      const customGivenDate = form.customGivenDate.value.trim();
-      const customExpiryDate = form.customExpiryDate.value.trim();
-      
-      // For legitymacja radcowskiego, these are already in the data object, but we still need to save them separately
-      // Skip saving them again if they're already in data (to avoid duplication)
-      
-      // Prawo jazdy specific fields
-      const customWydany = form.customWydany ? form.customWydany.value.trim() : '';
-      const customNumerDokumentu = form.customNumerDokumentu ? form.customNumerDokumentu.value.trim() : '';
-      const customNumerBlankietu = form.customNumerBlankietu ? form.customNumerBlankietu.value.trim() : '';
-      const customOrganWydajacy = form.customOrganWydajacy ? form.customOrganWydajacy.value.trim() : '';
-      const customOgraniczenia = form.customOgraniczenia ? form.customOgraniczenia.value.trim() : '';
-
-      // Prefix for localStorage keys based on document type
-      let prefix = '';
-      if (isPrawoJazdy) {
-        prefix = 'prawoJazdy_';
-      } else if (isKartaDuzejRodziny) {
-        prefix = 'karta_duzej_rodziny_';
-      } else if (isLegitymacjaStudencka) {
-        prefix = 'legitymacja_studencka_';
-      } else if (isLegitymacjaAdwokacka) {
-        prefix = 'legitymacja_adwokacka_';
-      } else if (isLegitymacja) {
-        prefix = 'legitymacja_';
-      }
-      
-      // Only save PESEL for mDowód
-      if (!isPrawoJazdy) {
-        const customPesel = form.customPesel.value.trim();
-        if (customPesel) {
-          const peselKey = prefix + 'pesel';
-          localStorage.setItem(peselKey, customPesel);
-          console.log('✓ Saved PESEL to localStorage with key:', peselKey, 'value:', customPesel);
-        } else {
-          console.warn('⚠ PESEL field is empty, not saving');
-        }
-      }
-      if (customKategorie && isPrawoJazdy) {
-        localStorage.setItem(prefix + 'kategorie', customKategorie);
-      }
-      if (customSeriesAndNumber && !isPrawoJazdy) {
-        const seriesKey = prefix + 'seriesAndNumber';
-        localStorage.setItem(seriesKey, customSeriesAndNumber);
-        console.log('✓ Saved seriesAndNumber to localStorage with key:', seriesKey, 'value:', customSeriesAndNumber);
-      } else if (!isPrawoJazdy) {
-        console.warn('⚠ seriesAndNumber field is empty, not saving');
-      }
-      if (customDocSeriesNumber && !isPrawoJazdy) {
-        localStorage.setItem('docSeriesNumber', customDocSeriesNumber);
-      }
-      if (customGivenDate) {
-        const givenKey = prefix + 'givenDate';
-        localStorage.setItem(givenKey, customGivenDate);
-        console.log('✓ Saved givenDate to localStorage with key:', givenKey, 'value:', customGivenDate);
-      } else {
-        console.warn('⚠ givenDate field is empty, not saving');
-      }
-      // Save expiryDate for mDowód and legitymacja types (not prawo jazdy)
-      if (customExpiryDate && !isPrawoJazdy) {
-        const expiryKey = prefix + 'expiryDate';
-        localStorage.setItem(expiryKey, customExpiryDate);
-        console.log('✓ Saved expiryDate to localStorage with key:', expiryKey, 'value:', customExpiryDate);
-      } else if (!isPrawoJazdy) {
-        console.warn('⚠ expiryDate field is empty, not saving');
-      }
-      
-      // VERIFY: Check what was actually saved
-      console.log('=== VERIFICATION: Checking saved mDowód fields ===');
-      console.log('  prefix:', prefix, '(empty for mDowód)');
-      console.log('  pesel:', localStorage.getItem(prefix + 'pesel'));
-      console.log('  seriesAndNumber:', localStorage.getItem(prefix + 'seriesAndNumber'));
-      console.log('  givenDate:', localStorage.getItem(prefix + 'givenDate'));
-      console.log('  expiryDate:', localStorage.getItem(prefix + 'expiryDate'));
-      
-      // Save prawo jazdy specific fields
-      if (isPrawoJazdy) {
-        if (customWydany) localStorage.setItem('prawoJazdy_wydany', customWydany);
-        if (customNumerDokumentu) localStorage.setItem('prawoJazdy_numerDokumentu', customNumerDokumentu);
-        if (customNumerBlankietu) localStorage.setItem('prawoJazdy_numerBlankietu', customNumerBlankietu);
-        if (customOrganWydajacy) localStorage.setItem('prawoJazdy_organWydajacy', customOrganWydajacy);
-        if (customOgraniczenia) localStorage.setItem('prawoJazdy_ograniczenia', customOgraniczenia);
+        localStorage.setItem(prefix + 'birthday', birthDayFormatted);
       }
 
       // Also save to IndexedDB as backup (but don't fail if it doesn't work)
-      // IMPORTANT: This ensures IndexedDB has the same data as localStorage
       let db;
       try {
         console.log('Attempting to save to IndexedDB as backup...');
         db = await getDb();
-        let dataKey = 'data';
-        if (isPrawoJazdy) {
-          dataKey = 'prawoJazdy_data';
-        } else if (isKartaDuzejRodziny) {
-          dataKey = 'karta_duzej_rodziny_data';
-        } else if (isLegitymacjaStudencka) {
-          dataKey = 'legitymacja_studencka_data';
-        } else if (isLegitymacjaAdwokacka) {
-          dataKey = 'legitymacja_adwokacka_data';
-        } else if (isLegitymacja) {
-          dataKey = 'legitymacja_data';
-        }
+        const dataKey = prefix + 'data';
         const dataToSave = { ...data, data: dataKey };
-        console.log('Saving to IndexedDB with key:', dataToSave.data);
         await saveData(db, dataToSave);
         console.log('✓ Also saved to IndexedDB successfully');
-        
-        // Verify IndexedDB save
-        const verifyData = await getData(db, dataKey);
-        if (verifyData && verifyData.name === data.name && verifyData.surname === data.surname) {
-          console.log('✓✓✓ IndexedDB verified - name and surname match:', verifyData.name, verifyData.surname);
-        } else {
-          console.warn('⚠ IndexedDB verification failed - data mismatch');
-        }
       } catch (error) {
         console.warn('⚠ IndexedDB save failed (but localStorage worked):', error);
-        // Don't fail the whole process if IndexedDB fails
       }
 
       // Zapisz zdjęcie w IndexedDB (with document type key)
       if (imageBase64) {
         try {
-          let imageKey = 'image';
-          if (isPrawoJazdy) {
-            imageKey = 'prawoJazdy_image';
-          } else if (isKartaDuzejRodziny) {
-            imageKey = 'karta_duzej_rodziny_image';
-          } else if (isLegitymacjaStudencka) {
-            imageKey = 'legitymacja_studencka_image';
-          } else if (isLegitymacjaAdwokacka) {
-            imageKey = 'legitymacja_adwokacka_image';
-          } else if (isLegitymacja) {
-            imageKey = 'legitymacja_image';
-          }
+          const imageKey = prefix + 'image';
           console.log('Saving image to IndexedDB with key:', imageKey);
           await saveData(db, { data: imageKey, image: imageBase64 });
-          // Also save to localStorage for quick access
           localStorage.setItem(prefix + 'userPhoto', imageBase64);
           console.log('Image saved successfully');
         } catch (error) {
@@ -1742,59 +1990,8 @@
       }
 
       localStorage.setItem('hasUserData', 'true');
-      console.log('hasUserData set to true');
-
-      // Sprawdź czy aplikacja jest już zainstalowana
-      const isInstalled = window.matchMedia('(display-mode: standalone)').matches || 
-                          window.navigator.standalone === true;
-      
-      // Redirect to appropriate card page based on document type
-      let cardPage = 'card.html';
-      if (isPrawoJazdy) {
-        cardPage = 'prawo_jazdy_card.html';
-      } else if (isKartaDuzejRodziny) {
-        cardPage = 'karta_duzej_rodziny_card.html';
-      } else if (isLegitymacjaStudencka) {
-        cardPage = 'legitymacja_studencka_card.html';
-      } else if (isLegitymacjaAdwokacka) {
-        cardPage = 'legitymacja_adwokacka_card.html';
-      } else if (isLegitymacja) {
-        cardPage = 'legitymacja_card.html';
-      }
-      // VERIFY DATA WAS SAVED BEFORE REDIRECTING
-      console.log('=== VERIFYING DATA SAVED ===');
-      const verifyJson = localStorage.getItem(storageKey);
-      if (verifyJson) {
-        try {
-          const verifyData = JSON.parse(verifyJson);
-          console.log('✓ VERIFIED: JSON data exists');
-          console.log('  Name:', verifyData.name);
-          console.log('  Surname:', verifyData.surname);
-          console.log('  Nationality:', verifyData.nationality);
-          console.log('  NumerWpisu:', verifyData.numerWpisu);
-          console.log('  Pesel:', verifyData.pesel);
-          console.log('  ExpiryDate:', verifyData.expiryDate);
-          console.log('  GivenDate:', verifyData.givenDate);
-        } catch (e) {
-          console.error('✗ Error parsing verification JSON:', e);
-        }
-      } else {
-        console.error('✗ ERROR: JSON data NOT found in localStorage!');
-      }
-      
-      // Verify individual fields
-      console.log('=== VERIFYING INDIVIDUAL FIELDS ===');
-      console.log('  name:', localStorage.getItem(prefix + 'name'));
-      console.log('  surname:', localStorage.getItem(prefix + 'surname'));
-      console.log('  nationality:', localStorage.getItem(prefix + 'nationality'));
-      console.log('  numerWpisu:', localStorage.getItem(prefix + 'numerWpisu'));
-      console.log('  pesel:', localStorage.getItem(prefix + 'pesel'));
-      console.log('  expiryDate:', localStorage.getItem(prefix + 'expiryDate'));
-      console.log('  givenDate:', localStorage.getItem(prefix + 'givenDate'));
-      
       console.log('=== ALL DATA SAVED SUCCESSFULLY ===');
       console.log('Redirecting to:', cardPage);
-      console.log('=== FORM SUBMISSION COMPLETED ===');
       
       // Add a small delay to ensure localStorage is fully written
       setTimeout(() => {
@@ -1827,19 +2024,22 @@
       // Redirect to appropriate card page
       const documentTypeInput = document.getElementById('documentType');
       const documentType = documentTypeInput ? documentTypeInput.value : '';
-      const isPrawoJazdy = documentType === 'mprawojazdy';
-      let cardPage = 'card.html';
-      if (isPrawoJazdy) {
-        cardPage = 'prawo_jazdy_card.html';
-      } else if (documentTypeInput && documentTypeInput.value === 'karta_duzej_rodziny') {
-        cardPage = 'karta_duzej_rodziny_card.html';
-      } else if (documentTypeInput && documentTypeInput.value === 'legitymacja_studencka') {
-        cardPage = 'legitymacja_studencka_card.html';
-      } else if (documentTypeInput && documentTypeInput.value === 'legitymacja_adwokacka') {
-        cardPage = 'legitymacja_adwokacka_card.html';
-      } else if (documentTypeInput && documentTypeInput.value === 'legitymacja') {
-        cardPage = 'legitymacja_card.html';
-      }
+      const cardPages = {
+        'mdowod': 'card.html',
+        'mprawojazdy': 'prawo_jazdy_card.html',
+        'legitymacja': 'legitymacja_card.html',
+        'legitymacja_adwokacka': 'legitymacja_adwokacka_card.html',
+        'legitymacja_studencka': 'legitymacja_studencka_card.html',
+        'karta_duzej_rodziny': 'karta_duzej_rodziny_card.html',
+        'diia': 'diia_card.html',
+        'bieglego_rewidenta': 'legitymacja_bieglego_rewidenta_card.html',
+        'doradcy_podatkowego': 'legitymacja_doradcy_podatkowego_card.html',
+        'inzyniera_budownictwa': 'legitymacja_inzyniera_budownictwa_card.html',
+        'radcy_prawnego': 'legitymacja_radcy_prawnego_card.html',
+        'pwz_lekarza': 'pwz_lekarza_card.html',
+        'poselka': 'legitymacja_poselka_card.html'
+      };
+      const cardPage = cardPages[documentType] || 'card.html';
       window.location.href = cardPage;
     }
 
