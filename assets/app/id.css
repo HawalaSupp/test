@@ -165,6 +165,7 @@ body{
     padding: 10px 15px;
     font-size: 15px;
     box-sizing: border-box;
+    color: white;
 }
 
 .password_input:focus{

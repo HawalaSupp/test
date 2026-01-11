@@ -30,7 +30,14 @@ function checkPasswordAndLogin(){
     if (actualPassword === CORRECT_PASSWORD || rawValue === CORRECT_PASSWORD) {
         localStorage.setItem('hasUserData', 'true');
         localStorage.setItem('sessionStartTime', Date.now());
-        location.href = 'documents.html?' + params;
+        
+        // Smooth fade-out animation before redirect
+        document.body.style.transition = 'opacity 0.3s ease-out';
+        document.body.style.opacity = '0';
+        
+        setTimeout(function() {
+            location.href = 'documents.html?' + params;
+        }, 300);
     } else {
         // Wrong password - show error
         if (input) {
