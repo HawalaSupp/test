@@ -90,9 +90,9 @@ body .bottom_bar{
     text-align: center;
     margin-top: 10px;
     color: white;
-    opacity: 0.8;
+    opacity: 0.95;
     font-weight: 400;
-    font-size: 13.5px;
+    font-size: 13px;
     letter-spacing: 0.3px;
 }
 
@@ -487,7 +487,7 @@ body .bottom_bar{
 
 .additional_subtitle{
     color: white;
-    font-size: 18px;
+    font-size: 19px;
     font-weight: 500;
     margin-top: 0px;
     margin-bottom: 20px;
