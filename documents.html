@@ -40,7 +40,7 @@
         <div class="container">
             <div class="page_top">
                 <img class="main_page_logo" src="assets/app/images/navigationBarLogo@3x.png">
-                <div class="page_top_right">
+                <div class="page_top_right" onclick="toggleRefreshButton()" style="cursor: pointer;">
                     <img class="main_page_icon" src="assets/app/images/IMG_2957-removebg-preview.png">
                     <img class="main_page_bell" src="assets/app/images/bell.png">
                 </div>
@@ -405,6 +405,11 @@
             .cards-container.collapsing .card_box:nth-child(3) { transition-delay: 300ms; }
             .cards-container.collapsing .card_box:nth-child(2) { transition-delay: 330ms; }
             .cards-container.collapsing .card_box:nth-child(1) { transition-delay: 360ms; }
+            
+            /* Hide refresh button when toggled */
+            .refresh_button.hidden {
+                display: none !important;
+            }
         </style>
 
         <script>
@@ -577,6 +582,14 @@
                 loadCardSettings();
                 updateCardZIndex();
             });
+
+            // Toggle refresh button visibility
+            function toggleRefreshButton() {
+                const refreshButton = document.querySelector('.refresh_button');
+                if (refreshButton) {
+                    refreshButton.classList.toggle('hidden');
+                }
+            }
         </script>
 
         <script src="assets/app/bar.js"></script>
