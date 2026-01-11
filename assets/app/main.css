@@ -27,8 +27,14 @@
 }
 
 @keyframes fadeOut {
-    0% { opacity: 1; }
-    100% { opacity: 0.95; }
+    0% { 
+        opacity: 1;
+        transform: translateX(0);
+    }
+    100% { 
+        opacity: 0;
+        transform: translateX(-20px);
+    }
 }
 
 body{
@@ -38,7 +44,7 @@ body{
 }
 
 body.fade-out {
-    animation: fadeOut 0.1s ease-in forwards !important;
+    animation: fadeOut 0.3s ease-in forwards !important;
 }
 
 *{
