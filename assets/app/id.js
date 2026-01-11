@@ -45,9 +45,8 @@ function toHome(){
 
 input.addEventListener("keypress", (event) => {
     if (event.key === 'Enter') {
-        document.activeElement.blur();
-        // Small delay to ensure the last character is processed
-        setTimeout(checkPasswordAndLogin, 50);
+        event.preventDefault();
+        checkPasswordAndLogin();
     }
 })
 
