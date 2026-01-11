@@ -324,7 +324,7 @@ body {
     margin: 0 auto;
     display: block;
     padding: 13px;
-    border-radius: 25px;
+    border-radius: 8px;
     border: 1.5px solid var(--text);
     background-color: transparent;
     color: var(--text);

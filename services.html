@@ -68,7 +68,7 @@
                 <p class="service_name">Sprawdź dowód</p>
                 <img class="arrow" src="assets/app/images/right_arrow_sharp.png">
             </div>
-            <div class="service" style="border: none;">
+            <div class="service" style="border: none;" onclick="sendTo('pesel.html')">
                 <img class="service_icon" src="assets/app/images/pesel.png">
                 <p class="service_name">Zastrzeż PESEL</p>
                 <img class="arrow" src="assets/app/images/right_arrow_sharp.png">
@@ -223,11 +223,52 @@
                 <img class="arrow" src="assets/app/images/right_arrow_sharp.png">
             </div>
         </div>
-        <div class="services_action">
-            <p class="title">Ulubione</p>
-            <p class="main_button">Dostosuj</p>
+        <p class="title">O tym dowodzie</p>
+        <div class="services_list" style="margin-bottom: 150px;">
+            <div class="service" style="border: none; display: flex; align-items: center; padding: 15px 20px; cursor: pointer;" onclick="showKolekcjonerskiModal()">
+                <img src="assets/app/images/informationIcon@3x.png" alt="" style="width: 24px; height: 24px; margin-right: 12px; flex-shrink: 0; filter: brightness(0) saturate(100%) invert(68%) sepia(97%) saturate(424%) hue-rotate(172deg) brightness(105%) contrast(101%);">
+                <p class="service_name" style="margin: 0; flex: 1;">Dowód kolekcjonerski</p>
+            </div>
         </div>
-        <div class="services_list" style="margin-top: 10px; margin-bottom: 150px;">
+    </div>
+
+    <!-- Kolekcjonerski Modal -->
+    <div id="kolekcjonerskiModal" class="kolekcjonerski-modal">
+        <div class="kolekcjonerski-modal-content">
+            <button class="kolekcjonerski-modal-close" onclick="closeKolekcjonerskiModal()">&times;</button>
+            <div class="kolekcjonerski-modal-text">
+                <h2>DOWÓD KOLEKCJONERSKI</h2>
+                <p>Niniejsza aplikacja stanowi wyłącznie dowód kolekcjonerski i w żadnym wypadku nie może być używana jako dokument tożsamości ani jako dowód osobisty.</p>
+                
+                <p><strong>WARUNKI UŻYWANIA:</strong></p>
+                <p>Zgodnie z art. 270a § 1 Kodeksu karnego, przestępstwem jest podrabianie dokumentu lub posługiwanie się podrobionym dokumentem w celu użycia go za autentyczny. Niniejsza aplikacja nie stanowi dokumentu autentycznego i nie może być w żaden sposób używana do celów identyfikacyjnych, prawnych, administracyjnych lub jakichkolwiek innych celów urzędowych.</p>
+                
+                <p><strong>STRICT PROHIBITION:</strong></p>
+                <p>Wszelkie użycie niniejszej aplikacji do celów innych niż podziwianie technologii i pracy włożonej w jej rozwój jest surowo zabronione. Niedozwolone jest w szczególności:</p>
+                <ul>
+                    <li>używanie aplikacji jako dokumentu tożsamości</li>
+                    <li>przedstawianie aplikacji jako autentycznego dowodu osobistego</li>
+                    <li>wykorzystywanie aplikacji w celu wprowadzenia kogokolwiek w błąd co do tożsamości</li>
+                    <li>używanie aplikacji w urzędach, instytucjach finansowych lub innych miejscach wymagających weryfikacji tożsamości</li>
+                    <li>wykorzystywanie aplikacji do celów oszukańczych, wyłudzeń lub innych działań niezgodnych z prawem</li>
+                </ul>
+                
+                <p><strong>PODSTAWY PRAWNE:</strong></p>
+                <p>Zgodnie z art. 63 ust. 1 ustawy z dnia 6 sierpnia 2010 r. o dowodach osobistych (Dz. U. z 2023 r. poz. 1234), dowód osobisty jest dokumentem potwierdzającym tożsamość i obywatelstwo polskie osoby, której został wydany. Niniejsza aplikacja nie stanowi takiego dokumentu i nie posiada mocy prawnej dowodu osobistego.</p>
+                
+                <p>Zgodnie z art. 270a § 2 Kodeksu karnego, kto podrabia dokument lub posługuje się podrobionym dokumentem w celu użycia go za autentyczny, podlega karze pozbawienia wolności od 3 miesięcy do lat 5. Użycie niniejszej aplikacji jako dowodu osobistego może stanowić przestępstwo podrabiania dokumentu.</p>
+                
+                <p><strong>ODPOWIEDZIALNOŚĆ:</strong></p>
+                <p>Użytkownik niniejszej aplikacji w pełni zdaje sobie sprawę, że aplikacja ta jest wyłącznie dowodem kolekcjonerskim i zobowiązuje się nie używać jej w sposób niezgodny z obowiązującymi przepisami prawa. Twórcy aplikacji nie ponoszą odpowiedzialności za jakiekolwiek nieprawidłowe użycie aplikacji przez użytkowników.</p>
+                
+                <p><strong>CELE KOLEKCJONERSKIE:</strong></p>
+                <p>Jedynym dozwolonym celem niniejszej aplikacji jest podziwianie technologii, rozwiązań programistycznych oraz pracy włożonej w jej rozwój. Aplikacja ma charakter wyłącznie edukacyjny i kolekcjonerski, służąc jako przykład nowoczesnych technologii cyfrowych wykorzystywanych w aplikacjach mobilnych.</p>
+                
+                <p><strong>OSTRZEŻENIE:</strong></p>
+                <p>Wszelkie próby użycia niniejszej aplikacji jako dokumentu tożsamości będą traktowane jako przestępstwo i będą podlegać odpowiedzialności karnej zgodnie z obowiązującym prawem polskim.</p>
+                
+                <p style="text-align: center; margin-top: 30px; font-weight: bold;">Aplikacja jest wyłącznie dowodem kolekcjonerskim.<br>Nie może być używana jako dokument tożsamości.</p>
+            </div>
         </div>
     </div>
 
@@ -236,6 +277,165 @@
     <script src="assets/app/manifest.js"></script>
     <script src="assets/app/cache.js"></script>
     <script src="assets/app/flow.js"></script>
+    <script>
+        function showKolekcjonerskiModal() {
+            const modal = document.getElementById('kolekcjonerskiModal');
+            if (modal) {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeKolekcjonerskiModal() {
+            const modal = document.getElementById('kolekcjonerskiModal');
+            if (modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('kolekcjonerskiModal');
+            if (modal) {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        closeKolekcjonerskiModal();
+                    }
+                });
+            }
+        });
+    </script>
+    <style>
+        .kolekcjonerski-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(5px);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .kolekcjonerski-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .kolekcjonerski-modal-content {
+            background: linear-gradient(135deg, #1F2329 0%, #252930 100%);
+            border-radius: 24px;
+            padding: 40px 35px;
+            max-width: 90%;
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin: 40px auto;
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .kolekcjonerski-modal.active .kolekcjonerski-modal-content {
+            transform: scale(1);
+        }
+
+        .kolekcjonerski-modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            z-index: 1;
+        }
+
+        .kolekcjonerski-modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .kolekcjonerski-modal-text {
+            color: white;
+            font-size: 14px;
+            line-height: 1.6;
+            max-height: 70vh;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .kolekcjonerski-modal-text h2 {
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 0 25px 0;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .kolekcjonerski-modal-text p {
+            margin: 15px 0;
+            text-align: justify;
+        }
+
+        .kolekcjonerski-modal-text strong {
+            font-weight: 600;
+            color: #4ba4fe;
+            display: block;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .kolekcjonerski-modal-text ul {
+            margin: 15px 0;
+            padding-left: 25px;
+        }
+
+        .kolekcjonerski-modal-text li {
+            margin: 8px 0;
+            text-align: left;
+        }
+
+        .kolekcjonerski-modal-text::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .kolekcjonerski-modal-text::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .kolekcjonerski-modal-text::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+        }
+
+        .kolekcjonerski-modal-text::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+    </style>
 
 
 
