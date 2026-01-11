@@ -15,12 +15,7 @@
     .legitymacja_under_grid {
       display: grid !important;
       grid-template-columns: repeat(4, 1fr) !important;
-    }
-    .legitymacja_under_grid .under_icon:nth-child(1) {
-      grid-column: 2;
-    }
-    .legitymacja_under_grid .under_icon:nth-child(2) {
-      grid-column: 3;
+      justify-items: center !important;
     }
     /* Make all data_value labels white for better visibility */
     .id_data_grid .data_holder .data_value {
@@ -38,6 +33,122 @@
     .content-loaded .id_bottom {
       opacity: 1;
     }
+    /* PESEL Modal */
+    .pesel-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0);
+      backdrop-filter: blur(0px);
+      z-index: 10000;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 0.3s ease, background-color 0.3s ease, backdrop-filter 0.3s ease;
+    }
+    .pesel-modal.active {
+      display: flex;
+      opacity: 1;
+      background-color: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(4px);
+    }
+    .pesel-modal-content {
+      background: linear-gradient(135deg, #1F2329 0%, #252930 100%);
+      border-radius: 24px;
+      padding: 50px 40px 40px 40px;
+      text-align: center;
+      position: relative;
+      max-width: 90%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transform: scale(0.9) translateY(20px);
+      opacity: 0;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+    }
+    .pesel-modal.active .pesel-modal-content {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+    }
+    .pesel-modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      width: 36px;
+      height: 36px;
+      line-height: 36px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .pesel-modal-close:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.1);
+    }
+    #enlargedPESELContainer {
+      margin: 0;
+      padding: 0;
+      background: transparent;
+      border-radius: 0;
+      display: inline-block;
+      text-align: center;
+      min-width: 280px;
+      max-width: 90%;
+    }
+    #enlargedPESELContainer .pesel-label {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 13px;
+      margin-bottom: 16px;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+    }
+    #enlargedPESELContainer .pesel-value {
+      color: #ffffff;
+      font-size: 36px;
+      font-weight: 500;
+      letter-spacing: 3px;
+      font-family: 'SF Mono', 'Monaco', 'Menlo', 'Consolas', monospace;
+      line-height: 1.5;
+      padding: 0;
+      margin: 0;
+      word-break: break-all;
+    }
+    /* Blue info box styling - matching legitymacja_studencka */
+    .info_box_blue {
+      background-color: rgba(75, 164, 254, 0.85) !important;
+      border-radius: 10px !important;
+      padding: 15px 20px !important;
+      margin: -110px 0 120px 0 !important;
+      width: 100%;
+      box-sizing: border-box;
+      border: none !important;
+    }
+    .info_box_blue .confirm_box {
+      border: none !important;
+      border-bottom: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+    .info_box_blue .confirm_box .box_value {
+      font-size: 14px !important;
+      text-align: left !important;
+      margin: 0 !important;
+      color: #0a284d !important;
+      flex: 1;
+    }
   </style>
   <link rel="icon" type="image/x-icon" href="assets/app/images/ikonka.png">
   <link rel="apple-touch-icon" href="assets/app/images/ikonka.png">
@@ -51,7 +162,7 @@
       <img src="assets/app/images/back_blue.png" class="back_img_fixed" alt="">
       <p onclick="sendTo('documents.html')" class="back_text_fixed">Dokumenty</p>
     </div>
-    <p class="title_text_fixed">Diia.pl card</p>
+    <p class="title_text_fixed" style="white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important;">Diia.pl card</p>
     <img src="assets/app/images/help.png" class="help_img_fixed" id="helpIconBtn" alt="" style="cursor: pointer; pointer-events: auto !important; z-index: 1000; position: relative;" onclick="if(window.toggleEagleDrag){window.toggleEagleDrag();}else{console.log('Function not ready');}">
   </div>
 
@@ -100,14 +211,13 @@
             <div></div>
           </div>
         </div>
-        <img draggable="false" class="id_image" id="bgImage" src="assets/app/images/attorneyAtLawCardBackground@3x.png" alt="">
+        <img draggable="false" class="id_image" id="bgImage" src="assets/app/images/diia.png" alt="">
         <img draggable="false" class="id_image_effect" src="assets/app/images/idCardEffect.png" alt="">
         <div class="inset"></div>
 
         <div class="id_own_image" id="userPhoto" style="background-image:url('assets/app/images/blank.png');"></div>
 
-        <img draggable="false" src="assets/app/images/flaga koks.webp" class="flag_video" alt="">
-        <img draggable="false" src="assets/app/images/flaga koks.webp" class="flag_video flag_video_overlay" alt="">
+        <img draggable="false" id="ukrainianFlag" class="flag_video" alt="" src="assets/app/images/flag_ua/1.png">
         <div class="eagle_wrapper">
           <img draggable="false" src="assets/app/images/newandreworked.png" class="eagle_video" alt="">
           <div class="hologram_shine"></div>
@@ -150,6 +260,18 @@
           </div>
           <p class="under_text">Potwierdź swoje dane</p>
         </div>
+        <div class="under_icon" onclick="showPESELModal(event)">
+          <div class="under_image_circle">
+            <img class="under_image under_image_blue" src="assets/app/images/AB023_Zoom_in.svg" alt="">
+          </div>
+          <p class="under_text">Powiększ<br>PESEL</p>
+        </div>
+        <div class="under_icon" onclick="sendTo('pesel.html')">
+          <div class="under_image_circle">
+            <img class="under_image under_image_blue under_image_larger" src="assets/app/images/AC004_Lock_pesel@3x.png" alt="">
+          </div>
+          <p class="under_text">Zastrzeż<br>PESEL</p>
+        </div>
         <div class="under_icon" onclick="sendTo('shortcuts.html')">
           <div class="under_image_circle">
             <img class="under_image under_image_small under_image_blue" src="assets/app/images/more.png" alt="">
@@ -184,6 +306,27 @@
           </div>
           <button class="main_button_filled update" style="right:20px;" onclick="location.reload()">Aktualizuj</button>
         </div>
+      </div>
+    </div>
+
+    <div class="confirm_info info_box_blue">
+      <div class="confirm_box">
+        <img src="assets/app/images/informationIcon@3x.png" alt="" style="width: 24px; height: 24px; margin-right: 10px; flex-shrink: 0; align-self: flex-start; margin-top: 2px;">
+        <div style="flex: 1;">
+          <p class="info_title" style="font-size: 18px; font-weight: 500; color: #0a284d; margin: 0 0 5px 0;">Informacja</p>
+          <p class="box_value">Dokument wydany na podstawie ustawy z dnia 12 marca 2022 r. o pomocy obywatelom Ukrainy w związku z konfliktem zbrojnym na terytorium tego państwa (Dz.U. 2023 poz. 103), pozwala na potwierdzenie tożsamości obywateli Ukrainy, których pobyt na terytorium Polski jest uznany za legalny.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PESEL Modal -->
+  <div class="pesel-modal" id="peselModal">
+    <div class="pesel-modal-content">
+      <button class="pesel-modal-close" onclick="closePESELModal()">&times;</button>
+      <div id="enlargedPESELContainer">
+        <div class="pesel-label">Numer PESEL</div>
+        <div class="pesel-value" id="enlargedPESELValue"></div>
       </div>
     </div>
   </div>
@@ -290,7 +433,94 @@
     // Run on DOM ready
     document.addEventListener('DOMContentLoaded', function() {
       loadAllData();
+      startUkrainianFlagAnimation();
     });
+
+    // ============================================================
+    // PESEL MODAL FUNCTIONS
+    // ============================================================
+    function showPESELModal(event) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      
+      const peselElement = document.getElementById('pesel_value');
+      const peselValue = peselElement ? peselElement.textContent.trim() : '';
+      
+      if (!peselValue) {
+        console.log('No PESEL value available');
+        return false;
+      }
+      
+      const modal = document.getElementById('peselModal');
+      const enlargedPESELValue = document.getElementById('enlargedPESELValue');
+      
+      if (modal && enlargedPESELValue) {
+        enlargedPESELValue.textContent = peselValue;
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+      
+      return false;
+    }
+
+    function closePESELModal() {
+      const modal = document.getElementById('peselModal');
+      if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+
+    // Close modal when clicking outside
+    document.addEventListener('click', function(e) {
+      const modal = document.getElementById('peselModal');
+      if (modal && e.target === modal) {
+        closePESELModal();
+      }
+    });
+
+    // ============================================================
+    // UKRAINIAN FLAG ANIMATION
+    // Cycles through numbered images in flag_ua folder for flowing effect
+    // ============================================================
+    function startUkrainianFlagAnimation() {
+      const flagImage = document.getElementById('ukrainianFlag');
+      if (!flagImage) {
+        console.log('Ukrainian flag image not found, retrying...');
+        setTimeout(startUkrainianFlagAnimation, 100);
+        return;
+      }
+
+      // Array of image numbers from the flag_ua folder (in order)
+      const flagFrames = [1, 3, 6, 9, 10, 13, 15, 16, 18, 22, 24, 27, 29, 30, 33, 35, 36, 38, 41, 42, 44, 47, 49, 50, 53, 55, 56, 58];
+      
+      let currentFrame = 0;
+      const fps = 12; // Frames per second for smooth, flowing flag animation (slower)
+      const frameInterval = 1000 / fps; // Milliseconds between frames
+      let lastTime = 0;
+
+      function animateFlag(timestamp) {
+        if (!lastTime) lastTime = timestamp;
+        
+        const elapsed = timestamp - lastTime;
+        
+        if (elapsed >= frameInterval) {
+          // Update to next frame
+          currentFrame = (currentFrame + 1) % flagFrames.length;
+          const imageNumber = flagFrames[currentFrame];
+          flagImage.src = `assets/app/images/flag_ua/${imageNumber}.png`;
+          lastTime = timestamp - (elapsed % frameInterval);
+        }
+        
+        requestAnimationFrame(animateFlag);
+      }
+
+      // Start the animation
+      requestAnimationFrame(animateFlag);
+      console.log('✓ Ukrainian flag animation started');
+    }
 
     // === Simple Background Draggable Functionality ===
     (function() {

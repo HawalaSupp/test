@@ -69,6 +69,7 @@ img{
     width: var(--width);
     margin-left: auto;
     margin-right: auto;
+    margin-top: -4px;
 }
 
 .top_grid_fixed{
@@ -204,7 +205,7 @@ img{
 .main_title{
     color: white;
     font-weight: 600;
-    font-size: 40px;
+    font-size: 38px;
     margin-top: 18px;
     margin-bottom: auto;
 }
@@ -228,7 +229,7 @@ img{
     margin-right: 5px;
     position: absolute;
     right: 55px;
-    top: 6px;
+    top: -2px;
 }
 
 .main_page_bell{
@@ -236,7 +237,7 @@ img{
 }
 
 .main_page_logo{
-    width: 40px;
+    width: 36px;
 }
 
 .confirm_box .main_button{
@@ -290,6 +291,12 @@ img{
     margin-top: auto;
     margin-bottom: auto;
     height: max-content;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    padding: 0 10px;
+    box-sizing: border-box;
+    max-width: 100%;
 }
 
 .refresh_button{
@@ -337,7 +344,7 @@ img{
 .main_button{
     color: var(--text);
     width: max-content;
-    font-size: 19px;
+    font-size: 17px;
     font-weight: 500;
     height: 40px;
     line-height: 40px;

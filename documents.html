@@ -39,7 +39,7 @@
     
         <div class="container">
             <div class="page_top">
-                <img class="main_page_logo" src="assets/app/images/logo_large.png">
+                <img class="main_page_logo" src="assets/app/images/navigationBarLogo@3x.png">
                 <div class="page_top_right">
                     <img class="main_page_icon" src="assets/app/images/IMG_2957-removebg-preview.png">
                     <img class="main_page_bell" src="assets/app/images/bell.png">
@@ -51,6 +51,7 @@
                 <p class="main_button" onclick="sendTo('creator.html')">Dodaj</p>
             </div>
             <div class="cards-container stacked" id="cardsContainer">
+            <!-- 1. mDowód -->
             <div class="card_box" data-card-id="mdowod" onclick="expandAndNavigate(this, 'card.html')">
                 <img class="card_background" src="assets/app/images/card_background.webp">
                 <p class="card_name">mDowód</p>
@@ -59,6 +60,16 @@
                     <img class="card_eagle" src="assets/app/images/IA001_Card_logo_default@3x.png">
                 </div>
             </div>
+            <!-- 2. Diia.pl -->
+            <div class="card_box" data-card-id="diia" onclick="expandAndNavigate(this, 'diia_card.html')">
+                <img class="card_background" src="assets/app/images/Diia_BG_BIG.png">
+                <p class="card_name">Diia.pl</p>
+                <div class="card_eagle_background">
+                    <div class="card_filler"></div>
+                    <img class="card_eagle" src="assets/app/images/IA001_Card_logo_default@3x.png">
+                </div>
+            </div>
+            <!-- 3. mPrawo jazdy -->
             <div class="card_box prawo_jazdy_card" data-card-id="mprawojazdy" onclick="expandAndNavigate(this, 'prawo_jazdy_card.html')">
                 <img class="card_background" src="assets/app/images/Prawo_jazdy_BG_BIG.png">
                 <p class="card_name">mPrawo jazdy</p>
@@ -67,30 +78,7 @@
                     <img class="card_eagle" src="assets/app/images/IA015_Card_mPrawo_jazdy@3x.png">
                 </div>
             </div>
-            <div class="card_box" data-card-id="legitymacja" onclick="expandAndNavigate(this, 'legitymacja_card.html')">
-                <img class="card_background" src="assets/app/images/Radca_prawny_BG_BIG.png">
-                <p class="card_name">Legitymacja aplikanta<br>radcowskiego</p>
-                <div class="card_eagle_background">
-                    <div class="card_filler"></div>
-                    <img class="card_eagle" src="assets/app/images/IA008_Card_logo_advisor@3x.png">
-                </div>
-            </div>
-            <div class="card_box" data-card-id="legitymacja_adwokacka" onclick="expandAndNavigate(this, 'legitymacja_adwokacka_card.html')">
-                <img class="card_background" src="assets/app/images/Adwokacka_BG_BIG.png">
-                <p class="card_name">Legitymacja adwokacka</p>
-                <div class="card_eagle_background">
-                    <div class="card_filler"></div>
-                    <img class="card_eagle" src="assets/app/images/IA004_Card_logo_lawyer@3x.png">
-                </div>
-            </div>
-            <div class="card_box" data-card-id="legitymacja_studencka" onclick="expandAndNavigate(this, 'legitymacja_studencka_card.html')">
-                <img class="card_background" src="assets/app/images/Studencka_BG_BIG.png">
-                <p class="card_name">Legitymacja studencka</p>
-                <div class="card_eagle_background">
-                    <div class="card_filler"></div>
-                    <img class="card_eagle" src="assets/app/images/IA001_Card_logo_default@3x.png">
-                </div>
-            </div>
+            <!-- 4. Karta Dużej Rodziny -->
             <div class="card_box" data-card-id="karta_duzej_rodziny" onclick="expandAndNavigate(this, 'karta_duzej_rodziny_card.html')">
                 <img class="card_background" src="assets/app/images/KDR_BG_BIG.png">
                 <p class="card_name">Karta Dużej Rodziny</p>
@@ -99,14 +87,25 @@
                     <img class="card_eagle" src="assets/app/images/IA003_Card_logo_KDR@3x.png">
                 </div>
             </div>
-            <div class="card_box" data-card-id="diia" onclick="expandAndNavigate(this, 'diia_card.html')">
-                <img class="card_background" src="assets/app/images/Diia_BG_BIG.png">
-                <p class="card_name">Diia.pl card</p>
+            <!-- 5. Legitymacja adwokacka -->
+            <div class="card_box" data-card-id="legitymacja_adwokacka" onclick="expandAndNavigate(this, 'legitymacja_adwokacka_card.html')">
+                <img class="card_background" src="assets/app/images/Adwokacka_BG_BIG.png">
+                <p class="card_name">Legitymacja adwokacka</p>
                 <div class="card_eagle_background">
                     <div class="card_filler"></div>
-                    <img class="card_eagle" src="assets/app/images/IA001_Card_logo_default@3x.png">
+                    <img class="card_eagle" src="assets/app/images/IA004_Card_logo_lawyer@3x.png">
                 </div>
             </div>
+            <!-- 6. Legitymacja aplikanta radcowskiego -->
+            <div class="card_box" data-card-id="legitymacja" onclick="expandAndNavigate(this, 'legitymacja_card.html')">
+                <img class="card_background" src="assets/app/images/Radca_prawny_BG_BIG.png">
+                <p class="card_name">Legitymacja aplikanta<br>radcowskiego</p>
+                <div class="card_eagle_background">
+                    <div class="card_filler"></div>
+                    <img class="card_eagle" src="assets/app/images/IA008_Card_logo_advisor@3x.png">
+                </div>
+            </div>
+            <!-- 7. Legitymacja biegłego rewidenta -->
             <div class="card_box" data-card-id="bieglego_rewidenta" onclick="expandAndNavigate(this, 'legitymacja_bieglego_rewidenta_card.html')">
                 <img class="card_background" src="assets/app/images/Biegly_rewident_BG_BIG.png">
                 <p class="card_name">Legitymacja biegłego<br>rewidenta</p>
@@ -115,6 +114,7 @@
                     <img class="card_eagle" src="assets/app/images/IA008_Card_logo_advisor@3x.png">
                 </div>
             </div>
+            <!-- 8. Legitymacja doradcy podatkowego -->
             <div class="card_box" data-card-id="doradcy_podatkowego" onclick="expandAndNavigate(this, 'legitymacja_doradcy_podatkowego_card.html')">
                 <img class="card_background" src="assets/app/images/Doradca_podatkowy_BG_BIG.png">
                 <p class="card_name">Legitymacja doradcy<br>podatkowego</p>
@@ -123,6 +123,7 @@
                     <img class="card_eagle" src="assets/app/images/IA001_Card_logo_default@3x.png">
                 </div>
             </div>
+            <!-- 9. Legitymacja inżyniera budownictwa -->
             <div class="card_box" data-card-id="inzyniera_budownictwa" onclick="expandAndNavigate(this, 'legitymacja_inzyniera_budownictwa_card.html')">
                 <img class="card_background" src="assets/app/images/Generyczny_BG_BIG.png">
                 <p class="card_name">Legitymacja inżyniera<br>budownictwa</p>
@@ -131,6 +132,16 @@
                     <img class="card_eagle" src="assets/app/images/IA001_Card_logo_default@3x.png">
                 </div>
             </div>
+            <!-- 10. Legitymacja poselka -->
+            <div class="card_box" data-card-id="poselka" onclick="expandAndNavigate(this, 'legitymacja_poselka_card.html')">
+                <img class="card_background" src="assets/app/images/Poselska_BG_BIG.png">
+                <p class="card_name">Legitymacja poselka</p>
+                <div class="card_eagle_background">
+                    <div class="card_filler"></div>
+                    <img class="card_eagle" src="assets/app/images/IA001_Card_logo_default@3x.png">
+                </div>
+            </div>
+            <!-- 11. Legitymacja radcy prawnego -->
             <div class="card_box" data-card-id="radcy_prawnego" onclick="expandAndNavigate(this, 'legitymacja_radcy_prawnego_card.html')">
                 <img class="card_background" src="assets/app/images/Radca_prawny_BG_BIG.png">
                 <p class="card_name">Legitymacja radcy<br>prawnego</p>
@@ -139,20 +150,22 @@
                     <img class="card_eagle" src="assets/app/images/IA008_Card_logo_advisor@3x.png">
                 </div>
             </div>
+            <!-- 12. Legitymacja studencka -->
+            <div class="card_box" data-card-id="legitymacja_studencka" onclick="expandAndNavigate(this, 'legitymacja_studencka_card.html')">
+                <img class="card_background" src="assets/app/images/Studencka_BG_BIG.png">
+                <p class="card_name">Legitymacja studencka</p>
+                <div class="card_eagle_background">
+                    <div class="card_filler"></div>
+                    <img class="card_eagle" src="assets/app/images/IA001_Card_logo_default@3x.png">
+                </div>
+            </div>
+            <!-- 13. PWZ lekarza -->
             <div class="card_box" data-card-id="pwz_lekarza" onclick="expandAndNavigate(this, 'pwz_lekarza_card.html')">
                 <img class="card_background" src="assets/app/images/Lekarz_BG_BIG.png">
                 <p class="card_name">PWZ lekarza</p>
                 <div class="card_eagle_background">
                     <div class="card_filler"></div>
                     <img class="card_eagle" src="assets/app/images/IA011_PWZ_lekarza_asset@3x.png">
-                </div>
-            </div>
-            <div class="card_box" data-card-id="poselka" onclick="expandAndNavigate(this, 'legitymacja_poselka_card.html')">
-                <img class="card_background" src="assets/app/images/Poselska_BG_BIG.png">
-                <p class="card_name">Legitymacja poselka</p>
-                <div class="card_eagle_background">
-                    <div class="card_filler"></div>
-                    <img class="card_eagle" src="assets/app/images/IA001_Card_logo_default@3x.png">
                 </div>
             </div>
             </div><!-- End cards-container -->
@@ -185,11 +198,16 @@
                 right: 0;
                 bottom: 0;
                 background: rgba(0, 0, 0, 0.85);
-                z-index: 1000;
-                display: flex;
+                z-index: 2000;
                 align-items: center;
                 justify-content: center;
                 padding: 20px;
+            }
+            .settings-modal[style*="display: none"] {
+                display: none !important;
+            }
+            .settings-modal[style*="display: flex"] {
+                display: flex !important;
             }
             .settings-content {
                 background: #1a1d24;
@@ -429,13 +447,8 @@
                 
                 // If cards are already expanded, navigate to the page
                 if (container.classList.contains('expanded')) {
-                    // Add a visual feedback before navigating
-                    cardElement.style.transform = 'scale(1.05)';
-                    cardElement.style.boxShadow = '0 15px 50px rgba(37, 99, 235, 0.5)';
-                    
-                    setTimeout(() => {
-                        window.location.href = url;
-                    }, 250);
+                    // Navigate immediately without visual effects
+                    window.location.href = url;
                 }
             }
             
@@ -458,21 +471,21 @@
                 }
             });
             
-            // Card configuration with display names
+            // Card configuration with display names (in display order)
             const cardConfig = {
                 'mdowod': 'mDowód',
+                'diia': 'Diia.pl',
                 'mprawojazdy': 'mPrawo jazdy',
-                'legitymacja': 'Legitymacja aplikanta radcowskiego',
-                'legitymacja_adwokacka': 'Legitymacja adwokacka',
-                'legitymacja_studencka': 'Legitymacja studencka',
                 'karta_duzej_rodziny': 'Karta Dużej Rodziny',
-                'diia': 'Diia.pl card',
+                'legitymacja_adwokacka': 'Legitymacja adwokacka',
+                'legitymacja': 'Legitymacja aplikanta radcowskiego',
                 'bieglego_rewidenta': 'Legitymacja biegłego rewidenta',
                 'doradcy_podatkowego': 'Legitymacja doradcy podatkowego',
                 'inzyniera_budownictwa': 'Legitymacja inżyniera budownictwa',
+                'poselka': 'Legitymacja poselska',
                 'radcy_prawnego': 'Legitymacja radcy prawnego',
-                'pwz_lekarza': 'PWZ lekarza',
-                'poselka': 'Legitymacja poselska'
+                'legitymacja_studencka': 'Legitymacja studencka',
+                'pwz_lekarza': 'PWZ lekarza'
             };
 
             // Load and apply card visibility settings

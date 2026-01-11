@@ -13,14 +13,9 @@
   <link rel="stylesheet" href="assets/app/card.css">
   <style>
     .karta_duzej_rodziny_under_grid {
-      display: grid !important;
-      grid-template-columns: repeat(4, 1fr) !important;
-    }
-    .karta_duzej_rodziny_under_grid .under_icon:nth-child(1) {
-      grid-column: 2;
-    }
-    .karta_duzej_rodziny_under_grid .under_icon:nth-child(2) {
-      grid-column: 3;
+      display: flex !important;
+      justify-content: center !important;
+      gap: 20px;
     }
     /* Make all data_value labels white for better visibility */
     .id_data_grid .data_holder .data_value {
@@ -38,6 +33,70 @@
     .content-loaded .id_bottom {
       opacity: 1;
     }
+    /* Make the family icon smaller */
+    .flag_video {
+      width: 14% !important;
+    }
+    /* QR Code Modal */
+    .qr-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(4px);
+      z-index: 10000;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .qr-modal.active {
+      display: flex;
+      opacity: 1;
+    }
+    .qr-modal-content {
+      background: linear-gradient(135deg, #1F2329 0%, #252930 100%);
+      border-radius: 24px;
+      padding: 50px 40px 40px 40px;
+      text-align: center;
+      position: relative;
+      max-width: 90%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .qr-modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      width: 36px;
+      height: 36px;
+      line-height: 36px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .qr-modal-close:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.1);
+    }
+    #enlargedQRCodeContainer {
+      margin: 0;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      display: inline-block;
+    }
   </style>
   <link rel="icon" type="image/x-icon" href="assets/app/images/ikonka.png">
   <link rel="apple-touch-icon" href="assets/app/images/ikonka.png">
@@ -51,7 +110,7 @@
       <img src="assets/app/images/back_blue.png" class="back_img_fixed" alt="">
       <p onclick="sendTo('documents.html')" class="back_text_fixed">Dokumenty</p>
     </div>
-    <p class="title_text_fixed">Karta Dużej Rodziny</p>
+    <p class="title_text_fixed" style="white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important;">Karta Dużej Rodziny</p>
     <img src="assets/app/images/help.png" class="help_img_fixed" id="helpIconBtn" alt="" style="cursor: pointer; pointer-events: auto !important; z-index: 1000; position: relative;" onclick="if(window.toggleEagleDrag){window.toggleEagleDrag();}else{console.log('Function not ready');}">
   </div>
 
@@ -100,14 +159,14 @@
             <div></div>
           </div>
         </div>
-        <img draggable="false" class="id_image" id="bgImage" src="assets/app/images/attorneyAtLawCardBackground@3x.png" alt="">
+        <img draggable="false" class="id_image" id="bgImage" src="assets/app/images/familyCardBackground.png" alt="">
         <img draggable="false" class="id_image_effect" src="assets/app/images/idCardEffect.png" alt="">
         <div class="inset"></div>
 
         <div class="id_own_image" id="userPhoto" style="background-image:url('assets/app/images/blank.png');"></div>
 
-        <img draggable="false" src="assets/app/images/flaga koks.webp" class="flag_video" alt="">
-        <img draggable="false" src="assets/app/images/flaga koks.webp" class="flag_video flag_video_overlay" alt="">
+        <img draggable="false" src="assets/app/images/familyCardIcon@3x.png" class="flag_video" alt="">
+        <img draggable="false" src="assets/app/images/familyCardIcon@3x.png" class="flag_video flag_video_overlay" alt="">
         <div class="eagle_wrapper">
           <img draggable="false" src="assets/app/images/newandreworked.png" class="eagle_video" alt="">
           <div class="hologram_shine"></div>
@@ -146,6 +205,13 @@
       </div>
     </div>
 
+    <div class="confirm_info" style="margin-top: 10px;">
+      <div class="confirm_box" style="display: flex; justify-content: flex-start; align-items: center; padding: 20px; gap: 8px; flex-wrap: nowrap; border-bottom: none;">
+        <div id="qrCodeContainer" style="flex-shrink: 0;"></div>
+        <button class="main_button_filled" id="enlargeQRBtn" style="flex-shrink: 0; white-space: nowrap; margin-right: 20px;">Powiększ kod QR</button>
+      </div>
+    </div>
+
     <div class="under_container">
       <div class="under_grid karta_duzej_rodziny_under_grid">
         <div class="under_icon" onclick="sendTo('scan.html', 'card.html')">
@@ -154,18 +220,18 @@
           </div>
           <p class="under_text">Potwierdź swoje dane</p>
         </div>
+        <div class="under_icon">
+          <div class="under_image_circle">
+            <img class="under_image under_image_blue" src="assets/app/images/family_card_partners_icon@3x.png" alt="">
+          </div>
+          <p class="under_text">Partnerzy karty</p>
+        </div>
         <div class="under_icon" onclick="sendTo('shortcuts.html')">
           <div class="under_image_circle">
             <img class="under_image under_image_small under_image_blue" src="assets/app/images/more.png" alt="">
           </div>
           <p class="under_text">Pozostałe skróty</p>
         </div>
-      </div>
-    </div>
-
-    <div class="confirm_info">
-      <div class="confirm_box" style="display: flex; justify-content: center; align-items: center; padding: 30px;">
-        <div id="qrCodeContainer" style="width: 200px; height: 200px;"></div>
       </div>
     </div>
 
@@ -180,6 +246,14 @@
           <button class="main_button_filled update" style="right:20px;" onclick="location.reload()">Aktualizuj</button>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- QR Code Modal -->
+  <div class="qr-modal" id="qrModal">
+    <div class="qr-modal-content">
+      <button class="qr-modal-close" onclick="closeQRModal()">&times;</button>
+      <div id="enlargedQRCodeContainer"></div>
     </div>
   </div>
 
@@ -204,9 +278,12 @@
       }
     }
     
+    // Store card number for modal
+    let currentCardNumber = '';
+    
     // Function to generate QR code
-    function generateQRCode(cardNumber) {
-      const qrContainer = document.getElementById('qrCodeContainer');
+    function generateQRCode(cardNumber, containerId, size) {
+      const qrContainer = document.getElementById(containerId);
       if (!qrContainer || !cardNumber) {
         console.log('QR container or card number not available');
         return;
@@ -219,8 +296,8 @@
         // Generate QR code using the QRCode library
         new QRCode(qrContainer, {
           text: cardNumber,
-          width: 200,
-          height: 200,
+          width: size || 120,
+          height: size || 120,
           correctLevel: QRCode.CorrectLevel.M
         });
         console.log('✓ QR code generated for card number:', cardNumber);
@@ -228,6 +305,46 @@
         console.error('Error generating QR code:', e);
       }
     }
+    
+    // Function to show enlarged QR code modal
+    function showQRModal(e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      if (!currentCardNumber) {
+        console.log('No card number available');
+        return false;
+      }
+      const modal = document.getElementById('qrModal');
+      const enlargedContainer = document.getElementById('enlargedQRCodeContainer');
+      if (modal && enlargedContainer) {
+        // Generate larger QR code (300px)
+        generateQRCode(currentCardNumber, 'enlargedQRCodeContainer', 300);
+        modal.classList.add('active');
+        // Prevent body scroll
+        document.body.style.overflow = 'hidden';
+      }
+      return false;
+    }
+    
+    // Function to close QR code modal
+    function closeQRModal() {
+      const modal = document.getElementById('qrModal');
+      if (modal) {
+        modal.classList.remove('active');
+        // Restore body scroll
+        document.body.style.overflow = '';
+      }
+    }
+    
+    // Close modal when clicking outside
+    document.addEventListener('click', function(e) {
+      const modal = document.getElementById('qrModal');
+      if (modal && e.target === modal) {
+        closeQRModal();
+      }
+    });
     
     // Load all data directly from localStorage - SIMPLE APPROACH
     function loadAllData() {
@@ -269,9 +386,23 @@
       if (expiryDate) setField('expiryDate', expiryDate);
       if (updateDate) setField('updateDate', updateDate);
       
+      // Store card number for modal
+      currentCardNumber = cardNumber;
+      
       // Generate QR code from card number
       if (cardNumber) {
-        generateQRCode(cardNumber);
+        generateQRCode(cardNumber, 'qrCodeContainer', 120);
+      }
+      
+      // Add click handler to enlarge button
+      const enlargeBtn = document.getElementById('enlargeQRBtn');
+      if (enlargeBtn) {
+        enlargeBtn.onclick = function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          showQRModal(e);
+          return false;
+        };
       }
       
       // Load user photo (karta_duzej_rodziny_ prefix)

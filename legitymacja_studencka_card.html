@@ -13,14 +13,28 @@
   <link rel="stylesheet" href="assets/app/card.css">
   <style>
     .legitymacja_studencka_under_grid {
-      display: grid !important;
-      grid-template-columns: repeat(4, 1fr) !important;
+      display: flex !important;
+      justify-content: center !important;
+      gap: 20px;
     }
-    .legitymacja_studencka_under_grid .under_icon:nth-child(1) {
-      grid-column: 2;
+    /* Barcode styling */
+    .barcode_box {
+      padding: 10px 15px !important;
     }
-    .legitymacja_studencka_under_grid .under_icon:nth-child(2) {
-      grid-column: 3;
+    .barcode_box #barcodeDisplay {
+      width: 100% !important;
+      height: 80px;
+      display: block;
+      margin-top: 5px;
+    }
+    .barcode_box #barcodeDisplay rect {
+      fill: transparent !important;
+    }
+    .barcode_box #barcodeDisplay g rect {
+      fill: white !important;
+    }
+    .barcode_box #barcodeDisplay text {
+      fill: white !important;
     }
     /* Make all data_value labels white for better visibility */
     .id_data_grid .data_holder .data_value {
@@ -38,6 +52,32 @@
     .content-loaded .id_bottom {
       opacity: 1;
     }
+    /* Blue info box styling - matching legitymacja_adwokacka */
+    .info_box_blue {
+      background-color: rgba(75, 164, 254, 0.85) !important;
+      border-radius: 10px !important;
+      padding: 15px 20px !important;
+      margin: -110px 0 120px 0 !important;
+      width: 100%;
+      box-sizing: border-box;
+      border: none !important;
+    }
+    .info_box_blue .confirm_box {
+      border: none !important;
+      border-bottom: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+    .info_box_blue .confirm_box .box_value {
+      font-size: 14px !important;
+      text-align: left !important;
+      margin: 0 !important;
+      color: #0a284d !important;
+      flex: 1;
+    }
   </style>
   <link rel="icon" type="image/x-icon" href="assets/app/images/ikonka.png">
   <link rel="apple-touch-icon" href="assets/app/images/ikonka.png">
@@ -51,7 +91,7 @@
       <img src="assets/app/images/back_blue.png" class="back_img_fixed" alt="">
       <p onclick="sendTo('documents.html')" class="back_text_fixed">Dokumenty</p>
     </div>
-    <p class="title_text_fixed">Legitymacja studencka</p>
+    <p class="title_text_fixed" style="white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important;">Legitymacja studencka</p>
     <img src="assets/app/images/help.png" class="help_img_fixed" id="helpIconBtn" alt="" style="cursor: pointer; pointer-events: auto !important; z-index: 1000; position: relative;" onclick="if(window.toggleEagleDrag){window.toggleEagleDrag();}else{console.log('Function not ready');}">
   </div>
 
@@ -100,7 +140,7 @@
             <div></div>
           </div>
         </div>
-        <img draggable="false" class="id_image" id="bgImage" src="assets/app/images/attorneyAtLawCardBackground@3x.png" alt="">
+        <img draggable="false" class="id_image" id="bgImage" src="assets/app/images/studentCardBackground.png" alt="">
         <img draggable="false" class="id_image_effect" src="assets/app/images/idCardEffect.png" alt="">
         <div class="inset"></div>
 
@@ -158,6 +198,12 @@
           </div>
           <p class="under_text">Potwierdź swoje dane</p>
         </div>
+        <div class="under_icon">
+          <div class="under_image_circle">
+            <img class="under_image under_image_blue" src="assets/app/images/AC015_Safe_bus@3x.png" alt="">
+          </div>
+          <p class="under_text">Bezpieczny autobus</p>
+        </div>
         <div class="under_icon" onclick="sendTo('shortcuts.html')">
           <div class="under_image_circle">
             <img class="under_image under_image_small under_image_blue" src="assets/app/images/more.png" alt="">
@@ -168,13 +214,13 @@
     </div>
 
     <div class="confirm_info">
-      <div class="confirm_box">
+      <div class="confirm_box" style="border-bottom: none;">
         <p class="box_top">Numer albumu</p>
         <p class="box_value" id="albumNumber"></p>
       </div>
-      <div class="confirm_box">
+      <div class="confirm_box barcode_box" style="border-bottom: none;">
         <p class="box_top">Kod kreskowy</p>
-        <p class="box_value" id="barcode"></p>
+        <svg id="barcodeDisplay"></svg>
       </div>
     </div>
 
@@ -190,12 +236,23 @@
         </div>
       </div>
     </div>
+
+    <div class="confirm_info info_box_blue">
+      <div class="confirm_box">
+        <img src="assets/app/images/informationIcon@3x.png" alt="" style="width: 24px; height: 24px; margin-right: 10px; flex-shrink: 0; align-self: flex-start; margin-top: 2px;">
+        <div style="flex: 1;">
+          <p class="info_title" style="font-size: 18px; font-weight: 500; color: #0a284d; margin: 0 0 5px 0;">Informacja</p>
+          <p class="box_value">Poświadcza uprawnienia do 50% ulgi przy przejazdach środkami komunikacji miejskiej, a także uprawnienia do korzystania - do ukończenia 26. roku życia - z ulgowych przejazdów środkami publicznego transportu zbiorowego autobusowego i kolejowego na podstawie odrębnych przepisów.</p>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script src="assets/app/bar.js"></script>
   <script src="assets/app/card.js"></script>
   <script src="assets/app/manifest.js"></script>
   <script src="assets/app/cache.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 
   <script>
     // ============================================================
@@ -212,6 +269,31 @@
       }
     }
     
+    // Generate barcode from album number
+    function generateBarcode(albumNumber) {
+      try {
+        JsBarcode("#barcodeDisplay", albumNumber, {
+          format: "CODE128",
+          width: 2,
+          height: 70,
+          displayValue: false,
+          background: "transparent",
+          lineColor: "#ffffff",
+          margin: 0
+        });
+        // Make barcode stretch to fill container
+        const svg = document.getElementById('barcodeDisplay');
+        if (svg) {
+          svg.setAttribute('preserveAspectRatio', 'none');
+          svg.removeAttribute('width');
+          svg.removeAttribute('height');
+        }
+        console.log('✓ Generated barcode for:', albumNumber);
+      } catch (e) {
+        console.error('Error generating barcode:', e);
+      }
+    }
+    
     // Load all data directly from localStorage - SIMPLE APPROACH
     function loadAllData() {
       console.log('=== LOADING ALL DATA FOR Legitymacja Studencka ===');
@@ -219,11 +301,11 @@
       // Try to get JSON data first (with legitymacja_studencka_ prefix)
       let data = {};
       const jsonData = localStorage.getItem('legitymacja_studencka_userData');
-      if (jsonData) {
-        try {
+        if (jsonData) {
+          try {
           data = JSON.parse(jsonData);
           console.log('Loaded legitymacja_studencka_userData JSON:', data);
-        } catch (e) {
+          } catch (e) {
           console.error('Error parsing legitymacja_studencka_userData JSON:', e);
         }
       }
@@ -236,7 +318,6 @@
       const givenDate = localStorage.getItem('legitymacja_studencka_givenDate') || data.givenDate || ''; // Data wydania
       const universityName = localStorage.getItem('legitymacja_studencka_universityName') || data.universityName || ''; // Nazwa uczelni
       const albumNumber = localStorage.getItem('legitymacja_studencka_albumNumber') || data.albumNumber || ''; // Numer albumu
-      const barcode = localStorage.getItem('legitymacja_studencka_barcode') || data.barcode || ''; // Kod kreskowy
       const updateDate = localStorage.getItem('legitymacja_studencka_update') || localStorage.getItem('update') || '';
       
       // Format birthday from day/month/year
@@ -245,7 +326,7 @@
         const day = String(data.day).padStart(2, '0');
         const month = String(data.month).padStart(2, '0');
         birthday = `${day}.${month}.${data.year}`;
-      } else {
+          } else {
         const day = localStorage.getItem('legitymacja_studencka_day');
         const month = localStorage.getItem('legitymacja_studencka_month');
         const year = localStorage.getItem('legitymacja_studencka_year');
@@ -265,7 +346,6 @@
       console.log('  givenDate (Data wydania):', givenDate);
       console.log('  universityName (Nazwa uczelni):', universityName);
       console.log('  albumNumber (Numer albumu):', albumNumber);
-      console.log('  barcode (Kod kreskowy):', barcode);
       
       // Set all fields - DIRECTLY, no complex logic
       if (name) setField('name', name.toUpperCase());
@@ -274,8 +354,11 @@
       if (pesel) setField('pesel_value', pesel);
       if (givenDate) setField('givenDate', givenDate);
       if (universityName) setField('universityName', universityName.toUpperCase());
-      if (albumNumber) setField('albumNumber', albumNumber);
-      if (barcode) setField('barcode', barcode);
+      if (albumNumber) {
+        setField('albumNumber', albumNumber);
+        // Generate barcode from album number
+        generateBarcode(albumNumber);
+      }
       if (updateDate) setField('updateDate', updateDate);
       
       // Load user photo (legitymacja_studencka_ prefix)
@@ -288,8 +371,8 @@
         }
       }
       
-      // Show content
-      document.body.classList.add('content-loaded');
+            // Show content
+                document.body.classList.add('content-loaded');
       
       console.log('=== DATA LOADING COMPLETE ===');
     }

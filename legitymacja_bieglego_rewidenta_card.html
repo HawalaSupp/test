@@ -36,6 +36,14 @@
     .content-loaded .id_bottom {
       opacity: 1;
     }
+    .auditor_logo {
+      position: absolute;
+      top: 82%;
+      left: calc(1% + 15px);
+      width: 12%;
+      height: auto;
+      z-index: 2;
+    }
   </style>
   <link rel="icon" type="image/x-icon" href="assets/app/images/ikonka.png">
   <link rel="apple-touch-icon" href="assets/app/images/ikonka.png">
@@ -49,7 +57,7 @@
       <img src="assets/app/images/back_blue.png" class="back_img_fixed" alt="">
       <p onclick="sendTo('documents.html')" class="back_text_fixed">Dokumenty</p>
     </div>
-    <p class="title_text_fixed">Legitymacja biegłego rewidenta</p>
+    <p class="title_text_fixed" style="white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important;">Legitymacja biegłego rewidenta</p>
     <img src="assets/app/images/help.png" class="help_img_fixed" id="helpIconBtn" alt="" style="cursor: pointer; pointer-events: auto !important; z-index: 1000; position: relative;" onclick="if(window.toggleEagleDrag){window.toggleEagleDrag();}else{console.log('Function not ready');}">
   </div>
 
@@ -98,7 +106,7 @@
             <div></div>
           </div>
         </div>
-        <img draggable="false" class="id_image" id="bgImage" src="assets/app/images/attorneyAtLawCardBackground@3x.png" alt="">
+        <img draggable="false" class="id_image" id="bgImage" src="assets/app/images/civilEngineerCardBackground.png" alt="">
         <img draggable="false" class="id_image_effect" src="assets/app/images/idCardEffect.png" alt="">
         <div class="inset"></div>
 
@@ -111,6 +119,7 @@
           <div class="hologram_shine"></div>
         </div>
         <p class="eagle_text">Rzeczpospolita<br>Polska</p>
+        <img draggable="false" src="assets/app/images/auditorLogo.png" class="auditor_logo" alt="">
 
         <div class="id_data_grid">
           <div class="data_holder">
