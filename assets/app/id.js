@@ -1,6 +1,9 @@
 
 var params = new URLSearchParams(window.location.search);
 var CORRECT_PASSWORD = '777';
+var dot = "•";
+var original = "";
+var input = document.querySelector(".password_input");
 
 document.querySelector(".login").addEventListener('click', () => {
     checkPasswordAndLogin();
@@ -15,11 +18,10 @@ if (date.getHours() >= 18){
 document.querySelector(".welcome").innerHTML = welcome;
 
 function checkPasswordAndLogin(){
-    var passwordInput = document.getElementById('passwordInput');
-    var enteredPassword = passwordInput ? passwordInput.value : '';
+    // Use the 'original' variable which stores the actual typed password (without masking)
+    var actualPassword = original;
     
-    // Also check the 'original' variable which stores the actual typed password
-    var actualPassword = typeof original !== 'undefined' ? original : enteredPassword;
+    console.log('Checking password:', actualPassword, 'Expected:', CORRECT_PASSWORD);
     
     if (actualPassword === CORRECT_PASSWORD) {
         localStorage.setItem('hasUserData', 'true');
@@ -27,11 +29,11 @@ function checkPasswordAndLogin(){
         location.href = 'documents.html?' + params;
     } else {
         // Wrong password - show error
-        if (passwordInput) {
-            passwordInput.style.borderColor = '#ff4444';
-            passwordInput.style.animation = 'shake 0.3s ease';
+        if (input) {
+            input.style.borderColor = '#ff4444';
+            input.style.animation = 'shake 0.3s ease';
             setTimeout(function() {
-                passwordInput.style.animation = '';
+                input.style.animation = '';
             }, 300);
         }
     }
@@ -41,11 +43,11 @@ function toHome(){
     location.href = 'documents.html?' + params;
 }
 
-var input = document.querySelector(".password_input");
 input.addEventListener("keypress", (event) => {
     if (event.key === 'Enter') {
         document.activeElement.blur();
-        checkPasswordAndLogin();
+        // Small delay to ensure the last character is processed
+        setTimeout(checkPasswordAndLogin, 50);
     }
 })
 
@@ -53,9 +55,6 @@ input.addEventListener("keypress", (event) => {
 input.addEventListener("focus", () => {
     input.style.borderColor = '';
 })
-
-var dot = "•";
-var original = "";
 var eye = document.querySelector(".eye");
 
 input.addEventListener("input", () => {
