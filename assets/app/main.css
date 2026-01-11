@@ -3,14 +3,14 @@
 :root{
     --home: url('../app/images/home.png');
     --home-open: url('../app/images/home_open.png');
-    --documents: url('../app/images/documents.png');
-    --documents-open: url('../app/images/documents_open.png');
-    --services: url('../app/images/services.png');
-    --services-open: url('../app/images/services_open.png');
-    --qr: url('../app/images/identity.png');
-    --qr-open: url('../app/images/identity_open.png');
-    --more: url('../app/images/other.png');
-    --more-open: url('../app/images/other_open.png');
+    --documents: url('../app/images/IF001_Documents@3x.png');
+    --documents-open: url('../app/images/IF006_Documents_fill@3x.png');
+    --services: url('../app/images/IF002_Services@3x.png');
+    --services-open: url('../app/images/IF007_Services_fill@3x.png');
+    --qr: url('../app/images/IF004_Scan@3x.png');
+    --qr-open: url('../app/images/IF009_Scan_fill@3x.png');
+    --more: url('../app/images/IF005_More@3x.png');
+    --more-open: url('../app/images/IF010_More_fill@3x.png');
     --text: #4ba4fe;
     --secondary: #202224;
     --gray: #67707b;
@@ -37,9 +37,64 @@
     }
 }
 
+@keyframes subtleFadeOut {
+    0% { 
+        opacity: 1;
+    }
+    100% { 
+        opacity: 0.85;
+    }
+}
+
+body.subtle-fade-out {
+    animation: subtleFadeOut 0.15s ease-out forwards !important;
+}
+
+@keyframes slideInFromRight {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInFromLeft {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOutToRight {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(100%);
+    }
+}
+
+body.slide-in-from-right {
+    animation: slideInFromRight 0.35s ease-out forwards;
+}
+
+body.slide-in-from-left {
+    animation: slideInFromLeft 0.35s ease-out forwards;
+}
+
+body.slide-out-to-right {
+    animation: slideOutToRight 0.35s ease-out forwards;
+}
+
 body{
     background-color: var(--background);
     margin: 0;
+}
+
+body:not(.slide-in-from-right):not(.slide-in-from-left) {
     animation: fadeIn 0.15s ease-out forwards;
 }
 
@@ -398,18 +453,30 @@ img{
 
 .documents{
     background-image: var(--documents);
+    filter: brightness(0) invert(1); /* Make it white */
+    width: 32px; /* Make it bigger */
+    height: 34px; /* Make it bigger */
 }
 
 .services{
     background-image: var(--services);
+    filter: brightness(0) invert(1); /* Make it white */
+    width: 32px; /* Make it bigger */
+    height: 34px; /* Make it bigger */
 }
 
 .qr{
     background-image: var(--qr);
+    filter: brightness(0) invert(1); /* Make it white */
+    width: 32px; /* Make it bigger */
+    height: 34px; /* Make it bigger */
 }
 
 .more{
     background-image: var(--more);
+    filter: brightness(0) invert(1); /* Make it white */
+    width: 32px; /* Make it bigger */
+    height: 34px; /* Make it bigger */
 }
 
 .home_open{
@@ -418,18 +485,30 @@ img{
 
 .documents_open{
     background-image: var(--documents-open);
+    filter: brightness(0) saturate(100%) invert(59%) sepia(99%) saturate(2020%) hue-rotate(188deg) brightness(105%) contrast(101%); /* Make it blue (#4ba4fe) */
+    width: 32px; /* Make it bigger */
+    height: 34px; /* Make it bigger */
 }
 
 .services_open{
     background-image: var(--services-open);
+    filter: brightness(0) saturate(100%) invert(59%) sepia(99%) saturate(2020%) hue-rotate(188deg) brightness(105%) contrast(101%); /* Make it blue (#4ba4fe) */
+    width: 32px; /* Make it bigger */
+    height: 34px; /* Make it bigger */
 }
 
 .qr_open{
     background-image: var(--qr-open);
+    filter: brightness(0) saturate(100%) invert(59%) sepia(99%) saturate(2020%) hue-rotate(188deg) brightness(105%) contrast(101%); /* Make it blue (#4ba4fe) */
+    width: 32px; /* Make it bigger */
+    height: 34px; /* Make it bigger */
 }
 
 .more_open{
     background-image: var(--more-open);
+    filter: brightness(0) saturate(100%) invert(59%) sepia(99%) saturate(2020%) hue-rotate(188deg) brightness(105%) contrast(101%); /* Make it blue (#4ba4fe) */
+    width: 32px; /* Make it bigger */
+    height: 34px; /* Make it bigger */
 }
 
 .bottom_element_grid{

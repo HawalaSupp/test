@@ -447,7 +447,9 @@
                 
                 // If cards are already expanded, navigate to the page
                 if (container.classList.contains('expanded')) {
-                    // Navigate immediately without visual effects
+                    // Set flag to indicate slide-in animation should be used
+                    localStorage.setItem('slideInFromRight', 'true');
+                    // Navigate with slide-in animation
                     window.location.href = url;
                 }
             }

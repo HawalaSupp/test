@@ -1,6 +1,28 @@
 
 var params = new URLSearchParams(window.location.search);
 
+// Simple slide-in animation from right (coming from documents page)
+(function() {
+    if (localStorage.getItem('slideInFromRight') === 'true') {
+        localStorage.removeItem('slideInFromRight');
+        document.body.classList.add('slide-in-from-right');
+        setTimeout(function() {
+            document.body.classList.remove('slide-in-from-right');
+        }, 400);
+    }
+})();
+
+// Simple slide-in animation from left (coming back to documents page)
+(function() {
+    if (localStorage.getItem('slideInFromLeft') === 'true') {
+        localStorage.removeItem('slideInFromLeft');
+        document.body.classList.add('slide-in-from-left');
+        setTimeout(function() {
+            document.body.classList.remove('slide-in-from-left');
+        }, 400);
+    }
+})();
+
 var bar = document.querySelectorAll(".bottom_element_grid");
 
 var top = localStorage.getItem('top');
@@ -25,14 +47,38 @@ if (localStorage.getItem('bottom')){
     })
 }
 
-function sendTo(url, top, bottom){
+function sendTo(url, top, bottom, skipAnimation, subtleFade){
     if (top) {
         localStorage.setItem('top', top)
     }
     if (bottom){
         localStorage.setItem('bottom', bottom)
     }
-    // Add smooth fade out and slide transition
+    // Skip animation completely
+    if (skipAnimation) {
+        location.href = `${url}?` + params;
+        return;
+    }
+    // Add subtle fade for bottom navigation switching
+    if (subtleFade) {
+        document.body.classList.add('subtle-fade-out');
+        setTimeout(() => {
+            location.href = `${url}?` + params;
+        }, 150);
+        return;
+    }
+    // Special animation for going back to documents page
+    if (url === 'documents.html' || url.includes('documents.html')) {
+        // Set flag for documents page to slide in from left
+        localStorage.setItem('slideInFromLeft', 'true');
+        // Slide current page out to the right
+        document.body.classList.add('slide-out-to-right');
+        setTimeout(() => {
+            location.href = `${url}?` + params;
+        }, 350);
+        return;
+    }
+    // Add smooth fade out and slide transition for other navigation
     document.body.classList.add('fade-out');
     setTimeout(() => {
         location.href = `${url}?` + params;
@@ -47,7 +93,8 @@ bar.forEach((element) => {
         localStorage.removeItem('top');
         localStorage.removeItem('bottom');
 
-        sendTo(element.getAttribute("send"))
+        // Add subtle fade for bottom navigation switching
+        sendTo(element.getAttribute("send"), null, null, false, true)
     })
 })
 
