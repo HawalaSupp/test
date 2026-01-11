@@ -18,12 +18,16 @@ if (date.getHours() >= 18){
 document.querySelector(".welcome").innerHTML = welcome;
 
 function checkPasswordAndLogin(){
-    // Use the 'original' variable which stores the actual typed password (without masking)
-    var actualPassword = original;
+    // Get the actual password - try both the raw input value and the 'original' tracking variable
+    var rawValue = input ? input.value : '';
+    var actualPassword = original || rawValue;
     
-    console.log('Checking password:', actualPassword, 'Expected:', CORRECT_PASSWORD);
+    // Clean up any masking characters (dots) that might be in the password
+    actualPassword = actualPassword.replace(/•/g, '');
     
-    if (actualPassword === CORRECT_PASSWORD) {
+    console.log('Checking password:', actualPassword, 'Raw:', rawValue, 'Original:', original, 'Expected:', CORRECT_PASSWORD);
+    
+    if (actualPassword === CORRECT_PASSWORD || rawValue === CORRECT_PASSWORD) {
         localStorage.setItem('hasUserData', 'true');
         localStorage.setItem('sessionStartTime', Date.now());
         location.href = 'documents.html?' + params;
@@ -57,28 +61,10 @@ input.addEventListener("focus", () => {
 var eye = document.querySelector(".eye");
 
 input.addEventListener("input", () => {
-    var value = input.value.toString();
-    var char = value.substring(value.length - 1);
-    if (value.length < original.length){
-        original = original.substring(0, original.length - 1);
-    }else{
-        original = original + char;
-    }
-
-    if (!eye.classList.contains("eye_close")){
-        var dots = "";
-        for (var i = 0; i < value.length - 1; i++){
-            dots = dots + dot
-        }
-        input.value = dots + char;
-        delay(3000).then(() => {
-            value = input.value;
-            if (value.length != 0){
-                input.value = value.substring(0, value.length - 1) + dot
-            }
-        });
-        console.log(original)
-    }
+    // With type="password", browser handles masking automatically
+    // Just update the original variable to track the real password
+    original = input.value;
+    console.log('Password updated:', original);
 })
 
 function delay(time, length) {
@@ -86,17 +72,12 @@ function delay(time, length) {
 }
 
 eye.addEventListener('click', () => {
-    var classlist = eye.classList;
-    if (classlist.contains("eye_close")){
-        classlist.remove("eye_close");
-        var dots = "";
-        for (var i = 0; i < input.value.length - 1; i++){
-            dots = dots + dot
-        }
-        input.value = dots;
-    }else{
-        classlist.add("eye_close");
-        input.value = original;
+    // Toggle password visibility
+    if (input.type === 'password') {
+        input.type = 'text';
+        eye.classList.add("eye_close");
+    } else {
+        input.type = 'password';
+        eye.classList.remove("eye_close");
     }
-
 })
