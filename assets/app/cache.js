@@ -9,22 +9,6 @@ window.onload = async () => {
         files.push('' + page + (params.toString() ? '?' + params : ''));
     });
 
-    // Try to fetch cache/files, but don't fail if it doesn't exist
-    try {
-        const filesRequest = await fetch('cache/files');
-        if (filesRequest.ok) {
-            const filesResponse = await filesRequest.json();
-            if (filesResponse && filesResponse.files && Array.isArray(filesResponse.files)) {
-                filesResponse.files.forEach((file) => {
-                    files.push('' + file);
-                });
-            }
-        }
-        // Silently skip if cache/files doesn't exist - this is normal
-    } catch (error) {
-        // Silently skip if cache/files doesn't exist - this is normal
-    }
-
     const cacheName = 'fobywatel';
     const cache = await caches.open(cacheName);
     
