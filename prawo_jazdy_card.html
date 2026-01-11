@@ -250,6 +250,7 @@
       const birthPlace = localStorage.getItem('prawoJazdy_birthPlace') || data.birthPlace || '';
       const sex = localStorage.getItem('prawoJazdy_sex') || data.sex || '';
       const birthDay = localStorage.getItem('prawoJazdy_birthDay') || '';
+      const pesel = localStorage.getItem('prawoJazdy_pesel') || data.pesel || '';
       const kategorie = localStorage.getItem('prawoJazdy_kategorie') || data.kategorie || '';
       const updateDate = localStorage.getItem('prawoJazdy_update') || localStorage.getItem('update') || '';
       
@@ -266,6 +267,7 @@
       console.log('  name:', name);
       console.log('  surname:', surname);
       console.log('  birthday:', birthday);
+      console.log('  pesel:', pesel);
       console.log('  kategorie:', kategorie);
       
       // Set all fields - DIRECTLY, no complex logic
@@ -273,6 +275,10 @@
       if (surname) setField('surname', surname.toUpperCase());
       if (birthday) setField('birthday', birthday);
       if (birthPlace) setField('birthPlace', birthPlace.toUpperCase());
+      if (pesel) {
+        const peselEl = document.getElementById('pesel_value');
+        if (peselEl) peselEl.textContent = pesel;
+      }
       if (kategorie) setField('kategorie', kategorie);
       if (updateDate) setField('updateDate', updateDate);
       

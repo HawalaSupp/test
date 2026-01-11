@@ -160,6 +160,7 @@
           if (sexGroup) sexGroup.style.display = 'block';
           if (birthdayDateGroup) birthdayDateGroup.style.display = 'block';
           if (givenDateGroup) givenDateGroup.style.display = 'block';
+          if (peselGroup) peselGroup.style.display = 'block';
           document.getElementById('kategorieGroup').style.display = 'block';
           document.getElementById('prawoJazdyFields').style.display = 'block';
           document.getElementById('prawoJazdyFields2').style.display = 'block';
@@ -1804,6 +1805,7 @@
           data.day = parseInt(getFieldValue('day')) || 0;
           data.month = parseInt(getFieldValue('month')) || 0;
           data.year = parseInt(getFieldValue('year')) || 0;
+          data.pesel = getFieldValue('customPesel');
           data.kategorie = getFieldValue('customKategorie');
           data.givenDate = getFieldValue('customGivenDate');
           data.wydany = getFieldValue('customWydany');
