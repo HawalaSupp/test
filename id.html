@@ -185,60 +185,6 @@
                 initBackgroundControls();
             }
         })();
-        
-        // Password validation
-        (function() {
-            const CORRECT_PASSWORD = '777';
-            
-            function initLogin() {
-                const loginBtn = document.getElementById('loginBtn');
-                const passwordInput = document.getElementById('passwordInput');
-                
-                if (!loginBtn || !passwordInput) {
-                    setTimeout(initLogin, 100);
-                    return;
-                }
-                
-                loginBtn.onclick = function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    
-                    const enteredPassword = passwordInput.value;
-                    
-                    if (enteredPassword === CORRECT_PASSWORD) {
-                        // Correct password - proceed to documents page
-                        localStorage.setItem('hasUserData', 'true');
-                        localStorage.setItem('sessionStartTime', Date.now());
-                        window.location.href = 'documents.html';
-                    } else {
-                        // Wrong password - shake the input to indicate error
-                        passwordInput.style.borderColor = '#ff4444';
-                        passwordInput.style.animation = 'shake 0.3s ease';
-                        setTimeout(function() {
-                            passwordInput.style.animation = '';
-                        }, 300);
-                    }
-                };
-                
-                // Reset border color when user starts typing
-                passwordInput.addEventListener('input', function() {
-                    passwordInput.style.borderColor = '';
-                });
-                
-                // Allow Enter key to submit
-                passwordInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        loginBtn.click();
-                    }
-                });
-            }
-            
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', initLogin);
-            } else {
-                initLogin();
-            }
-        })();
     </script>
     <style>
         @keyframes shake {

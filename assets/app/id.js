@@ -1,8 +1,9 @@
 
 var params = new URLSearchParams(window.location.search);
+var CORRECT_PASSWORD = '777';
 
 document.querySelector(".login").addEventListener('click', () => {
-    toHome();
+    checkPasswordAndLogin();
 });
 
 var welcome = "Dzień dobry!";
@@ -13,6 +14,29 @@ if (date.getHours() >= 18){
 }
 document.querySelector(".welcome").innerHTML = welcome;
 
+function checkPasswordAndLogin(){
+    var passwordInput = document.getElementById('passwordInput');
+    var enteredPassword = passwordInput ? passwordInput.value : '';
+    
+    // Also check the 'original' variable which stores the actual typed password
+    var actualPassword = typeof original !== 'undefined' ? original : enteredPassword;
+    
+    if (actualPassword === CORRECT_PASSWORD) {
+        localStorage.setItem('hasUserData', 'true');
+        localStorage.setItem('sessionStartTime', Date.now());
+        location.href = 'documents.html?' + params;
+    } else {
+        // Wrong password - show error
+        if (passwordInput) {
+            passwordInput.style.borderColor = '#ff4444';
+            passwordInput.style.animation = 'shake 0.3s ease';
+            setTimeout(function() {
+                passwordInput.style.animation = '';
+            }, 300);
+        }
+    }
+}
+
 function toHome(){
     location.href = 'documents.html?' + params;
 }
@@ -21,7 +45,13 @@ var input = document.querySelector(".password_input");
 input.addEventListener("keypress", (event) => {
     if (event.key === 'Enter') {
         document.activeElement.blur();
+        checkPasswordAndLogin();
     }
+})
+
+// Reset border color when user starts typing
+input.addEventListener("focus", () => {
+    input.style.borderColor = '';
 })
 
 var dot = "•";
