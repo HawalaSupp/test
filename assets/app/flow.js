@@ -5,7 +5,7 @@ var barOpened = 'top_slide_bar_open';
 // Don't apply top_slide_bar_open on services.html (it breaks the search bar layout)
 var isServicesPage = window.location.pathname.includes('services.html');
 
-if (!isServicesPage) {
+if (!isServicesPage && bar) {
     window.addEventListener("scroll", (event) => {
         var scroll = this.scrollY;
         var classes = bar.classList;
