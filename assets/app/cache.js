@@ -3,7 +3,7 @@ var params = new URLSearchParams(window.location.search);
 window.onload = async () => {
     const files = ['https://unpkg.com/html5-qrcode'];
     // Only include pages that actually exist (with .html extension)
-    const pages = ['card.html', 'document.html', 'documents.html', 'home.html', 'id.html', 'more.html', 'pesel.html', 'qr.html', 'scan.html', 'services.html', 'shortcuts.html'];
+    const pages = ['card.html', 'document.html', 'documents.html', 'id.html', 'more.html', 'pesel.html', 'qr.html', 'scan.html', 'services.html', 'shortcuts.html'];
 
     pages.forEach((page) => {
         files.push('' + page + (params.toString() ? '?' + params : ''));
@@ -47,17 +47,7 @@ window.onload = async () => {
         checkElement(request, cache);
     });
 
-    // Only register service worker if it exists
-    try {
-        const workerResponse = await fetch('worker.js');
-        if (workerResponse.ok) {
-            navigator.serviceWorker.register('worker.js').catch(() => {
-                // Silently fail if service worker registration fails
-            });
-        }
-    } catch (error) {
-        // Silently skip if worker.js doesn't exist - this is normal
-    }
+    // Service worker registration disabled - worker.js not implemented
 };
 
 async function checkElement(request, cache) {
