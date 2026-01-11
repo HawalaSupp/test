@@ -2,76 +2,16 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8">
-  <link rel="stylesheet" href="assets/app/login.css">
   <link rel="icon" type="image/x-icon" href="assets/app/images/AppIcon~phone~1792@2x~180x180.png">
   <link rel="apple-touch-icon" href="assets/app/images/AppIcon~phone~1792@2x~180x180.png">
   <link rel="shortcut icon" href="assets/app/images/AppIcon~phone~1792@2x~180x180.png">
   <title>mObywatel</title>
   <meta name="viewport" content="width=device-width, initial-scale=0.8, user-scalable=no">
-  <meta name="mobile-web-app-capable" content="yes">
   <script>
-    if (localStorage.getItem('hasUserData') === 'true') {
-      window.location.replace('id.html');
-    }
+    // Redirect to the main login page
+    window.location.replace('id.html');
   </script>
 </head>
 <body>
-  <div class="background"></div>
-  <div class="login_wrapper">
-    <div class="top_grid">
-      <img src="assets/app/images/logo_large.png" class="logo">
-      <p class="logo_text">mObywatel</p>
-    </div>
-    
-    <div class="top_text">
-      <p class="welcome"></p>
-      <p class="login_text">Zaloguj się do aplikacji.</p>
-    </div>
-    
-    <div class="password_box">
-      <div class="password_grid">
-        <p class="password_text">Hasło</p>
-        <div class="input_holder">
-          <input type="password" class="password_input" id="password" placeholder="">
-          <div class="eye" onclick="togglePassword()"></div>
-        </div>
-        <p class="forgot_password">Nie pamiętasz hasła?</p>
-      </div>
-    </div>
-    
-    <div class="bottom">
-      <div class="login" onclick="forwardToLogin()">Zaloguj się</div>
-      
-      <div class="data">
-        <div class="logos_row">
-          <div class="mc_wrapper">
-            <img src="assets/app/images/mc.png" class="logo_other" alt="MC">
-          </div>
-          <div class="eu_wrapper">
-            <p class="eu_text">Sfinansowano przez Unię Europejską</p>
-            <img src="assets/app/images/eu@3x.png" class="logo_other" alt="EU">
-          </div>
-        </div>
-        <p class="version">wersja 4.71.1 (2)</p>
-      </div>
-    </div>
-  </div>
-  
-  <script>
-    function togglePassword() {
-      var input = document.getElementById('password');
-      if (input.type === 'password') {
-        input.type = 'text';
-      } else {
-        input.type = 'password';
-      }
-    }
-    
-    function forwardToLogin() {
-      localStorage.setItem('hasUserData', 'true');
-      localStorage.setItem('sessionStartTime', Date.now());
-      window.location.href = 'id.html';
-    }
-  </script>
 </body>
 </html>

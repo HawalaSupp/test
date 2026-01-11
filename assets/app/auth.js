@@ -10,7 +10,7 @@ window.goToCreator = function() {
     // localStorage.removeItem('birthDay');
     // localStorage.removeItem('givenDate');
     // localStorage.removeItem('expiryDate');
-    window.location.href = 'index.html';
+    window.location.href = 'id.html';
 };
 
 

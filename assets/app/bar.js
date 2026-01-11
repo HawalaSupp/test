@@ -4,7 +4,7 @@ var params = new URLSearchParams(window.location.search);
 // Auto-logout after 3 minutes of inactivity or 30 seconds after leaving the website
 (function() {
     // Don't run on login page
-    if (window.location.pathname.includes('index.html')) {
+    if (window.location.pathname.includes('id.html')) {
         return;
     }
     
@@ -44,7 +44,7 @@ var params = new URLSearchParams(window.location.search);
             localStorage.removeItem('lastActiveTime');
             clearInterval(checkInterval);
             clearTimeout(activityTimer);
-            window.location.href = 'index.html';
+            window.location.href = 'id.html';
         }
     }
     
@@ -64,7 +64,7 @@ var params = new URLSearchParams(window.location.search);
             localStorage.removeItem('lastActiveTime');
             clearInterval(checkInterval);
             clearTimeout(activityTimer);
-            window.location.href = 'index.html';
+            window.location.href = 'id.html';
         }
     }
     
@@ -83,7 +83,7 @@ var params = new URLSearchParams(window.location.search);
             localStorage.removeItem('hasUserData');
             localStorage.removeItem('sessionStartTime');
             localStorage.removeItem('lastActiveTime');
-            window.location.href = 'index.html';
+            window.location.href = 'id.html';
             return;
         }
         
@@ -94,7 +94,7 @@ var params = new URLSearchParams(window.location.search);
                 localStorage.removeItem('hasUserData');
                 localStorage.removeItem('sessionStartTime');
                 localStorage.removeItem('lastActiveTime');
-                window.location.href = 'index.html';
+                window.location.href = 'id.html';
                 return;
             }
         } else {
