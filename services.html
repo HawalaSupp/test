@@ -19,6 +19,14 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="viewport" content="width=device-width, initial-scale=0.8, user-scalable=no">
     <meta name="mobile-web-app-capable" content="yes">
+    <script>
+        function logoutToLogin() {
+            localStorage.removeItem('hasUserData');
+            localStorage.removeItem('sessionStartTime');
+            localStorage.removeItem('lastActiveTime');
+            window.location.href = 'index.html';
+        }
+    </script>
 <link type="text/css" rel="stylesheet" id="dark-mode-custom-link"><link type="text/css" rel="stylesheet" id="dark-mode-general-link"><style lang="en" type="text/css" id="dark-mode-custom-style"></style><style lang="en" type="text/css" id="dark-mode-native-style"></style><style lang="en" type="text/css" id="dark-mode-native-sheet"></style><style>:is([id*='google_ads_iframe'],[id*='taboola-'],.taboolaHeight,.taboola-placeholder,#top-ad,#credential_picker_container,#credentials-picker-container,#credential_picker_iframe,[id*='google-one-tap-iframe'],#google-one-tap-popup-container,.google-one-tap__module,.google-one-tap-modal-div,#amp_floatingAdDiv,#ez-content-blocker-container) {display:none!important;min-height:0!important;height:0!important;}</style></head>
 <body>
     <button class="refresh_button" onclick="window.location.href = window.location.href.split("?")[0] + "?t=" + Date.now()" title="Force Refresh">↻</button>
@@ -58,6 +66,11 @@
     <div class="container">
         <p class="title" style="margin-top: 250px;">Ochrona danych</p>
         <div class="services_list">
+            <div class="service" style="border: none; cursor: pointer;" onclick="logoutToLogin()">
+                <img class="service_icon" src="assets/app/images/safe_in_web.png">
+                <p class="service_name">Dane zameldowania</p>
+                <img class="arrow" src="assets/app/images/right_arrow_sharp.png">
+            </div>
             <div class="service" style="border: none;">
                 <img class="service_icon" src="assets/app/images/safe_in_web.png">
                 <p class="service_name">Bezpiecznie w sieci</p>
@@ -293,6 +306,7 @@
                 document.body.style.overflow = '';
             }
         }
+
 
         // Close modal when clicking outside
         document.addEventListener('DOMContentLoaded', function() {

@@ -40,9 +40,9 @@
         <div class="container">
             <div class="page_top">
                 <img class="main_page_logo" src="assets/app/images/navigationBarLogo@3x.png">
-                <div class="page_top_right" onclick="toggleRefreshButton()" style="cursor: pointer;">
+                <div class="page_top_right">
                     <img class="main_page_icon" src="assets/app/images/IMG_2957-removebg-preview.png">
-                    <img class="main_page_bell" src="assets/app/images/bell.png">
+                    <img class="main_page_bell" src="assets/app/images/bell.png" onclick="toggleRefreshButton()" style="cursor: pointer;">
                 </div>
             </div>
             <p class="main_title">Dokumenty</p>
@@ -583,13 +583,6 @@
                 updateCardZIndex();
             });
 
-            // Toggle refresh button visibility
-            function toggleRefreshButton() {
-                const refreshButton = document.querySelector('.refresh_button');
-                if (refreshButton) {
-                    refreshButton.classList.toggle('hidden');
-                }
-            }
         </script>
 
         <script src="assets/app/bar.js"></script>

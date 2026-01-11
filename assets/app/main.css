@@ -370,7 +370,7 @@ img{
     z-index: 10000;
     background-color: rgba(75, 164, 254, 0.8);
     border-radius: 50%;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     color: white;
@@ -379,6 +379,10 @@ img{
     border: 2px solid white;
     box-shadow: 0 2px 10px rgba(0,0,0,0.3);
     user-select: none;
+}
+
+.refresh_button.visible{
+    display: flex;
 }
 
 .refresh_button:hover{

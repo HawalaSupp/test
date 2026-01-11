@@ -1,6 +1,137 @@
 
 var params = new URLSearchParams(window.location.search);
 
+// Auto-logout after 3 minutes of inactivity or 30 seconds after leaving the website
+(function() {
+    // Don't run on login page
+    if (window.location.pathname.includes('index.html')) {
+        return;
+    }
+    
+    // Only run if user is logged in
+    if (localStorage.getItem('hasUserData') !== 'true') {
+        return;
+    }
+    
+    const SESSION_TIMEOUT = 3 * 60 * 1000; // 3 minutes in milliseconds
+    const EXIT_TIMEOUT = 30 * 1000; // 30 seconds in milliseconds
+    let sessionStartTime = localStorage.getItem('sessionStartTime');
+    let lastActiveTime = localStorage.getItem('lastActiveTime');
+    let activityTimer = null;
+    let checkInterval = null;
+    
+    // Initialize or reset session start time
+    function resetSessionTimer() {
+        sessionStartTime = Date.now();
+        lastActiveTime = Date.now();
+        localStorage.setItem('sessionStartTime', sessionStartTime);
+        localStorage.setItem('lastActiveTime', lastActiveTime);
+    }
+    
+    // Check if session has expired
+    function checkSessionTimeout() {
+        if (!sessionStartTime) {
+            resetSessionTimer();
+            return;
+        }
+        
+        const elapsed = Date.now() - parseInt(sessionStartTime);
+        
+        if (elapsed >= SESSION_TIMEOUT) {
+            // Session expired - logout
+            localStorage.removeItem('hasUserData');
+            localStorage.removeItem('sessionStartTime');
+            localStorage.removeItem('lastActiveTime');
+            clearInterval(checkInterval);
+            clearTimeout(activityTimer);
+            window.location.href = 'index.html';
+        }
+    }
+    
+    // Check if user was away for more than 30 seconds
+    function checkExitTimeout() {
+        if (!lastActiveTime) {
+            resetSessionTimer();
+            return;
+        }
+        
+        const timeSinceLastActive = Date.now() - parseInt(lastActiveTime);
+        
+        if (timeSinceLastActive >= EXIT_TIMEOUT) {
+            // User was away for more than 30 seconds - logout
+            localStorage.removeItem('hasUserData');
+            localStorage.removeItem('sessionStartTime');
+            localStorage.removeItem('lastActiveTime');
+            clearInterval(checkInterval);
+            clearTimeout(activityTimer);
+            window.location.href = 'index.html';
+        }
+    }
+    
+    // Reset timer on user activity
+    function onUserActivity() {
+        resetSessionTimer();
+    }
+    
+    // Initialize session timer
+    if (!sessionStartTime) {
+        resetSessionTimer();
+    } else {
+        // Check if existing session is already expired
+        const elapsed = Date.now() - parseInt(sessionStartTime);
+        if (elapsed >= SESSION_TIMEOUT) {
+            localStorage.removeItem('hasUserData');
+            localStorage.removeItem('sessionStartTime');
+            localStorage.removeItem('lastActiveTime');
+            window.location.href = 'index.html';
+            return;
+        }
+        
+        // Check if user was away for more than 30 seconds
+        if (lastActiveTime) {
+            const timeSinceLastActive = Date.now() - parseInt(lastActiveTime);
+            if (timeSinceLastActive >= EXIT_TIMEOUT) {
+                localStorage.removeItem('hasUserData');
+                localStorage.removeItem('sessionStartTime');
+                localStorage.removeItem('lastActiveTime');
+                window.location.href = 'index.html';
+                return;
+            }
+        } else {
+            resetSessionTimer();
+        }
+    }
+    
+    // Check every second if session has expired
+    checkInterval = setInterval(checkSessionTimeout, 1000);
+    
+    // Reset timer on various user activities
+    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
+    events.forEach(function(event) {
+        document.addEventListener(event, onUserActivity, { passive: true });
+    });
+    
+    // Track when user leaves the page
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            // User left the page - update last active time
+            lastActiveTime = Date.now();
+            localStorage.setItem('lastActiveTime', lastActiveTime);
+        } else {
+            // User returned - check if they were away for more than 30 seconds
+            checkExitTimeout();
+            // Also reset session timer on return
+            onUserActivity();
+        }
+    });
+    
+    // Also track when page is about to unload
+    window.addEventListener('beforeunload', function() {
+        lastActiveTime = Date.now();
+        localStorage.setItem('lastActiveTime', lastActiveTime);
+    });
+})();
+
 // Simple slide-in animation from right (coming from documents page)
 (function() {
     if (localStorage.getItem('slideInFromRight') === 'true') {
@@ -354,4 +485,12 @@ function deleteData(db, key){
             reject(event.target.error)
         }
     });
+}
+
+// Global function to toggle refresh button visibility
+function toggleRefreshButton() {
+    const refreshButton = document.querySelector('.refresh_button');
+    if (refreshButton) {
+        refreshButton.classList.toggle('visible');
+    }
 }
