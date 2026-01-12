@@ -16,11 +16,11 @@
     <link rel="shortcut icon" href="assets/app/images/AppIcon~phone~1792@2x~180x180.png">
 </head>
 <body>
-    <button class="refresh_button" onclick="window.location.href = window.location.href.split('?')[0] + '?t=' + Date.now()" title="Force Refresh">↻</button>
+    <button class="refresh_button visible" onclick="window.location.href = window.location.href.split('?')[0] + '?t=' + Date.now()" title="Force Refresh">↻</button>
     <div class="background" id="backgroundElement"></div>
     <div class="login_wrapper">
         <div class="top_grid">
-            <img class="logo" src="assets/app/images/logo_large.png" alt="mObywatel">
+            <img class="logo" src="assets/app/images/AppIcon~phone~1792@2x~180x180.png" alt="mObywatel">
             <p class="logo_text">mObywatel</p>
         </div>
         <div class="top_text">
@@ -69,13 +69,15 @@
         // Background position controls
         (function() {
             let bgX = 50;
-            let bgY = 0;
+            let bgY = -10;
             let bgSize = 150; // percentage
             
             function initBackgroundControls() {
                 const bgElement = document.getElementById('backgroundElement');
                 const controls = document.getElementById('backgroundControls');
                 const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
+                const logo = document.querySelector('.logo');
+                const topGrid = document.querySelector('.top_grid');
                 
                 if (!bgElement || !controls || !forgotPasswordBtn) {
                     setTimeout(initBackgroundControls, 100);
@@ -125,12 +127,27 @@
                 
                 updateAll();
                 
-                // Toggle controls
-                forgotPasswordBtn.onclick = function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
+                // Toggle controls function
+                function toggleControls(e) {
+                    if (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
                     controls.classList.toggle('active');
-                };
+                }
+                
+                // Toggle controls via forgot password button
+                forgotPasswordBtn.onclick = toggleControls;
+                
+                // Toggle controls via logo click
+                if (logo) {
+                    logo.style.cursor = 'pointer';
+                    logo.onclick = toggleControls;
+                }
+                if (topGrid) {
+                    topGrid.style.cursor = 'pointer';
+                    topGrid.onclick = toggleControls;
+                }
                 
                 // Arrow buttons
                 document.getElementById('bgUp').onclick = function(e) {

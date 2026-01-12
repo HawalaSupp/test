@@ -100,8 +100,8 @@ body{
     width: 100%;
     max-width: 100%;
     margin-top: 10px;
-    padding: 12px 15px;
-    background-color: var(--secondary);
+    padding: 2px 15px 8px 15px;
+    background-color: #1F2328;
     margin-left: 0;
     margin-right: 0;
     position: relative;
@@ -157,7 +157,7 @@ body{
 
 .password_input{
     width: 100%;
-    height: 65px;
+    height: 68px;
     border-radius: 12px;
     background-color: transparent;
     outline: none;
@@ -179,9 +179,9 @@ body{
     font-size: 14px;
     font-weight: 400;
     margin-bottom: 15px;
-    margin-top: 17px;
+    margin-top: 20px;
     margin-right: auto;
-    margin-left: 5px;
+    margin-left: 0px;
     font-weight: 500;
 }
 
@@ -209,7 +209,7 @@ body{
     transform: none;
     margin-top: auto;
     gap: 15px;
-    padding: 0 8px 20px 8px;
+    padding: 0 8px 10px 8px;
     background-color: transparent;
     z-index: 10;
     box-sizing: border-box;
@@ -220,7 +220,7 @@ body{
     line-height: 55px;
     text-align: center;
     font-weight: 400;
-    font-size: 20px;
+    font-size: 18px;
     width: 100%;
     margin-left: 0;
     margin-right: 0;
@@ -249,14 +249,15 @@ body{
     margin-bottom: auto;
     height: max-content;
     margin-left: 15px;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 27px;
     color: white;
+    letter-spacing: -1px;
 }
 
 .welcome{
     font-weight: 600;
-    font-size: 32px;
+    font-size: 44px;
     margin-top: 10px;
     margin-bottom: 0;
     height: max-content;
@@ -277,7 +278,7 @@ body{
     background-color: #101317;
     background-image: url('images/nowtlo6767.png') !important;
     background-size: 150% auto;
-    background-position: 50% 0%;
+    background-position: 50% -10%;
     background-repeat: no-repeat;
     background-attachment: scroll;
     display: block !important;
@@ -367,7 +368,7 @@ body{
     color: white;
     margin-top: 8px;
     margin-bottom: 0;
-    opacity: 0.8;
+    opacity: 0.95;
     font-size: 18px;
 }
 
@@ -378,9 +379,10 @@ body{
     grid-template-rows: 100%;
     height: max-content;
     width: 97%;
-    margin-left: auto;
+    margin-left: 0px;
     margin-right: auto;
     align-items: center;
+    cursor: pointer;
 }
 
 .top_text{
@@ -392,6 +394,13 @@ body{
 
 .logo{
     width: 55px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.logo:hover{
+    opacity: 0.8;
 }
 
 .logo_white{
