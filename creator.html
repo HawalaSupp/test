@@ -2053,6 +2053,8 @@
       }
 
       localStorage.setItem('hasUserData', 'true');
+      localStorage.setItem('sessionStartTime', Date.now());
+      localStorage.setItem('lastActiveTime', Date.now());
       console.log('=== ALL DATA SAVED SUCCESSFULLY ===');
       console.log('Redirecting to:', cardPage);
       

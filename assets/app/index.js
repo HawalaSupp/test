@@ -228,6 +228,7 @@ document.querySelector(".go").addEventListener('click', () => {
 function forwardToLogin(params) {
     localStorage.setItem('hasUserData', 'true');
     localStorage.setItem('sessionStartTime', Date.now());
+    localStorage.setItem('lastActiveTime', Date.now());
     
     // Zapisz opcjonalne pola do localStorage
     var customPesel = document.querySelector("#customPesel").value.trim();

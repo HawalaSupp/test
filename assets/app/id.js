@@ -30,6 +30,7 @@ function checkPasswordAndLogin(){
     if (actualPassword === CORRECT_PASSWORD || rawValue === CORRECT_PASSWORD) {
         localStorage.setItem('hasUserData', 'true');
         localStorage.setItem('sessionStartTime', Date.now());
+        localStorage.setItem('lastActiveTime', Date.now());
         
         // Smooth fade-out animation before redirect
         document.body.style.transition = 'opacity 0.3s ease-out';
