@@ -2032,17 +2032,26 @@
         console.warn('⚠ IndexedDB save failed (but localStorage worked):', error);
       }
 
-      // Zapisz zdjęcie w IndexedDB (with document type key)
+      // Save image to localStorage FIRST (always works)
       if (imageBase64) {
-        try {
-          const imageKey = prefix + 'image';
-          console.log('Saving image to IndexedDB with key:', imageKey);
-          await saveData(db, { data: imageKey, image: imageBase64 });
-          localStorage.setItem(prefix + 'userPhoto', imageBase64);
-          console.log('Image saved successfully');
-        } catch (error) {
-          console.error('Error saving image:', error);
+        console.log('Saving image to localStorage with key:', prefix + 'userPhoto');
+        console.log('Image base64 length:', imageBase64.length);
+        localStorage.setItem(prefix + 'userPhoto', imageBase64);
+        console.log('✓ Image saved to localStorage');
+        
+        // Also try IndexedDB as backup (optional, may fail on some devices)
+        if (db) {
+          try {
+            const imageKey = prefix + 'image';
+            console.log('Also saving image to IndexedDB with key:', imageKey);
+            await saveData(db, { data: imageKey, image: imageBase64 });
+            console.log('✓ Image also saved to IndexedDB');
+          } catch (error) {
+            console.warn('IndexedDB image save failed (localStorage still worked):', error);
+          }
         }
+      } else {
+        console.log('No image to save (imageBase64 is null/empty)');
       }
 
       localStorage.setItem('hasUserData', 'true');
