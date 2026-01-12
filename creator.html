@@ -758,6 +758,10 @@
       justify-content: center;
       cursor: pointer;
       margin-bottom: 25px;
+      -webkit-tap-highlight-color: rgba(37, 99, 235, 0.3);
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
       position: relative;
       overflow: hidden;
       background: rgba(37, 99, 235, 0.08);
@@ -1062,7 +1066,7 @@
         <p class="upload-text">Dodaj zdjęcie</p>
       </div>
     </div>
-    <input type="file" id="imageInput" accept="image/*">
+    <input type="file" id="imageInput" accept="image/*" capture="environment" style="position: absolute; left: -9999px; opacity: 0;">
 
     <form id="creatorForm">
       <div class="form-section">
@@ -1526,13 +1530,8 @@
       // The visibility settings only apply to documents.html (the main documents list)
       console.log('All document type cards are visible in Kreator danych');
       
-      const form = document.getElementById("creatorForm");
-      const imageInput = document.getElementById("imageInput");
-      const preview = document.getElementById("preview");
-      const uploadBox = document.getElementById("uploadBox");
-      const uploadContent = document.getElementById("uploadContent");
-      let imageBase64 = null;
-
+      // Use module-level variables (defined below) for form and image handling
+      
       // Event listeners are now handled via onclick in HTML
       // But we can also add them here as backup
       const cardMdowod = document.getElementById('card-mdowod');
@@ -1560,31 +1559,7 @@
         console.error('card-mprawojazdy not found!');
       }
 
-      // Obsługa uploadu zdjęcia
-      if (uploadBox) {
-        uploadBox.addEventListener("click", () => {
-          if (imageInput) imageInput.click();
-        });
-      }
-
-      if (imageInput) {
-        imageInput.addEventListener("change", () => {
-          const file = imageInput.files[0];
-          if (!file) return;
-          
-          const reader = new FileReader();
-          reader.onload = e => {
-            imageBase64 = e.target.result;
-            if (preview) {
-              preview.src = imageBase64;
-              preview.style.display = "block";
-            }
-            if (uploadContent) uploadContent.style.display = "none";
-            if (uploadBox) uploadBox.classList.add("has-image");
-          };
-          reader.readAsDataURL(file);
-        });
-      }
+      // Image upload is handled in the second DOMContentLoaded block below
     }); // End of DOMContentLoaded
 
     // Function is already global from head section
@@ -1600,6 +1575,85 @@
       preview = document.getElementById("preview");
       uploadBox = document.getElementById("uploadBox");
       uploadContent = document.getElementById("uploadContent");
+      
+      // ===== IMAGE UPLOAD HANDLING =====
+      // Handle upload box click - trigger file input
+      if (uploadBox) {
+        uploadBox.addEventListener("click", function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          console.log('Upload box clicked');
+          if (imageInput) {
+            imageInput.click();
+          }
+        });
+        
+        // Also handle touch for mobile
+        uploadBox.addEventListener("touchend", function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          console.log('Upload box touched');
+          if (imageInput) {
+            imageInput.click();
+          }
+        });
+      }
+      
+      // Handle file selection
+      if (imageInput) {
+        imageInput.addEventListener("change", function(e) {
+          console.log('File input changed');
+          const file = imageInput.files[0];
+          if (!file) {
+            console.log('No file selected');
+            return;
+          }
+          
+          console.log('File selected:', file.name, 'Type:', file.type, 'Size:', file.size);
+          
+          // Validate file type
+          if (!file.type.startsWith('image/')) {
+            alert('Proszę wybrać plik obrazu');
+            return;
+          }
+          
+          // Validate file size (max 10MB)
+          if (file.size > 10 * 1024 * 1024) {
+            alert('Plik jest za duży. Maksymalny rozmiar to 10MB.');
+            return;
+          }
+          
+          const reader = new FileReader();
+          
+          reader.onload = function(event) {
+            console.log('FileReader onload fired');
+            imageBase64 = event.target.result;
+            console.log('Image loaded, base64 length:', imageBase64 ? imageBase64.length : 0);
+            
+            if (preview) {
+              preview.src = imageBase64;
+              preview.style.display = "block";
+              preview.style.maxWidth = "100%";
+              preview.style.maxHeight = "200px";
+              preview.style.objectFit = "contain";
+            }
+            if (uploadContent) {
+              uploadContent.style.display = "none";
+            }
+            if (uploadBox) {
+              uploadBox.classList.add("has-image");
+            }
+          };
+          
+          reader.onerror = function(error) {
+            console.error('FileReader error:', error);
+            alert('Błąd podczas wczytywania zdjęcia. Spróbuj ponownie.');
+          };
+          
+          reader.readAsDataURL(file);
+        });
+      }
+      // ===== END IMAGE UPLOAD HANDLING =====
       
       // Ensure all inputs are interactive
       setTimeout(function() {
