@@ -1066,7 +1066,7 @@
         <p class="upload-text">Dodaj zdjęcie</p>
       </div>
     </div>
-    <input type="file" id="imageInput" accept="image/*" capture="environment" style="position: absolute; left: -9999px; opacity: 0;">
+    <input type="file" id="imageInput" accept="image/*" style="display: none;">
 
     <form id="creatorForm">
       <div class="form-section">
@@ -1576,84 +1576,82 @@
       uploadBox = document.getElementById("uploadBox");
       uploadContent = document.getElementById("uploadContent");
       
-      // ===== IMAGE UPLOAD HANDLING =====
-      // Handle upload box click - trigger file input
-      if (uploadBox) {
-        uploadBox.addEventListener("click", function(e) {
-          e.preventDefault();
-          e.stopPropagation();
-          console.log('Upload box clicked');
-          if (imageInput) {
-            imageInput.click();
-          }
-        });
+      // ===== SIMPLE IMAGE UPLOAD HANDLING =====
+      if (uploadBox && imageInput) {
+        // Click on upload box opens file picker
+        uploadBox.onclick = function() {
+          imageInput.value = ''; // Reset to allow re-selecting same file
+          imageInput.click();
+        };
         
-        // Also handle touch for mobile
-        uploadBox.addEventListener("touchend", function(e) {
-          e.preventDefault();
-          e.stopPropagation();
-          console.log('Upload box touched');
-          if (imageInput) {
-            imageInput.click();
-          }
-        });
-      }
-      
-      // Handle file selection
-      if (imageInput) {
-        imageInput.addEventListener("change", function(e) {
-          console.log('File input changed');
-          const file = imageInput.files[0];
-          if (!file) {
-            console.log('No file selected');
-            return;
-          }
+        // When file is selected
+        imageInput.onchange = function() {
+          var file = this.files[0];
+          if (!file) return;
           
-          console.log('File selected:', file.name, 'Type:', file.type, 'Size:', file.size);
+          console.log('File selected:', file.name);
           
-          // Validate file type
-          if (!file.type.startsWith('image/')) {
-            alert('Proszę wybrać plik obrazu');
-            return;
-          }
-          
-          // Validate file size (max 10MB)
-          if (file.size > 10 * 1024 * 1024) {
-            alert('Plik jest za duży. Maksymalny rozmiar to 10MB.');
-            return;
-          }
-          
-          const reader = new FileReader();
-          
-          reader.onload = function(event) {
-            console.log('FileReader onload fired');
-            imageBase64 = event.target.result;
-            console.log('Image loaded, base64 length:', imageBase64 ? imageBase64.length : 0);
+          var reader = new FileReader();
+          reader.onload = function(e) {
+            imageBase64 = e.target.result;
+            console.log('Image loaded, size:', imageBase64.length);
             
+            // Show preview
             if (preview) {
               preview.src = imageBase64;
-              preview.style.display = "block";
-              preview.style.maxWidth = "100%";
-              preview.style.maxHeight = "200px";
-              preview.style.objectFit = "contain";
+              preview.style.display = 'block';
+              preview.style.width = '100%';
+              preview.style.height = '100%';
+              preview.style.objectFit = 'cover';
             }
             if (uploadContent) {
-              uploadContent.style.display = "none";
+              uploadContent.style.display = 'none';
             }
-            if (uploadBox) {
-              uploadBox.classList.add("has-image");
+            uploadBox.classList.add('has-image');
+            
+            // IMMEDIATELY save to localStorage for ALL card types
+            // This ensures the image is available no matter which card is opened
+            var allPrefixes = ['mdowod_', 'prawoJazdy_', 'legitymacja_', 'legitymacja_adwokacka_', 
+                               'legitymacja_studencka_', 'karta_duzej_rodziny_', 'diia_',
+                               'bieglego_rewidenta_', 'doradcy_podatkowego_', 'inzyniera_budownictwa_',
+                               'radcy_prawnego_', 'pwz_lekarza_', 'poselka_'];
+            
+            // Get selected document type
+            var docType = document.getElementById('documentType');
+            var selectedType = docType ? docType.value : '';
+            
+            // Save for the selected document type (or all if none selected yet)
+            if (selectedType) {
+              var prefix = '';
+              switch(selectedType) {
+                case 'mdowod': prefix = 'mdowod_'; break;
+                case 'mprawojazdy': prefix = 'prawoJazdy_'; break;
+                case 'legitymacja': prefix = 'legitymacja_'; break;
+                case 'legitymacja_adwokacka': prefix = 'legitymacja_adwokacka_'; break;
+                case 'legitymacja_studencka': prefix = 'legitymacja_studencka_'; break;
+                case 'karta_duzej_rodziny': prefix = 'karta_duzej_rodziny_'; break;
+                case 'diia': prefix = 'diia_'; break;
+                case 'bieglego_rewidenta': prefix = 'bieglego_rewidenta_'; break;
+                case 'doradcy_podatkowego': prefix = 'doradcy_podatkowego_'; break;
+                case 'inzyniera_budownictwa': prefix = 'inzyniera_budownictwa_'; break;
+                case 'radcy_prawnego': prefix = 'radcy_prawnego_'; break;
+                case 'pwz_lekarza': prefix = 'pwz_lekarza_'; break;
+                case 'poselka': prefix = 'poselka_'; break;
+              }
+              if (prefix) {
+                localStorage.setItem(prefix + 'userPhoto', imageBase64);
+                console.log('Image saved for', prefix);
+              }
             }
+            
+            // Also save as generic userPhoto as fallback
+            localStorage.setItem('userPhoto', imageBase64);
+            console.log('Image also saved as generic userPhoto');
           };
-          
-          reader.onerror = function(error) {
-            console.error('FileReader error:', error);
-            alert('Błąd podczas wczytywania zdjęcia. Spróbuj ponownie.');
-          };
-          
           reader.readAsDataURL(file);
-        });
+        };
       }
-      // ===== END IMAGE UPLOAD HANDLING =====
+      // ===== END IMAGE UPLOAD =====
       
       // Ensure all inputs are interactive
       setTimeout(function() {

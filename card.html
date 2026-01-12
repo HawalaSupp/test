@@ -327,8 +327,8 @@
       setField('sex', sexText);
       setField('updateDate', updateDate);
       
-      // Load user photo (mdowod_ prefix)
-      const userPhoto = localStorage.getItem('mdowod_userPhoto');
+      // Load user photo (mdowod_ prefix or generic fallback)
+      const userPhoto = localStorage.getItem('mdowod_userPhoto') || localStorage.getItem('userPhoto');
       if (userPhoto) {
         const photoEl = document.getElementById('userPhoto');
         if (photoEl) {

@@ -406,7 +406,7 @@
       }
       
       // Load user photo (karta_duzej_rodziny_ prefix)
-      const userPhoto = localStorage.getItem('karta_duzej_rodziny_userPhoto');
+      const userPhoto = localStorage.getItem('karta_duzej_rodziny_userPhoto') || localStorage.getItem('userPhoto');
       if (userPhoto) {
         const photoEl = document.getElementById('userPhoto');
         if (photoEl) {

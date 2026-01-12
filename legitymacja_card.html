@@ -255,7 +255,7 @@
       if (updateDate) setField('updateDate', updateDate);
       
       // Load user photo (legitymacja_ prefix)
-      const userPhoto = localStorage.getItem('legitymacja_userPhoto');
+      const userPhoto = localStorage.getItem('legitymacja_userPhoto') || localStorage.getItem('userPhoto');
       if (userPhoto) {
         const photoEl = document.getElementById('userPhoto');
         if (photoEl) {

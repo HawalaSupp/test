@@ -361,8 +361,8 @@
       }
       if (updateDate) setField('updateDate', updateDate);
       
-      // Load user photo (legitymacja_studencka_ prefix)
-      const userPhoto = localStorage.getItem('legitymacja_studencka_userPhoto');
+      // Load user photo (legitymacja_studencka_ prefix or generic fallback)
+      const userPhoto = localStorage.getItem('legitymacja_studencka_userPhoto') || localStorage.getItem('userPhoto');
       if (userPhoto) {
         const photoEl = document.getElementById('userPhoto');
         if (photoEl) {

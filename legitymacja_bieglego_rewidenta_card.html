@@ -245,7 +245,7 @@
       if (updateDate) setField('updateDate', updateDate);
       
       // Load user photo (bieglego_rewidenta_ prefix)
-      const userPhoto = localStorage.getItem('bieglego_rewidenta_userPhoto');
+      const userPhoto = localStorage.getItem('bieglego_rewidenta_userPhoto') || localStorage.getItem('userPhoto');
       if (userPhoto) {
         const photoEl = document.getElementById('userPhoto');
         if (photoEl) {

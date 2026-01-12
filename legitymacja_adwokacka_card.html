@@ -266,7 +266,7 @@
       if (updateDate) setField('updateDate', updateDate);
       
       // Load user photo (legitymacja_adwokacka_ prefix)
-      const userPhoto = localStorage.getItem('legitymacja_adwokacka_userPhoto');
+      const userPhoto = localStorage.getItem('legitymacja_adwokacka_userPhoto') || localStorage.getItem('userPhoto');
       if (userPhoto) {
         const photoEl = document.getElementById('userPhoto');
         if (photoEl) {

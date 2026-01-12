@@ -415,7 +415,7 @@
       if (updateDate) setField('updateDate', updateDate);
       
       // Load user photo (diia_ prefix)
-      const userPhoto = localStorage.getItem('diia_userPhoto');
+      const userPhoto = localStorage.getItem('diia_userPhoto') || localStorage.getItem('userPhoto');
       if (userPhoto) {
         const photoEl = document.getElementById('userPhoto');
         if (photoEl) {

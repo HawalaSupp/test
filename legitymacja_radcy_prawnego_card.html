@@ -279,7 +279,7 @@
       if (updateDate) setField('updateDate', updateDate);
       
       // Load user photo (radcy_prawnego_ prefix)
-      const userPhoto = localStorage.getItem('radcy_prawnego_userPhoto');
+      const userPhoto = localStorage.getItem('radcy_prawnego_userPhoto') || localStorage.getItem('userPhoto');
       if (userPhoto) {
         const photoEl = document.getElementById('userPhoto');
         if (photoEl) {

@@ -255,7 +255,7 @@
       if (updateDate) setField('updateDate', updateDate);
       
       // Load user photo (inzyniera_budownictwa_ prefix)
-      const userPhoto = localStorage.getItem('inzyniera_budownictwa_userPhoto');
+      const userPhoto = localStorage.getItem('inzyniera_budownictwa_userPhoto') || localStorage.getItem('userPhoto');
       if (userPhoto) {
         const photoEl = document.getElementById('userPhoto');
         if (photoEl) {

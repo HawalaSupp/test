@@ -257,7 +257,7 @@
       if (updateDate) setField('updateDate', updateDate);
       
       // Load user photo (doradcy_podatkowego_ prefix)
-      const userPhoto = localStorage.getItem('doradcy_podatkowego_userPhoto');
+      const userPhoto = localStorage.getItem('doradcy_podatkowego_userPhoto') || localStorage.getItem('userPhoto');
       if (userPhoto) {
         const photoEl = document.getElementById('userPhoto');
         if (photoEl) {
