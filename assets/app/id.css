@@ -8,11 +8,11 @@
     gap: 10px;
     height: 100vh;
     max-height: 100vh;
-    padding: 15px 0 0px;
+    padding: 30px 20px 0px 20px;
     position: relative;
     z-index: 1;
     flex: 1;
-    overflow-x: hidden;
+    overflow-x: visible;
     overflow-y: hidden;
 }
 
@@ -22,7 +22,7 @@ body{
     background-color: transparent !important;
     min-height: 100vh;
     width: 100%;
-    overflow-x: hidden;
+    overflow-x: visible;
     overflow-y: auto;
     position: relative;
     font-family: "Poppins", "Roboto", sans-serif;
@@ -97,17 +97,18 @@ body{
 }
 
 .password_box{
-    width: 100%;
-    max-width: 100%;
+    width: calc(100% + 40px);
+    max-width: calc(100% + 40px);
     margin-top: 10px;
-    padding: 2px 15px 8px 15px;
+    padding: 0px 15px 5px 15px;
     background-color: #1F2328;
-    margin-left: 0;
-    margin-right: 0;
+    margin-left: -20px;
+    margin-right: -20px;
     position: relative;
     border-radius: 15px;
     box-shadow: 0 10px 35px rgba(0,0,0,0.35);
     box-sizing: border-box;
+    overflow: visible;
 }
 
 .password_grid{
@@ -137,22 +138,30 @@ body{
 }
 
 .eye{
-    background-image: url('assets/app/images/eye.png');
+    background-image: url('images/AA022_Show_password@3x.png');
     position: absolute;
     top: 0;
     bottom: 0;
     margin-top: auto;
     margin-bottom: auto;
     right: 20px;
-    width: 25px;
-    height: 25px;
-    background-size: 100%;
+    width: 30px;
+    height: 30px;
+    background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+    cursor: pointer;
+    z-index: 10;
+    display: block;
+    filter: brightness(0) invert(1);
+    transition: opacity 0.3s ease, background-image 0.3s ease;
+    opacity: 1;
 }
 
 .eye_close{
-    background-image: url('assets/app/images/eye_closed.png');
+    background-image: url('images/AA023_Hide_password@3x.png');
+    background-size: contain;
+    filter: brightness(0) invert(1);
 }
 
 .password_input{
@@ -163,7 +172,8 @@ body{
     outline: none;
     border: 2px solid var(--gray);
     padding: 10px 15px;
-    font-size: 15px;
+    font-size: 18px;
+    letter-spacing: 2px;
     box-sizing: border-box;
     color: white;
 }
@@ -177,12 +187,11 @@ body{
 .forgot_password{
     color: var(--text);
     font-size: 14px;
-    font-weight: 400;
+    font-weight: 550;
     margin-bottom: 15px;
     margin-top: 20px;
     margin-right: auto;
     margin-left: 0px;
-    font-weight: 500;
 }
 
 .secondary_link{
@@ -219,7 +228,7 @@ body{
     color: black;
     line-height: 55px;
     text-align: center;
-    font-weight: 400;
+    font-weight: 450;
     font-size: 18px;
     width: 100%;
     margin-left: 0;
@@ -248,11 +257,11 @@ body{
     margin-top: auto;
     margin-bottom: auto;
     height: max-content;
-    margin-left: 15px;
-    font-weight: 700;
+    margin-left: 10px;
+    font-weight: 600;
     font-size: 27px;
     color: white;
-    letter-spacing: -1px;
+    letter-spacing: -1.5px;
 }
 
 .welcome{
@@ -260,6 +269,7 @@ body{
     font-size: 44px;
     margin-top: 10px;
     margin-bottom: 0;
+    margin-left: -20px;
     height: max-content;
     color: white;
 }
@@ -368,6 +378,7 @@ body{
     color: white;
     margin-top: 8px;
     margin-bottom: 0;
+    margin-left: -20px;
     opacity: 0.95;
     font-size: 18px;
 }
@@ -379,7 +390,7 @@ body{
     grid-template-rows: 100%;
     height: max-content;
     width: 97%;
-    margin-left: 0px;
+    margin-left: -20px;
     margin-right: auto;
     align-items: center;
     cursor: pointer;

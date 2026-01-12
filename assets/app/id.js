@@ -80,12 +80,22 @@ function delay(time, length) {
 }
 
 eye.addEventListener('click', () => {
-    // Toggle password visibility
-    if (input.type === 'password') {
-        input.type = 'text';
-        eye.classList.add("eye_close");
-    } else {
-        input.type = 'password';
-        eye.classList.remove("eye_close");
-    }
+    // Smooth fade animation
+    eye.style.opacity = '0';
+    
+    setTimeout(() => {
+        // Toggle password visibility
+        if (input.type === 'password') {
+            input.type = 'text';
+            eye.classList.add("eye_close");
+        } else {
+            input.type = 'password';
+            eye.classList.remove("eye_close");
+        }
+        
+        // Fade back in
+        setTimeout(() => {
+            eye.style.opacity = '1';
+        }, 10);
+    }, 150);
 })
