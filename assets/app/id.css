@@ -404,7 +404,7 @@ body{
 }
 
 .logo{
-    width: 55px;
+    width: 50px;
     border-radius: 12px;
     cursor: pointer;
     transition: opacity 0.2s ease;
