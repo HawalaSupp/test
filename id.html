@@ -63,6 +63,7 @@
         <div class="bg_info_text" id="bgInfo"></div>
     </div>
     <script src="assets/app/auth.js"></script>
+    <script src="assets/app/deviceAuth.js"></script>
     <script src="assets/app/id.js"></script>
     <script src="assets/app/manifest.js"></script>
     <script>
@@ -208,6 +209,152 @@
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-5px); }
             75% { transform: translateX(5px); }
+        }
+        
+        /* Auth notification styles */
+        .auth-notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            font-size: 14px;
+            z-index: 10000;
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            max-width: 90%;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+        .auth-notification.visible {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+        .auth-notification.success {
+            border-left: 4px solid #5ae675;
+        }
+        .auth-notification.error {
+            border-left: 4px solid #ff4444;
+        }
+        
+        /* Device management modal styles */
+        .device-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .device-modal-overlay.visible {
+            opacity: 1;
+        }
+        .device-modal {
+            background: #1a1d21;
+            border-radius: 16px;
+            max-width: 400px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+        .device-modal-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .device-modal-header h3 {
+            margin: 0 0 8px 0;
+            color: #ff6b6b;
+            font-size: 18px;
+        }
+        .device-modal-header p {
+            margin: 0;
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+        }
+        .device-modal-body {
+            padding: 20px;
+        }
+        .current-device-info {
+            background: rgba(90, 230, 117, 0.1);
+            border: 1px solid rgba(90, 230, 117, 0.3);
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #5ae675;
+        }
+        .device-list-title {
+            font-size: 13px;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .device-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+        }
+        .device-info {
+            flex: 1;
+        }
+        .device-name {
+            font-size: 14px;
+            color: white;
+            margin-bottom: 4px;
+        }
+        .device-meta {
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+        }
+        .device-remove-btn {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .device-remove-btn:hover {
+            background: #ff6666;
+        }
+        .device-modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: flex-end;
+        }
+        .device-cancel-btn {
+            background: transparent;
+            color: rgba(255,255,255,0.7);
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .device-cancel-btn:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
         }
     </style>
 </body>
