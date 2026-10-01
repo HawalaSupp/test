@@ -75,7 +75,7 @@
         const allOptionalGroups = [
           'nationalityGroup', 'familyNameGroup', 'fathersNameGroup', 'fathersFamilyNameGroup',
           'mothersNameGroup', 'mothersFamilyNameGroup', 'peselGroup', 'kategorieGroup',
-          'mdowodSeriesGroup', 'mdowodExpiryGroup', 'mdowodDocSeriesGroup',
+          'mdowodSeriesGroup', 'mdowodExpiryGroup', 'mdowodDocSeriesGroup', 'mdowodIssuerGroup',
           'prawoJazdyFields', 'prawoJazdyFields2', 'prawoJazdyFields3', 'prawoJazdyFields4', 'prawoJazdyFields5',
           'numerWpisuGroup', 'birthCountryGroup', 'professionalTitleGroup', 'auditorNumberGroup',
           'registrationNumberGroup', 'issuingAuthorityGroup', 'policyExpiryDateGroup',
@@ -146,6 +146,7 @@
           if (peselGroup) peselGroup.style.display = 'block';
           document.getElementById('mdowodSeriesGroup').style.display = 'block';
           document.getElementById('mdowodDocSeriesGroup').style.display = 'block';
+          document.getElementById('mdowodIssuerGroup').style.display = 'block';
           if (givenDateGroup) givenDateGroup.style.display = 'block';
           if (expiryDateGroup) expiryDateGroup.style.display = 'block';
           // Set required
@@ -515,6 +516,7 @@
           window.setValueAndTrigger(document.getElementById('mothersName'), window.pick(window.FIRST_NAMES));
           window.setValueAndTrigger(document.getElementById('customSeriesAndNumber'), 'ZZC ' + String(window.randomInt(10000,99999)));
           window.setValueAndTrigger(document.getElementById('customDocSeriesNumber'), 'ABC ' + String(window.randomInt(100000,999999)));
+          window.setValueAndTrigger(document.getElementById('customDocIssuer'), 'URZĄD MIASTA');
           const ey = gy + 10;
           window.setValueAndTrigger(document.getElementById('customExpiryDate'), gd + '.' + gm + '.' + ey);
         }
@@ -1309,6 +1311,12 @@
         <div class="error">Opcjonalne pole</div>
       </div>
 
+      <div class="input-group" id="mdowodIssuerGroup" style="display: none;">
+        <label>Organ wydający (np. URZĄD MIASTA)</label>
+        <input type="text" id="customDocIssuer" placeholder="URZĄD MIASTA">
+        <div class="error">Opcjonalne pole</div>
+      </div>
+
       <div class="input-group">
         <label>Data wydania (np. 11.09.2022)</label>
         <input type="text" id="customGivenDate">
@@ -1496,7 +1504,7 @@
       const allOptionalGroups = [
         'nationalityGroup', 'familyNameGroup', 'fathersNameGroup', 'fathersFamilyNameGroup',
         'mothersNameGroup', 'mothersFamilyNameGroup', 'peselGroup', 'kategorieGroup',
-        'mdowodSeriesGroup', 'mdowodExpiryGroup', 'mdowodDocSeriesGroup',
+        'mdowodSeriesGroup', 'mdowodExpiryGroup', 'mdowodDocSeriesGroup', 'mdowodIssuerGroup',
         'prawoJazdyFields', 'prawoJazdyFields2', 'prawoJazdyFields3', 'prawoJazdyFields4', 'prawoJazdyFields5',
         'numerWpisuGroup', 'birthCountryGroup', 'professionalTitleGroup', 'auditorNumberGroup',
         'registrationNumberGroup', 'issuingAuthorityGroup', 'policyExpiryDateGroup',
@@ -1845,6 +1853,7 @@
           data.pesel = getFieldValue('customPesel');
           data.seriesAndNumber = getFieldValue('customSeriesAndNumber');
           data.docSeriesNumber = getFieldValue('customDocSeriesNumber');
+          data.docIssuer = getFieldValue('customDocIssuer');
           data.givenDate = getFieldValue('customGivenDate');
           data.expiryDate = getFieldValue('customExpiryDate');
           break;
@@ -2002,6 +2011,9 @@
         if (value) {
           localStorage.setItem(itemKey, value);
           console.log('  - Saved', itemKey, '=', value);
+        } else {
+          // Remove an older value when the user deliberately clears a field.
+          localStorage.removeItem(itemKey);
         }
       });
       console.log('✓ Saved individual fields to localStorage');
